@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
-/* 
+ 
 app.use(
 	cors({
 		origin: process.env.CLIENT_URL,
@@ -16,7 +16,7 @@ app.use(
 );
 
 app.use(express.json());
-
+/*
 //database connection
 mongoose
 	.connect(MONGO_URI)
