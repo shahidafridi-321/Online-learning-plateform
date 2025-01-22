@@ -22,7 +22,7 @@ mongoose
 	.connect(MONGO_URI)
 	.then(() => console.log("mongodb is connected"))
 	.catch((e) => console.log(e));
-/*
+
 app.use((err, req, res, next) => {
 	console.log(err.stack);
 	res.status(500).json({
@@ -31,6 +31,7 @@ app.use((err, req, res, next) => {
 	});
 });
 
+/*
 app.listen(PORT, () => {
 	console.log(`Server is now running on port ${PORT}`);
 });
