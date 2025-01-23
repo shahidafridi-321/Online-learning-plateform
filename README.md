@@ -37,9 +37,12 @@ Server:
    jsonwebtoken: To generate and verify JSON Web Tokens (JWT) for authentication.
    multer: To handle file uploads in Node.js applications.
    paypal-rest-sdk: To integrate PayPal payment functionality into applications.
-   
+
 References:
 	learn what collections and documents is ,from the MongoDB manual to get a basic idea of how a document database stores data.
 
 MongoDB service providers:
 	The internet is full of mongodb services providers but we will be using MongoDB Atlas.
+
+Challenges:
+	I have faced a problem of database connection when I was try to get connection to online mongoDB service provider “Altas MongoDB” I got error  “ETIMEOUT” I tried and research a lot but cannot find any solution at the end I decide to use mongoDB locally so I installed it on my machine.
