@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import { AuthPage } from "@/pages/auth";
 import App from "@/App";
+import { AuthPageRoot } from "@/pages/auth";
 
 export const routes = createBrowserRouter([
 	{
@@ -9,6 +9,6 @@ export const routes = createBrowserRouter([
 	},
 	{
 		path: "/auth",
-		element: <AuthPage />,
+		element: <AuthPageRoot />,
 	},
 ]);
