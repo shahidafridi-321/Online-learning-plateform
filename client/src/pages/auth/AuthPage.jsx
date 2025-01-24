@@ -60,10 +60,10 @@ export const AuthPage = () => {
 					onValueChange={handleTabChange}
 					className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto"
 				>
-					<TabsList className="grid grid-cols-2 w-full rounded-lg shadow-lg bg-white mb-6">
+					<TabsList className="flex w-full rounded-lg justify-between space-x-2  bg-transparent pb-3 mb-6">
 						<TabsTrigger
 							value="signin"
-							className={`py-2 text-sm md:text-base font-medium text-gray-800 transition-all hover:bg-gray-100 ${
+							className={`py-2 flex-grow text-sm md:text-base font-medium shadow-lg  text-gray-800 transition-all hover:bg-gray-100 ${
 								activeTab === "signin" ? "bg-gray-200" : ""
 							}`}
 						>
@@ -71,7 +71,7 @@ export const AuthPage = () => {
 						</TabsTrigger>
 						<TabsTrigger
 							value="signup"
-							className={`py-2 text-sm md:text-base font-medium text-gray-800 transition-all hover:bg-gray-100 ${
+							className={`py-2 flex-grow text-sm md:text-base font-medium shadow-lg text-gray-800 transition-all hover:bg-gray-100 ${
 								activeTab === "signup" ? "bg-gray-200" : ""
 							}`}
 						>
