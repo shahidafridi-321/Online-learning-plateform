@@ -9,10 +9,14 @@ const PORT = process.env.PORT || 5002;
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(express.json());
-app.use(cors());
+app.use(
+	cors({
+		origin: "*", // Allow requests from any origin
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow specific HTTP methods
+		allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+	})
+);
 
-// Handle preflight requests (OPTIONS)
-app.options("*", cors());
 
 //database connection
 mongoose
