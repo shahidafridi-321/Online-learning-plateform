@@ -5,18 +5,14 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth-routes/index");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(express.json());
+app.use(cors());
 
-app.use(
-	cors({
-		origin: process.env.CLIENT_URL,
-		methods: ["GET", "POST", "DELETE", "PUT"],
-		allowedHeaders: ["Content-Type", "Authorization"],
-	})
-);
+// Handle preflight requests (OPTIONS)
+app.options("*", cors());
 
 //database connection
 mongoose
@@ -26,6 +22,11 @@ mongoose
 
 // routes configuration
 app.use("/auth", authRoutes);
+
+app.use((req, res, next) => {
+	console.log(`${req.method} ${req.path}`);
+	next();
+});
 
 app.use((err, req, res, next) => {
 	console.log(err.stack);
