@@ -22,6 +22,7 @@ export const AuthPage = () => {
 		setSignInFormData,
 		signUpFormData,
 		setSignUpFormData,
+		handleRegisterUser,
 	} = useContext(AuthContext);
 
 	const handleTabChange = (value) => {
@@ -119,6 +120,7 @@ export const AuthPage = () => {
 									formData={signUpFormData}
 									setFormData={setSignUpFormData}
 									isButtonDisabled={!checkIfSignUpFormIsvalid()}
+									handleSubmit={handleRegisterUser}
 								/>
 							</CardContent>
 						</Card>
