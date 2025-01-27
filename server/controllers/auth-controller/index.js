@@ -1,5 +1,6 @@
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
 	const { userName, userEmail, password, role } = req.body;
@@ -37,7 +38,7 @@ const registerUser = async (req, res) => {
 		// save new user
 		await newUser.save();
 
-		return res.status(201).json({
+		res.status(201).json({
 			success: true,
 			message: "User registered successfully",
 		});
@@ -50,4 +51,49 @@ const registerUser = async (req, res) => {
 	}
 };
 
-module.exports = { registerUser };
+const loginUser = async (req, res) => {
+	const { userEmail, password } = req.body;
+
+	// Input validation
+	if (!userEmail || !password) {
+		return res.status(400).json({
+			success: false,
+			message: "All fields are required",
+		});
+	}
+	// Checks user exists
+
+	const checkUser = await User.findOne({ userEmail });
+	if (!checkUser || !(await bcrypt.compare(password, checkUser.password))) {
+		return res.status(401).json({
+			success: false,
+			message: "Invalid credintial",
+		});
+	}
+	const accessToken = jwt.sign(
+		{
+			_id: checkUser._id,
+			userName: checkUser.userName,
+			userEmail: checkUser.userEmail,
+			role: checkUser.role,
+		},
+		"JWT_SECRET",
+		{ expiresIn: "120m" }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Logged in successfully",
+		data: {
+			accessToken,
+			user: {
+				_id: checkUser._id,
+				userName: checkUser.userName,
+				userEmail: checkUser.userEmail,
+				role: checkUser.role,
+			},
+		},
+	});
+};
+
+module.exports = { registerUser, loginUser };
