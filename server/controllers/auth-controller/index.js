@@ -5,7 +5,7 @@ const registerUser = async (req, res) => {
 	const { userName, userEmail, password, role } = req.body;
 
 	// Input validation
-	if (!userName || !userEmail || password) {
+	if (!userName || !userEmail || !password) {
 		return res.status(400).json({
 			success: false,
 			message: "All fields are required",
@@ -13,7 +13,9 @@ const registerUser = async (req, res) => {
 	}
 	try {
 		// Check if user already exists
-		const existingUser = User.findOne({ $or: [{ userName }, { userEmail }] });
+		const existingUser = await User.findOne({
+			$or: [{ userName }, { userEmail }],
+		});
 		if (existingUser) {
 			return res.status(400).json({
 				success: false,
@@ -41,6 +43,10 @@ const registerUser = async (req, res) => {
 		});
 	} catch (error) {
 		console.log(error);
+		return res.status(500).json({
+			success: false,
+			message: "Internet server Error",
+		});
 	}
 };
 
