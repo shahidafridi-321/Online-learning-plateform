@@ -7,6 +7,7 @@ import { AuthContext } from "@/context/auth-context";
 import { InstructorDashboardPage } from "@/pages/instructor/InstructorDashboardPage";
 import { StudentViewCommonLayout } from "@/components/student-view/StudentViewCommonLayout";
 import { StudentHomePage } from "@/pages/student/StudentHomePage";
+import { NotFoundPage } from "@/pages/not-found/NotFoundPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -42,5 +43,9 @@ export const routes = createBrowserRouter([
 				element: <StudentHomePage />,
 			},
 		],
+	},
+	{
+		path: "*",
+		element: <NotFoundPage />,
 	},
 ]);
