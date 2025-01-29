@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const morgan = require("morgan");
 const authRoutes = require("./routes/auth-routes/index");
 
 const app = express();
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 5002;
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(express.json());
+app.use(morgan("tiny"));
 app.use(
 	cors({
 		origin: "*", // Allow requests from any origin
@@ -17,11 +19,10 @@ app.use(
 	})
 );
 
-
 //database connection
 mongoose
 	.connect(MONGO_URI)
-	.then(() => console.log("mongodb is connected"))
+	.then(() => console.log(`${MONGO_URI} is conneted`))
 	.catch((e) => console.log(e));
 
 // routes configuration
