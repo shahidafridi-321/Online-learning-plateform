@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 		authenticate: false,
 		user: null,
 	});
+	const [loading, setLoading] = useState(true);
 
 	const handleRegisterUser = async (e) => {
 		e.preventDefault();
@@ -59,13 +60,14 @@ export const AuthProvider = ({ children }) => {
 				authenticate: false,
 				user: null,
 			});
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		checkAuthUser();
 	}, []);
-	console.log(auth);
 
 	return (
 		<AuthContext.Provider
@@ -76,6 +78,8 @@ export const AuthProvider = ({ children }) => {
 				setSignUpFormData,
 				handleRegisterUser,
 				handleLoginUser,
+				auth,
+				loading,
 			}}
 		>
 			{children}
