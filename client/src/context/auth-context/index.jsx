@@ -56,10 +56,12 @@ export const AuthProvider = ({ children }) => {
 			}
 		} catch (error) {
 			console.error("Error checking authentication:", error);
-			setAuth({
-				authenticate: false,
-				user: null,
-			});
+			if (!error?.response?.data?.success) {
+				setAuth({
+					authenticate: false,
+					user: null,
+				});
+			}
 		} finally {
 			setLoading(false);
 		}
