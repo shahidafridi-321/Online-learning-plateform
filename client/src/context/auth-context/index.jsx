@@ -71,6 +71,13 @@ export const AuthProvider = ({ children }) => {
 		checkAuthUser();
 	}, []);
 
+	const resetCredentials = () => {
+		setAuth({
+			authenticate: false,
+			user: null,
+		});
+	};
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -82,6 +89,7 @@ export const AuthProvider = ({ children }) => {
 				handleLoginUser,
 				auth,
 				loading,
+				resetCredentials,
 			}}
 		>
 			{children}
