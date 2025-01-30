@@ -45,6 +45,7 @@ export const InstructorDashboardPage = () => {
 							<Button
 								className="w-full justify-start mb-2"
 								key={menuItem.value}
+								variant={activeTab === menuItem.value ? "secondary" : "ghost"}
 								onClick={
 									menuItem.value === "logout"
 										? handleLogout
