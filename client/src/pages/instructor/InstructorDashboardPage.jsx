@@ -4,10 +4,11 @@ import { InstructorDashboard } from "./InstructorDashboard";
 import { InstructorCourses } from "./InstructorCourses";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { AuthContext } from "@/context/auth-context";
 
 export const InstructorDashboardPage = () => {
 	const [activeTab, setActiveTab] = useState("dashboard");
-	const { resetCredentials } = useContext(AudioContext);
+	const { resetCredentials } = useContext(AuthContext);
 
 	const menuItems = [
 		{
