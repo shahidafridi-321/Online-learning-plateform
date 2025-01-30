@@ -35,30 +35,38 @@ export const InstructorDashboardPage = () => {
 		resetCredentials();
 		sessionStorage.clear();
 	};
+
 	return (
-		<div className="flex h-full min-h-screen bg-gray-100">
-			<aside className="w-64 bg-white  shadow-md hidden md:block">
-				<div className="p-4">
-					<h2 className="text-2xl font-bold mb-4">Instructor View</h2>
-					<nav>
-						{menuItems.map((menuItem) => (
-							<Button
-								className="w-full justify-start mb-2"
-								key={menuItem.value}
-								variant={activeTab === menuItem.value ? "secondary" : "ghost"}
-								onClick={
-									menuItem.value === "logout"
-										? handleLogout
-										: () => setActiveTab(menuItem.value)
-								}
-							>
-								<menuItem.icon className="mr-2 h-4 w-4" />
-								{menuItem.label}
-							</Button>
-						))}
-					</nav>
-				</div>
+		<div className="flex min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
+			{/* Sidebar */}
+			<aside className="w-64 bg-white shadow-lg p-6 hidden md:block">
+				<h2 className="text-2xl font-bold mb-6">Instructor View</h2>
+				<nav className="space-y-2">
+					{menuItems.map((menuItem) => (
+						<Button
+							key={menuItem.value}
+							className={`w-full flex items-center justify-start text-lg py-3 rounded-lg transition-all font-medium `}
+							onClick={
+								menuItem.value === "logout"
+									? handleLogout
+									: () => setActiveTab(menuItem.value)
+							}
+							variant={activeTab === menuItem.value ? "secondary" : "ghost"}
+						>
+							<menuItem.icon
+								className={`mr-3 h-5 w-5 ${
+									activeTab === menuItem.value
+										? "text-gray-900"
+										: "text-gray-600"
+								}`}
+							/>
+							{menuItem.label}
+						</Button>
+					))}
+				</nav>
 			</aside>
+
+			{/* Main Content */}
 			<main className="flex-1 p-8 overflow-y-auto">
 				<div className="max-w-7xl mx-auto">
 					<h1 className="text-3xl font-bold mb-8">Dashboard</h1>
