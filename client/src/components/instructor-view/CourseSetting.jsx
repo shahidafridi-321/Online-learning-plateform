@@ -7,7 +7,7 @@ export const CourseSetting = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Course Setting Page</CardTitle>
+				<CardTitle>Course Setting</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<div className="flex flex-col gap-3">
