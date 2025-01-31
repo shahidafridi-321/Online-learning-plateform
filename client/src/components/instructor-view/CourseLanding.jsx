@@ -10,7 +10,7 @@ export const CourseLanding = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Course Landing Page</CardTitle>
+				<CardTitle>Course Landing</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<FormControls
