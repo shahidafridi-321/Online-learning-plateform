@@ -1,7 +1,17 @@
-import { createContext } from "react";
+import { courseLandingInitialFormData } from "@/config";
+import { createContext,useState } from "react";
 
 export const InstructorContext = createContext(null);
 
 export const InstructorContextProvider = ({ children }) => {
-	return <InstructorContext.Provider>{children}</InstructorContext.Provider>;
+	const [courseLandingFormData, setCourseLandingFormData] = useState(
+		courseLandingInitialFormData
+	);
+	return (
+		<InstructorContext.Provider
+			value={{ courseLandingFormData, setCourseLandingFormData }}
+		>
+			{children}
+		</InstructorContext.Provider>
+	);
 };
