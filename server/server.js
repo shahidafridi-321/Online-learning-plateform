@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const authRoutes = require("./routes/auth-routes/index");
+const mediaRoutes = require("./routes/instructor-routes/media-routes");
 
 const app = express();
 const PORT = process.env.PORT || 5002;
