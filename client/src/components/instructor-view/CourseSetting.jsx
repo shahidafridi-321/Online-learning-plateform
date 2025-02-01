@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { mediaUploadService } from "@/services";
+import { Image } from "lucide-react";
 
 export const CourseSetting = () => {
 	const { courseLandingFormData, setCourseLandingFormData } =
 		useContext(InstructorContext);
 
-		
 	const handleImageUploadChange = async (event) => {
 		const seletedImage = event.target.files[0];
 		if (seletedImage) {
@@ -28,21 +28,27 @@ export const CourseSetting = () => {
 			}
 		}
 	};
+	console.log(courseLandingFormData);
+
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>Course Setting</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<div className="flex flex-col gap-3">
-					<Label>Upload Course Image</Label>
-					<Input
-						type="file"
-						className="mb-4"
-						accept="image/*"
-						onChange={(event) => handleImageUploadChange(event)}
-					/>
-				</div>
+				{courseLandingFormData?.image ? (
+					<img src={courseLandingFormData.image} />
+				) : (
+					<div className="flex flex-col gap-3">
+						<Label>Upload Course Image</Label>
+						<Input
+							type="file"
+							className="mb-4"
+							accept="image/*"
+							onChange={(event) => handleImageUploadChange(event)}
+						/>
+					</div>
+				)}
 			</CardContent>
 		</Card>
 	);
