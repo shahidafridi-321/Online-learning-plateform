@@ -6,10 +6,15 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { courseCurriculumInitialFormData } from "@/config";
+import { mediaUploadService } from "@/services";
 
 export const CourseCurriculum = () => {
-	const { courseCurriculumFormData, setCourseCurriculumFormData } =
-		useContext(InstructorContext);
+	const {
+		courseCurriculumFormData,
+		setCourseCurriculumFormData,
+		mediaUploadProgress,
+		setMediaUploadProgress,
+	} = useContext(InstructorContext);
 
 	const handleNewLecture = () => {
 		setCourseCurriculumFormData([
@@ -31,13 +36,38 @@ export const CourseCurriculum = () => {
 
 	console.log(courseCurriculumFormData);
 
-	const handleFreeprviewPChange = (value, currentIndex) => {
+	const handleFreeprviewPChange = (currentValue, currentIndex) => {
 		let copyCourseCurriculumFormData = [...courseCurriculumFormData];
 		copyCourseCurriculumFormData[currentIndex] = {
 			...copyCourseCurriculumFormData[currentIndex],
-			freePreview: value,
+			freePreview: currentValue,
 		};
 		setCourseCurriculumFormData(copyCourseCurriculumFormData);
+	};
+
+	const handleSingleFileUpload = async (event, currentIndex) => {
+		const selectedFile = event.target.files[0];
+		if (selectedFile) {
+			const videoFormData = new FormData();
+			videoFormData.append("file", selectedFile);
+
+			try {
+				setMediaUploadProgress(true);
+				const response = await mediaUploadService(videoFormData);
+				if (response.success) {
+					let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+					copyCourseCurriculumFormData[currentIndex] = {
+						...copyCourseCurriculumFormData[currentIndex],
+						videoUrl: response?.data?.url,
+						public_id: response?.data?.public_id,
+					};
+					setCourseCurriculumFormData(copyCourseCurriculumFormData);
+					setMediaUploadProgress(false);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		}
 	};
 
 	return (
@@ -73,7 +103,14 @@ export const CourseCurriculum = () => {
 								</div>
 							</div>
 							<div className="mt-6">
-								<Input type="file" accept="video/*" className="mb-4" />
+								<Input
+									type="file"
+									accept="video/*"
+									className="mb-4 "
+									onChange={(event) => {
+										handleSingleFileUpload(event, index);
+									}}
+								/>
 							</div>
 						</div>
 					))}
