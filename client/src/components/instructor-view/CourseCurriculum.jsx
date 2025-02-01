@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { courseCurriculumInitialFormData } from "@/config";
-import { mediaUploadService } from "@/services";
+import { mediaDeleteService, mediaUploadService } from "@/services";
 import { MediaProgressBar } from "../MediaProgressBar";
 import { VideoPlayer } from "../video-player/VideoPlayer";
 
@@ -90,6 +90,23 @@ export const CourseCurriculum = () => {
 		});
 	};
 
+	const handleVideoReplace = async (currentIndex) => {
+		let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+		const getCurrentVideoPublicId =
+			copyCourseCurriculumFormData[currentIndex].public_id;
+		const deleteCurrentMediaResponse = mediaDeleteService(
+			getCurrentVideoPublicId
+		);
+		if (deleteCurrentMediaResponse?.success) {
+			copyCourseCurriculumFormData[currentIndex] = {
+				...copyCourseCurriculumFormData[currentIndex],
+				videoUrl: "",
+				public_id: "",
+			};
+			setCourseCurriculumFormData(copyCourseCurriculumFormData);
+		}
+	};
+
 	return (
 		<Card>
 			<CardHeader>
@@ -141,7 +158,9 @@ export const CourseCurriculum = () => {
 											width="450px"
 											height="200px"
 										/>
-										<Button>Replace Video</Button>
+										<Button onClick={() => handleVideoReplace(index)}>
+											Replace Video
+										</Button>
 										<Button className="bg-red-900">Delete Lecture</Button>
 									</div>
 								) : (
