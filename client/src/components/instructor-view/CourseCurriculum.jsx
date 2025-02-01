@@ -8,6 +8,7 @@ import { Label } from "../ui/label";
 import { courseCurriculumInitialFormData } from "@/config";
 import { mediaUploadService } from "@/services";
 import { MediaProgressBar } from "../MediaProgressBar";
+import { VideoPlayer } from "../video-player/VideoPlayer";
 
 export const CourseCurriculum = () => {
 	const {
@@ -72,6 +73,7 @@ export const CourseCurriculum = () => {
 				}
 			} catch (error) {
 				console.log(error);
+				setMediaUploadProgress(false);
 			}
 		}
 	};
@@ -115,14 +117,24 @@ export const CourseCurriculum = () => {
 								</div>
 							</div>
 							<div className="mt-6">
-								<Input
-									type="file"
-									accept="video/*"
-									className="mb-4 "
-									onChange={(event) => {
-										handleSingleFileUpload(event, index);
-									}}
-								/>
+								{courseCurriculumFormData[index]?.videoUrl ? (
+									<div className="flex gap-3">
+										<VideoPlayer
+											url={courseCurriculumFormData[index]?.videoUrl}
+										/>
+										<Button>Replace Video</Button>
+										<Button className="bg-red-900">Delete Lecture</Button>
+									</div>
+								) : (
+									<Input
+										type="file"
+										accept="video/*"
+										className="mb-4 "
+										onChange={(event) => {
+											handleSingleFileUpload(event, index);
+										}}
+									/>
+								)}
 							</div>
 						</div>
 					))}
