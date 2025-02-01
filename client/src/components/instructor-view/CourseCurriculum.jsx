@@ -121,6 +121,8 @@ export const CourseCurriculum = () => {
 									<div className="flex gap-3">
 										<VideoPlayer
 											url={courseCurriculumFormData[index]?.videoUrl}
+											width="450px"
+											height="200px"
 										/>
 										<Button>Replace Video</Button>
 										<Button className="bg-red-900">Delete Lecture</Button>
