@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { Slider } from "../ui/slider";
 import { Button } from "../ui/button";
@@ -13,69 +13,79 @@ import {
 	VolumeX,
 } from "lucide-react";
 
-export const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
+export function VideoPlayer({
+	width = "100%",
+	height = "100%",
+	url,
+	onProgressUpdate,
+	progressData,
+}) {
 	const [playing, setPlaying] = useState(false);
 	const [volume, setVolume] = useState(0.5);
 	const [muted, setMuted] = useState(false);
 	const [played, setPlayed] = useState(0);
 	const [seeking, setSeeking] = useState(false);
 	const [isFullScreen, setIsFullScreen] = useState(false);
-	const [showControlls, setshowControlls] = useState(true);
+	const [showControls, setShowControls] = useState(true);
 
 	const playerRef = useRef(null);
 	const playerContainerRef = useRef(null);
-	const controllTimeoutRef = useRef(null);
+	const controlsTimeoutRef = useRef(null);
 
-	const pad = (string) => {
+	function handlePlayAndPause() {
+		setPlaying(!playing);
+	}
+
+	function handleProgress(state) {
+		if (!seeking) {
+			setPlayed(state.played);
+		}
+	}
+
+	function handleRewind() {
+		playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
+	}
+
+	function handleForward() {
+		playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
+	}
+
+	function handleToggleMute() {
+		setMuted(!muted);
+	}
+
+	function handleSeekChange(newValue) {
+		setPlayed(newValue[0]);
+		setSeeking(true);
+	}
+
+	function handleSeekMouseUp() {
+		setSeeking(false);
+		playerRef.current?.seekTo(played);
+	}
+
+	function handleVolumeChange(newValue) {
+		setVolume(newValue[0]);
+	}
+
+	function pad(string) {
 		return ("0" + string).slice(-2);
-	};
-	const formateTimer = (seconds) => {
+	}
+
+	function formatTime(seconds) {
 		const date = new Date(seconds * 1000);
 		const hh = date.getUTCHours();
 		const mm = date.getUTCMinutes();
 		const ss = pad(date.getUTCSeconds());
+
 		if (hh) {
 			return `${hh}:${pad(mm)}:${ss}`;
-		} else return `${mm}:${ss}`;
-	};
-
-	const handlePlayAndPause = () => {
-		setPlaying(!playing);
-	};
-
-	const handleProgress = (state) => {
-		if (!seeking) {
-			setPlayed(state.played);
 		}
-	};
 
-	const handleRewind = () => {
-		playerRef?.current.seekTo(playerRef?.current.getCurrentTime() - 5);
-	};
+		return `${mm}:${ss}`;
+	}
 
-	const handleForward = () => {
-		playerRef?.current.seekTo(playerRef?.current.getCurrentTime() + 5);
-	};
-
-	const handleToggleMute = () => {
-		setMuted(!muted);
-	};
-
-	const handleSeekChange = (newValue) => {
-		setPlayed(newValue[0]);
-		setSeeking(true);
-	};
-
-	const handleSeekMouseUp = () => {
-		setSeeking(false);
-		playerRef.current.seekTo(played);
-	};
-
-	const handleVolumeChange = (newValue) => {
-		setVolume(newValue[0]);
-	};
-
-	const handleFullscreen = useCallback(() => {
+	const handleFullScreen = useCallback(() => {
 		if (!isFullScreen) {
 			if (playerContainerRef?.current.requestFullscreen) {
 				playerContainerRef?.current?.requestFullscreen();
@@ -87,13 +97,11 @@ export const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
 		}
 	}, [isFullScreen]);
 
-	const handleMouseMove = () => {
-		setshowControlls(true);
-		clearTimeout(controllTimeoutRef.current);
-		controllTimeoutRef.current = setTimeout(() => {
-			setshowControlls(false);
-		}, 3000);
-	};
+	function handleMouseMove() {
+		setShowControls(true);
+		clearTimeout(controlsTimeoutRef.current);
+		controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
+	}
 
 	useEffect(() => {
 		const handleFullScreenChange = () => {
@@ -107,34 +115,40 @@ export const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
 		};
 	}, []);
 
+	/* useEffect(() => {
+		if (played === 1) {
+			onProgressUpdate({
+				...progressData,
+				progressValue: played,
+			});
+		}
+	}, [played]);
+ */
 	return (
 		<div
 			ref={playerContainerRef}
-			className={`relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ease-in-out ${
-				isFullScreen ? "w-screen h-screen" : ""
-			}`}
-			style={{
-				width,
-				height,
-			}}
+			className={`relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ease-in-out 
+      ${isFullScreen ? "w-screen h-screen" : ""}
+      `}
+			style={{ width, height }}
 			onMouseMove={handleMouseMove}
-			onMouseLeave={() => setshowControlls(false)}
+			onMouseLeave={() => setShowControls(false)}
 		>
 			<ReactPlayer
 				ref={playerRef}
 				className="absolute top-0 left-0"
-				width={"100%"}
-				height={"100%"}
+				width="100%"
+				height="100%"
 				url={url}
 				playing={playing}
 				volume={volume}
 				muted={muted}
 				onProgress={handleProgress}
 			/>
-			{showControlls && (
+			{showControls && (
 				<div
 					className={`absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-75 p-4 transition-opacity duration-300 ${
-						showControlls ? "opacity-100" : "opacity-0"
+						showControls ? "opacity-100" : "opacity-0"
 					}`}
 				>
 					<Slider
@@ -145,7 +159,6 @@ export const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
 						onValueCommit={handleSeekMouseUp}
 						className="w-full mb-4"
 					/>
-
 					<div className="flex items-center justify-between">
 						<div className="flex items-center space-x-2">
 							<Button
@@ -161,26 +174,26 @@ export const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
 								)}
 							</Button>
 							<Button
-								variant="ghost"
-								size="icon"
 								onClick={handleRewind}
 								className="text-white bg-transparent hover:text-white hover:bg-gray-700"
+								variant="ghost"
+								size="icon"
 							>
 								<RotateCcw className="h-6 w-6" />
 							</Button>
 							<Button
-								variant="ghost"
-								size="icon"
 								onClick={handleForward}
 								className="text-white bg-transparent hover:text-white hover:bg-gray-700"
+								variant="ghost"
+								size="icon"
 							>
 								<RotateCw className="h-6 w-6" />
 							</Button>
 							<Button
-								variant="ghost"
-								size="icon"
 								onClick={handleToggleMute}
 								className="text-white bg-transparent hover:text-white hover:bg-gray-700"
+								variant="ghost"
+								size="icon"
 							>
 								{muted ? (
 									<VolumeX className="h-6 w-6" />
@@ -193,31 +206,30 @@ export const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
 								max={100}
 								step={1}
 								onValueChange={(value) => handleVolumeChange([value[0] / 100])}
-								onValueCommit={handleSeekMouseUp}
-								className="w-24"
+								className="w-24 "
 							/>
 						</div>
 						<div className="flex items-center space-x-2">
 							<div className="text-white">
-								{formateTimer(played * (playerRef?.current.getDuration() || 0))}
-								/ {formateTimer(playerRef?.current.getDuration() || 0)}
+								{formatTime(played * (playerRef?.current?.getDuration() || 0))}/{" "}
+								{formatTime(playerRef?.current?.getDuration() || 0)}
 							</div>
 							<Button
-                className="text-white bg-transparent hover:text-white hover:bg-gray-700"
-                variant="ghost"
-                size="icon"
-                onClick={handleFullscreen}
-              >
-                {isFullScreen ? (
-                  <Minimize className="h-6 w-6" />
-                ) : (
-                  <Maximize className="h-6 w-6" />
-                )}
-              </Button>
+								className="text-white bg-transparent hover:text-white hover:bg-gray-700"
+								variant="ghost"
+								size="icon"
+								onClick={handleFullScreen}
+							>
+								{isFullScreen ? (
+									<Minimize className="h-6 w-6" />
+								) : (
+									<Maximize className="h-6 w-6" />
+								)}
+							</Button>
 						</div>
 					</div>
 				</div>
 			)}
 		</div>
 	);
-};
+}
