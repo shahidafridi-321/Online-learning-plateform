@@ -24,7 +24,7 @@ const deleteMediaFromCloudinary = async (publicId) => {
 		await cloudinary.uploader.destroy(publicId);
 	} catch (error) {
 		console.log(error);
-		throw new Error("Error deletin media from cloudinary");
+		throw new Error("Error deleting media from cloudinary");
 	}
 };
 
