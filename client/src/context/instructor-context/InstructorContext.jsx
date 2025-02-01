@@ -15,6 +15,8 @@ export const InstructorContextProvider = ({ children }) => {
 	);
 
 	const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
+	const [mediaUploadProgressPercentage, setMediaUploadProgressPercentage] =
+		useState(0);
 	return (
 		<InstructorContext.Provider
 			value={{
@@ -24,6 +26,8 @@ export const InstructorContextProvider = ({ children }) => {
 				setCourseCurriculumFormData,
 				mediaUploadProgress,
 				setMediaUploadProgress,
+				mediaUploadProgressPercentage,
+				setMediaUploadProgressPercentage,
 			}}
 		>
 			{children}
