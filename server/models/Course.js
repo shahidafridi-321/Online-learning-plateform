@@ -29,6 +29,7 @@ const courseSchema = mongoose.Schema({
 		},
 	],
 	curriculum: [LectureSchema],
+	isPublished: Boolean,
 });
 
 module.exports = mongoose.model("Course", courseSchema);
