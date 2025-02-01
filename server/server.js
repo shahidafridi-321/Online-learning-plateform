@@ -28,7 +28,7 @@ mongoose
 
 // routes configuration
 app.use("/auth", authRoutes);
-app.use("/auth", mediaRoutes);
+app.use("/media", mediaRoutes);
 
 app.use((req, res, next) => {
 	console.log(`${req.method} ${req.path}`);
