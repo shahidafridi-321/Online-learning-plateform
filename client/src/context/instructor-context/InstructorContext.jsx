@@ -19,6 +19,8 @@ export const InstructorContextProvider = ({ children }) => {
 		useState(0);
 
 	const [instructorCoursesList, setInstructorCoursesList] = useState([]);
+
+	const [currentEditedCourseId, setCurrentEditedCourseId] = useState(null);
 	return (
 		<InstructorContext.Provider
 			value={{
@@ -32,6 +34,8 @@ export const InstructorContextProvider = ({ children }) => {
 				setMediaUploadProgressPercentage,
 				instructorCoursesList,
 				setInstructorCoursesList,
+				currentEditedCourseId,
+				setCurrentEditedCourseId,
 			}}
 		>
 			{children}
