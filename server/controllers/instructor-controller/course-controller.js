@@ -21,13 +21,36 @@ const addNewCourse = async (req, res) => {
 	}
 };
 
-const getAllCourses = async () => {
+const getAllCourses = async (req, res) => {
 	try {
 		const courseList = await Course.find({});
 
 		res.status(201).json({
 			success: true,
 			data: courseList,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Some Error Occured",
+		});
+	}
+};
+
+const getCourseDetailsById = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const courseDetails = await Course.findById(id);
+		if (!courseDetails) {
+			res.status(404).json({
+				success: false,
+				message: "Course Not Found",
+			});
+		}
+		res.status(201).json({
+			success: true,
+			data: courseDetails,
 		});
 	} catch (error) {
 		console.log(error);
