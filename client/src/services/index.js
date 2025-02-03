@@ -34,3 +34,8 @@ export const mediaDeleteService = async (id) => {
 	const { data } = await axiosInstance.delete(`/media/delete/${id}`);
 	return data;
 };
+
+export const fetchInstructorCourseListService = async () => {
+	const { data } = await axiosInstance.get(`/instructor/course/get`);
+	return data;
+};
