@@ -1,18 +1,55 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CourseCurriculum } from "@/components/instructor-view/CourseCurriculum";
 import { CourseLanding } from "@/components/instructor-view/CourseLanding";
 import { CourseSetting } from "@/components/instructor-view/CourseSetting";
+import { InstructorContext } from "@/context/instructor-context/InstructorContext";
 
 export const AddNewCoursePage = () => {
+	const { courseLandingFormData, courseCurriculumFormData } =
+		useContext(InstructorContext);
+
+	const isEmpty = (value) => {
+		if (Array.isArray(value)) {
+			return value.length === 0;
+		}
+		return value === "" || value === null || value === undefined;
+	};
+
+	const validateFormData = () => {
+		for (const key in courseLandingFormData) {
+			if (isEmpty(courseLandingFormData[key])) {
+				return false;
+			}
+		}
+
+		let hasFreePreview = false;
+
+		for (const item of courseCurriculumFormData) {
+			if (
+				isEmpty(item.title) ||
+				isEmpty(item.videoUrl) ||
+				isEmpty(item.public_id)
+			) {
+				return false;
+			}
+			if (item.freePreview) {
+				hasFreePreview = true;
+			}
+		}
+		return hasFreePreview;
+	};
+
 	return (
 		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800 p-6">
-			{/* Page Header */}
 			<div className="flex justify-between items-center mb-6">
 				<h1 className="text-3xl font-extrabold">Create a New Course</h1>
-				<Button className="text-sm font-bold px-8 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700">
+				<Button
+					className="text-sm font-bold px-8 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700"
+					disabled={!validateFormData()}
+				>
 					SUBMIT
 				</Button>
 			</div>
