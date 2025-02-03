@@ -12,10 +12,18 @@ import {
 import { Delete, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { InstructorContext } from "@/context/instructor-context/InstructorContext";
+import {
+	courseCurriculumInitialFormData,
+	courseLandingInitialFormData,
+} from "@/config";
 
 export const InstructorCourses = ({ listOfCourses }) => {
 	const navigate = useNavigate();
-	const { setCurrentEditedCourseId } = useContext(InstructorContext);
+	const {
+		setCurrentEditedCourseId,
+		setCourseLandingFormData,
+		setCourseCurriculumFormData,
+	} = useContext(InstructorContext);
 
 	return (
 		<Card>
@@ -25,6 +33,8 @@ export const InstructorCourses = ({ listOfCourses }) => {
 					className="p-5"
 					onClick={() => {
 						setCurrentEditedCourseId(null);
+						setCourseCurriculumFormData(courseCurriculumInitialFormData);
+						setCourseLandingFormData(courseLandingInitialFormData);
 						navigate("/instructor/create-new-course");
 					}}
 				>
