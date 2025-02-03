@@ -20,3 +20,20 @@ const addNewCourse = async (req, res) => {
 		});
 	}
 };
+
+const getAllCourses = async () => {
+	try {
+		const courseList = await Course.find({});
+
+		res.status(201).json({
+			success: true,
+			data: courseList,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Some Error Occured",
+		});
+	}
+};
