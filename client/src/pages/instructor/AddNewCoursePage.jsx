@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -7,12 +7,15 @@ import { CourseLanding } from "@/components/instructor-view/CourseLanding";
 import { CourseSetting } from "@/components/instructor-view/CourseSetting";
 import { InstructorContext } from "@/context/instructor-context/InstructorContext";
 import { AuthContext } from "@/context/auth-context";
-import { addNewCourseService } from "@/services";
+import {
+	addNewCourseService,
+	fetchInstructorCourseDetailsService,
+} from "@/services";
 import {
 	courseCurriculumInitialFormData,
 	courseLandingInitialFormData,
 } from "@/config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AddNewCoursePage = () => {
 	const {
@@ -20,10 +23,15 @@ export const AddNewCoursePage = () => {
 		courseCurriculumFormData,
 		setCourseLandingFormData,
 		setCourseCurriculumFormData,
+		currentEditedCourseId,
+		setCurrentEditedCourseId,
 	} = useContext(InstructorContext);
 
 	const { auth } = useContext(AuthContext);
 	const navigate = useNavigate();
+	const params = useParams();
+
+	console.log(params);
 
 	const isEmpty = (value) => {
 		if (Array.isArray(value)) {
@@ -74,6 +82,35 @@ export const AddNewCoursePage = () => {
 			navigate(-1);
 		}
 	};
+
+	const fetchCurrentCourseDetails = async () => {
+		const response = await fetchInstructorCourseDetailsService(
+			currentEditedCourseId
+		);
+		if (response?.success) {
+			const setCourseFormData = Object.keys(
+				courseLandingInitialFormData
+			).reduce((current, key) => {
+				current[key] =
+					response?.data[key] || courseCurriculumInitialFormData[key];
+				return current;
+			}, {});
+			setCourseLandingFormData(setCourseFormData);
+			setCourseCurriculumFormData(response?.data?.curriculum);
+		}
+	};
+
+	useEffect(() => {
+		if (currentEditedCourseId !== null) {
+			fetchCurrentCourseDetails();
+		}
+	}, [currentEditedCourseId]);
+
+	useEffect(() => {
+		if (params?.courseId) {
+			setCurrentEditedCourseId(params?.courseId);
+		}
+	}, [params?.courseId]);
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800 p-6">
