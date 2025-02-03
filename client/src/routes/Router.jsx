@@ -36,6 +36,10 @@ export const routes = createBrowserRouter([
 		element: <ProtectedRoute element={<AddNewCoursePage />} />,
 	},
 	{
+		path: "/instructor/edit-course/:courseId",
+		element: <ProtectedRoute element={<AddNewCoursePage />} />,
+	},
+	{
 		path: "/",
 		element: <ProtectedRoute element={<StudentViewCommonLayout />} />,
 		children: [
