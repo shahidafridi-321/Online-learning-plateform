@@ -35,6 +35,7 @@ export const CourseSetting = () => {
 				}
 			} catch (error) {
 				console.log(error);
+				setMediaUploadProgress(false);
 			}
 		}
 	};
