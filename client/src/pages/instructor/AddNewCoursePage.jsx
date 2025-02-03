@@ -6,10 +6,22 @@ import { CourseCurriculum } from "@/components/instructor-view/CourseCurriculum"
 import { CourseLanding } from "@/components/instructor-view/CourseLanding";
 import { CourseSetting } from "@/components/instructor-view/CourseSetting";
 import { InstructorContext } from "@/context/instructor-context/InstructorContext";
+import { AuthContext } from "@/context/auth-context";
+import { addNewCourseService } from "@/services";
+import {
+	courseCurriculumInitialFormData,
+	courseLandingInitialFormData,
+} from "@/config";
 
 export const AddNewCoursePage = () => {
-	const { courseLandingFormData, courseCurriculumFormData } =
-		useContext(InstructorContext);
+	const {
+		courseLandingFormData,
+		courseCurriculumFormData,
+		setCourseLandingFormData,
+		setCourseCurriculumFormData,
+	} = useContext(InstructorContext);
+
+	const { auth } = useContext(AuthContext);
 
 	const isEmpty = (value) => {
 		if (Array.isArray(value)) {
@@ -42,6 +54,24 @@ export const AddNewCoursePage = () => {
 		return hasFreePreview;
 	};
 
+	const handleCreateCourse = async () => {
+		const courseFinalFormData = {
+			instructorId: auth?.user?._id,
+			instructorName: auth?.user?.userName,
+			date: new Date(),
+			...courseLandingFormData,
+			students: [],
+			curriculum: courseCurriculumFormData,
+			isPublished: true,
+		};
+		const response = await addNewCourseService(courseFinalFormData);
+
+		if (response?.success) {
+			setCourseLandingFormData(courseLandingInitialFormData);
+			setCourseCurriculumFormData(courseCurriculumInitialFormData);
+		}
+	};
+
 	return (
 		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800 p-6">
 			<div className="flex justify-between items-center mb-6">
@@ -49,6 +79,7 @@ export const AddNewCoursePage = () => {
 				<Button
 					className="text-sm font-bold px-8 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700"
 					disabled={!validateFormData()}
+					onClick={handleCreateCourse}
 				>
 					SUBMIT
 				</Button>
