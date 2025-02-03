@@ -12,6 +12,7 @@ import {
 	courseCurriculumInitialFormData,
 	courseLandingInitialFormData,
 } from "@/config";
+import { useNavigate } from "react-router-dom";
 
 export const AddNewCoursePage = () => {
 	const {
@@ -22,6 +23,7 @@ export const AddNewCoursePage = () => {
 	} = useContext(InstructorContext);
 
 	const { auth } = useContext(AuthContext);
+	const navigate = useNavigate();
 
 	const isEmpty = (value) => {
 		if (Array.isArray(value)) {
@@ -69,6 +71,7 @@ export const AddNewCoursePage = () => {
 		if (response?.success) {
 			setCourseLandingFormData(courseLandingInitialFormData);
 			setCourseCurriculumFormData(courseCurriculumInitialFormData);
+			navigate(-1);
 		}
 	};
 
