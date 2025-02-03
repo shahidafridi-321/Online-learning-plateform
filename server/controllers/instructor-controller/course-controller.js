@@ -6,7 +6,7 @@ const addNewCourse = async (req, res) => {
 		const newlyCreatedCourse = new Course(courseData);
 		const saveCourse = await newlyCreatedCourse.save();
 		if (saveCourse) {
-			res.status(201).json({
+			return res.status(201).json({
 				success: true,
 				message: "Course Added Successfully",
 				data: saveCourse,
@@ -43,12 +43,12 @@ const getCourseDetailsById = async (req, res) => {
 		const id = req.params.id;
 		const courseDetails = await Course.findById(id);
 		if (!courseDetails) {
-			res.status(404).json({
+			return res.status(404).json({
 				success: false,
 				message: "Course Not Found",
 			});
 		}
-		res.status(201).json({
+		res.status(200).json({
 			success: true,
 			data: courseDetails,
 		});
@@ -59,4 +59,43 @@ const getCourseDetailsById = async (req, res) => {
 			message: "Some Error Occured",
 		});
 	}
+};
+
+const updateCourseById = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const updatedCourseData = req.body;
+		const updatedCourse = await Course.findByIdAndUpdate(
+			id,
+			updatedCourseData,
+			{
+				new: true,
+			}
+		);
+
+		if (!updatedCourse) {
+			return res.status(404).json({
+				success: false,
+				message: "Course Not Found",
+			});
+		}
+		res.status(200).json({
+			success: true,
+			message: "Course Updated successfully",
+			data: updatedCourse,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Some Error Occured",
+		});
+	}
+};
+
+module.exports = {
+	addNewCourse,
+	getAllCourses,
+	getCourseDetailsById,
+	updateCourseById,
 };
