@@ -10,6 +10,7 @@ import { AuthContext } from "@/context/auth-context";
 import {
 	addNewCourseService,
 	fetchInstructorCourseDetailsService,
+	updateCourseByIdService,
 } from "@/services";
 import {
 	courseCurriculumInitialFormData,
@@ -74,11 +75,18 @@ export const AddNewCoursePage = () => {
 			curriculum: courseCurriculumFormData,
 			isPublished: true,
 		};
-		const response = await addNewCourseService(courseFinalFormData);
+		const response =
+			currentEditedCourseId !== null
+				? await updateCourseByIdService(
+						currentEditedCourseId,
+						courseFinalFormData
+				  )
+				: await addNewCourseService(courseFinalFormData);
 
 		if (response?.success) {
 			setCourseLandingFormData(courseLandingInitialFormData);
 			setCourseCurriculumFormData(courseCurriculumInitialFormData);
+			setCurrentEditedCourseId(null);
 			navigate(-1);
 		}
 	};
