@@ -12,8 +12,7 @@ import {
 import { Delete, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export const InstructorCourses = () => {
-	const listOfCourses = [];
+export const InstructorCourses = ({ listOfCourses }) => {
 	const navigate = useNavigate();
 	return (
 		<Card>
