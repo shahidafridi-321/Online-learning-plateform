@@ -50,7 +50,10 @@ export const fetchInstructorCourseDetailsService = async (id) => {
 	return data;
 };
 
-export const updateCourseByIdService = async (id) => {
-	const { data } = await axiosInstance.put(`/instructor/course/update/${id}`);
+export const updateCourseByIdService = async (id, formData) => {
+	const { data } = await axiosInstance.put(
+		`/instructor/course/update/${id}`,
+		formData
+	);
 	return data;
 };
