@@ -32,8 +32,6 @@ export const AddNewCoursePage = () => {
 	const navigate = useNavigate();
 	const params = useParams();
 
-	console.log(params);
-
 	const isEmpty = (value) => {
 		if (Array.isArray(value)) {
 			return value.length === 0;
