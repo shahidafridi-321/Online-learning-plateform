@@ -113,9 +113,9 @@ export const CourseCurriculum = () => {
 		bulkUploadInputRef.current?.click();
 	};
 
-	/* const handleMediaBulkUpload = async (event) => {
+	const handleMediaBulkUpload = async (event) => {
 		
-	} */
+	}
 
 	return (
 		<Card>
