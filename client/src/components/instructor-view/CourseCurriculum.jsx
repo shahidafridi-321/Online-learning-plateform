@@ -10,6 +10,7 @@ import { mediaDeleteService, mediaUploadService } from "@/services";
 import { MediaProgressBar } from "../MediaProgressBar";
 import { VideoPlayer } from "../video-player/VideoPlayer";
 import { useRef } from "react";
+import { Upload } from "lucide-react";
 
 export const CourseCurriculum = () => {
 	const {
@@ -40,8 +41,6 @@ export const CourseCurriculum = () => {
 		};
 		setCourseCurriculumFormData(copyCourseCurriculumFormData);
 	};
-
-	console.log(courseCurriculumFormData);
 
 	const handleFreeprviewPChange = (currentValue, currentIndex) => {
 		let copyCourseCurriculumFormData = [...courseCurriculumFormData];
@@ -110,12 +109,38 @@ export const CourseCurriculum = () => {
 		}
 	};
 
+	const handleOpenBulkUploadDialog = () => {
+		bulkUploadInputRef.current?.click();
+	};
+
+	/* const handleMediaBulkUpload = async (event) => {
+		
+	} */
+
 	return (
 		<Card>
 			<CardHeader className="flex flex-row justify-between">
 				<CardTitle>Create Course Curriculum</CardTitle>
 				<div>
-					<Input type="file" />
+					<Input
+						type="file"
+						ref={bulkUploadInputRef}
+						accept="video/*"
+						multiple
+						className="hidden"
+						id="bulk-media-upload"
+						onChange={handleMediaBulkUpload}
+					/>
+					<Button
+						as="label"
+						htmlFor="bulk-media-upload"
+						variant="outline"
+						className="cursor-pointer"
+						onClick={handleOpenBulkUploadDialog}
+					>
+						<Upload className="w-4 h-4 mr-2" />
+						Bulk Upload
+					</Button>
 				</div>
 			</CardHeader>
 			<CardContent>
