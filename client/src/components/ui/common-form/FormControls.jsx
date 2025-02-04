@@ -30,6 +30,7 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 								[getControlItem.name]: e.target.value,
 							})
 						}
+						className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400"
 					/>
 				);
 				break;
@@ -41,17 +42,19 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 						}
 						value={currentControlItemValue}
 					>
-						<SelectTrigger className="w-full">
+						<SelectTrigger className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 bg-white">
 							<SelectValue placeholder={getControlItem.label} />
 						</SelectTrigger>
-						<SelectContent>
-							{getControlItem.options && getControlItem.options.length > 0
-								? getControlItem.options.map((optionsItem) => (
-										<SelectItem key={optionsItem.id} value={optionsItem.id}>
-											{optionsItem.label}
-										</SelectItem>
-								  ))
-								: null}
+						<SelectContent className="rounded-lg border border-gray-300 shadow-lg mt-1">
+							{getControlItem.options?.map((optionsItem) => (
+								<SelectItem
+									key={optionsItem.id}
+									value={optionsItem.id}
+									className="text-sm md:text-base px-4 py-2.5 hover:bg-gray-50 focus:bg-gray-100"
+								>
+									{optionsItem.label}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				);
@@ -70,6 +73,7 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 								[getControlItem.name]: e.target.value,
 							})
 						}
+						className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 min-h-[100px] placeholder-gray-400 transition-all"
 					/>
 				);
 				break;
@@ -88,6 +92,7 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 								[getControlItem.name]: e.target.value,
 							})
 						}
+						className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400"
 					/>
 				);
 				break;
@@ -95,10 +100,15 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 		return element;
 	};
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col gap-4 sm:gap-5">
 			{formControls.map((controlItem) => (
-				<div key={controlItem.name}>
-					<Label htmlFor={controlItem.name}>{controlItem.label}</Label>
+				<div key={controlItem.name} className="space-y-2">
+					<Label
+						htmlFor={controlItem.name}
+						className="text-sm font-medium text-gray-700 sm:text-base"
+					>
+						{controlItem.label}
+					</Label>
 					{renderComponentByType(controlItem)}
 				</div>
 			))}

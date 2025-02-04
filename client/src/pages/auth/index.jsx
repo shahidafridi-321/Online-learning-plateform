@@ -49,10 +49,15 @@ export const AuthPage = () => {
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
-			<header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-300">
-				<Link to="/" className="flex items-center space-x-2">
+			<header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-300 bg-white/50 backdrop-blur-sm">
+				<Link
+					to="/"
+					className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+				>
 					<GraduationCapIcon className="h-8 w-8 text-gray-800 animate-bounce" />
-					<span className="font-bold text-2xl lg:text-3xl">LMS LEARN</span>
+					<span className="font-bold text-2xl lg:text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+						LMS LEARN
+					</span>
 				</Link>
 			</header>
 
@@ -63,27 +68,33 @@ export const AuthPage = () => {
 					onValueChange={handleTabChange}
 					className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto"
 				>
-					<TabsList className="flex w-full rounded-lg justify-between space-x-2  bg-transparent pb-3 mb-6">
+					<TabsList className="grid w-full grid-cols-2 rounded-lg bg-gray-100/50 backdrop-blur-sm p-1.5 gap-1.5 mb-6">
 						<TabsTrigger
 							value="signin"
-							className={`py-2 flex-grow text-sm md:text-base font-medium shadow-lg  text-gray-800 transition-all hover:bg-gray-100 ${
-								activeTab === "signin" ? "bg-gray-200" : ""
-							}`}
+							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all
+                ${
+									activeTab === "signin"
+										? "bg-white shadow-md text-purple-600"
+										: "text-gray-600 hover:bg-white/50"
+								}`}
 						>
 							Sign In
 						</TabsTrigger>
 						<TabsTrigger
 							value="signup"
-							className={`py-2 flex-grow text-sm md:text-base font-medium shadow-lg text-gray-800 transition-all hover:bg-gray-100 ${
-								activeTab === "signup" ? "bg-gray-200" : ""
-							}`}
+							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all
+                ${
+									activeTab === "signup"
+										? "bg-white shadow-md text-purple-600"
+										: "text-gray-600 hover:bg-white/50"
+								}`}
 						>
 							Sign Up
 						</TabsTrigger>
 					</TabsList>
 
 					<TabsContent value="signin">
-						<Card className="p-6 space-y-4 bg-white rounded-lg shadow-lg text-gray-800 animate-slide-up">
+						<Card className="p-4 sm:p-6 space-y-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-xl text-gray-800 animate-slide-up">
 							<CardHeader>
 								<CardTitle className="text-lg md:text-xl font-bold">
 									Sign In To Your Account
@@ -106,7 +117,7 @@ export const AuthPage = () => {
 					</TabsContent>
 
 					<TabsContent value="signup">
-						<Card className="p-6 space-y-4 bg-white rounded-lg shadow-lg text-gray-800 animate-slide-up">
+						<Card className="p-4 sm:p-6 space-y-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-xl text-gray-800 animate-slide-up">
 							<CardHeader>
 								<CardTitle className="text-lg md:text-xl font-bold">
 									Sign Up To Get Started
