@@ -6,7 +6,11 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { courseCurriculumInitialFormData } from "@/config";
-import { mediaDeleteService, mediaUploadService } from "@/services";
+import {
+	mediaBulkUploadService,
+	mediaDeleteService,
+	mediaUploadService,
+} from "@/services";
 import { MediaProgressBar } from "../MediaProgressBar";
 import { VideoPlayer } from "../video-player/VideoPlayer";
 import { useRef } from "react";
@@ -109,13 +113,60 @@ export const CourseCurriculum = () => {
 		}
 	};
 
+	const areAllCourseCurriculumFormDataObjectsAreEmpty = (arr) => {
+		return arr.every((obj) => {
+			return Object.entries(obj).every(([key, value]) => {
+				if (typeof value === "boolean") {
+					return true;
+				}
+				return value === "";
+			});
+		});
+	};
+
 	const handleOpenBulkUploadDialog = () => {
 		bulkUploadInputRef.current?.click();
 	};
 
 	const handleMediaBulkUpload = async (event) => {
-		
-	}
+		const seletedFiles = Array.from(event.target.files);
+		const bulkFormData = new FormData();
+		seletedFiles.forEach((fileItem) => bulkFormData.append("files", fileItem));
+
+		try {
+			setMediaUploadProgress(true);
+			const response = await mediaBulkUploadService(
+				bulkFormData,
+				setMediaUploadProgressPercentage
+			);
+
+			if (response?.success) {
+				let copyCourseCurriculumFormData =
+					areAllCourseCurriculumFormDataObjectsAreEmpty(
+						courseCurriculumFormData
+					)
+						? []
+						: [...courseCurriculumFormData];
+
+				copyCourseCurriculumFormData = {
+					...copyCourseCurriculumFormData,
+					...response?.data.map((item, index) => ({
+						videoUrl: item?.url,
+						public_id: item?.public_id,
+						title: `Lecture ${
+							copyCourseCurriculumFormData.length + (index + 1)
+						}`,
+						freePreview: false,
+					})),
+				};
+				setCourseCurriculumFormData(copyCourseCurriculumFormData);
+				setMediaUploadProgress(false);
+			}
+		} catch (error) {
+			console.log(error);
+			setMediaUploadProgress(false);
+		}
+	};
 
 	return (
 		<Card>
