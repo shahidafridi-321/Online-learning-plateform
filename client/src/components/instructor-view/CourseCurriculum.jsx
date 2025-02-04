@@ -148,8 +148,9 @@ export const CourseCurriculum = () => {
 						? []
 						: [...courseCurriculumFormData];
 
-				copyCourseCurriculumFormData = {
+				copyCourseCurriculumFormData = [
 					...copyCourseCurriculumFormData,
+					// eslint-disable-next-line no-unsafe-optional-chaining
 					...response?.data.map((item, index) => ({
 						videoUrl: item?.url,
 						public_id: item?.public_id,
@@ -158,7 +159,7 @@ export const CourseCurriculum = () => {
 						}`,
 						freePreview: false,
 					})),
-				};
+				];
 				setCourseCurriculumFormData(copyCourseCurriculumFormData);
 				setMediaUploadProgress(false);
 			}
@@ -177,7 +178,7 @@ export const CourseCurriculum = () => {
 
 		if (response?.success) {
 			copyCourseCurriculumFormData = copyCourseCurriculumFormData.filter(
-				(_, index) => index !== currentIndex
+				(data, index) => index !== currentIndex
 			);
 			setCourseCurriculumFormData(copyCourseCurriculumFormData);
 		}
