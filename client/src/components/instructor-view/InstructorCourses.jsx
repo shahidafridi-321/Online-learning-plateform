@@ -61,7 +61,10 @@ export const InstructorCourses = ({ listOfCourses }) => {
 											</TableCell>
 											<TableCell>{course?.students?.length}</TableCell>
 											<TableCell>
-												${course?.students?.length * course?.pricing}
+												$
+												{course?.students?.length
+													? course?.students?.length * course?.pricing
+													: course?.pricing}
 											</TableCell>
 											<TableCell className="text-right">
 												<Button
