@@ -9,6 +9,7 @@ import { courseCurriculumInitialFormData } from "@/config";
 import { mediaDeleteService, mediaUploadService } from "@/services";
 import { MediaProgressBar } from "../MediaProgressBar";
 import { VideoPlayer } from "../video-player/VideoPlayer";
+import { useRef } from "react";
 
 export const CourseCurriculum = () => {
 	const {
@@ -19,6 +20,8 @@ export const CourseCurriculum = () => {
 		mediaUploadProgressPercentage,
 		setMediaUploadProgressPercentage,
 	} = useContext(InstructorContext);
+
+	const bulkUploadInputRef = useRef(null);
 
 	const handleNewLecture = () => {
 		setCourseCurriculumFormData([
@@ -109,8 +112,11 @@ export const CourseCurriculum = () => {
 
 	return (
 		<Card>
-			<CardHeader>
+			<CardHeader className="flex flex-row justify-between">
 				<CardTitle>Create Course Curriculum</CardTitle>
+				<div>
+					<Input type="file" />
+				</div>
 			</CardHeader>
 			<CardContent>
 				<Button
