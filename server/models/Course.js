@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 
 const LectureSchema = mongoose.Schema({
-	title: String,
-	videoUrl: String,
-	public_id: String,
-	freePreview: Boolean,
+	title: { type: String, required: true },
+	type: { type: String, enum: ["video", "text"], default: "video" },
+	videoUrl: { type: String, default: "" },
+	public_id: { type: String, default: "" },
+	textContent: { type: String, default: "" },
+	freePreview: { type: Boolean, default: false },
 });
 
 const courseSchema = mongoose.Schema({
