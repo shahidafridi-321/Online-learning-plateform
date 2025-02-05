@@ -49,11 +49,18 @@ export const AddNewCoursePage = () => {
 		let hasFreePreview = false;
 
 		for (const item of courseCurriculumFormData) {
-			if (
-				isEmpty(item.title) ||
-				isEmpty(item.videoUrl) ||
-				isEmpty(item.public_id)
-			) {
+			if (isEmpty(item.title)) {
+				return false;
+			}
+			if (item.type === "video") {
+				if (isEmpty(item.videoUrl) || isEmpty(item.public_id)) {
+					return false;
+				}
+			} else if (item.type === "text") {
+				if (isEmpty(item.textContent)) {
+					return false;
+				}
+			} else {
 				return false;
 			}
 			if (item.freePreview) {
@@ -73,6 +80,7 @@ export const AddNewCoursePage = () => {
 			curriculum: courseCurriculumFormData,
 			isPublished: true,
 		};
+
 		const response =
 			currentEditedCourseId !== null
 				? await updateCourseByIdService(
