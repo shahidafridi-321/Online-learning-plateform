@@ -20,7 +20,7 @@ export const Header = () => {
 					>
 						<GraduationCapIcon className="h-8 w-8 text-gray-800 animate-bounce" />
 						<span className="font-bold text-2xl lg:text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-							LMS LEARN
+							Learn For Fun
 						</span>
 					</Link>
 					<div className="flex items-center space-x-1">
