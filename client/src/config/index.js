@@ -164,10 +164,12 @@ export const courseLandingInitialFormData = {
 
 export const courseCurriculumInitialFormData = [
 	{
+		type: "video",
 		title: "",
 		videoUrl: "",
-		freePreview: false,
 		public_id: "",
+		textContent: "",
+		freePreview: false,
 	},
 ];
 
