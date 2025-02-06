@@ -7,3 +7,5 @@ const router = express.Router();
 
 router.get("/get", getStudentViewCourseDetails);
 router.get("/get/details/:id", getStudentViewCourseDetails);
+
+module.exports = router;
