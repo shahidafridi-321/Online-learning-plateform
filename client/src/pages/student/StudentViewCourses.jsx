@@ -14,12 +14,35 @@ import React, { useState, useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentViewCourseListService } from "@/services";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSearchParams } from "react-router-dom";
 
 export const StudentViewCourses = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
 		useContext(StudentContext);
+
 	const [sort, setSort] = useState("price-lowtohigh");
-	const [filterOptions, setFilterOptions] = useState([]);
+	const [filters, setFilters] = useState({});
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const handleFilterOnChange = (getSectionId, getCurrentOption) => {
+		let cpyFilters = { ...filters };
+		const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
+		if (indexOfCurrentSection === -1) {
+			cpyFilters = {
+				...cpyFilters,
+				[getSectionId]: [getCurrentOption.id],
+			};
+		} else {
+			const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(
+				getCurrentOption.id
+			);
+			if (indexOfCurrentOption === -1)
+				cpyFilters[getSectionId].push(getCurrentOption.id);
+			else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+		}
+		setFilters(cpyFilters);
+		sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
+	};
 
 	const fetchAllStudentViewCourses = async () => {
 		const response = await fetchStudentViewCourseListService();
@@ -31,6 +54,22 @@ export const StudentViewCourses = () => {
 	useEffect(() => {
 		fetchAllStudentViewCourses();
 	}, []);
+
+	const createSearchParamsHelper = (filterParams) => {
+		const queryParams = [];
+		for (const [key, value] of Object.entries(filterParams)) {
+			if (Array.isArray(value) && value.length > 0) {
+				const paramValue = value.join(",");
+				queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+			}
+		}
+		return queryParams.join("&");
+	};
+
+	useEffect(() => {
+		const buildQueryStringForFilters = createSearchParamsHelper(filters);
+		setSearchParams(new URLSearchParams(buildQueryStringForFilters));
+	}, [filters]);
 
 	return (
 		<div className="container mx-auto p-4">
@@ -48,10 +87,15 @@ export const StudentViewCourses = () => {
 											className="flex font-medium items-center gap-3"
 										>
 											<Checkbox
-												checked={false}
-												onCheckedChange={() => {
-													handleFilterOnChange(keyItem, option.id);
-												}}
+												checked={
+													filters &&
+													Object.keys(filters).length > 0 &&
+													filters[keyItem] &&
+													filters[keyItem].indexOf(option.id) > -1
+												}
+												onCheckedChange={() =>
+													handleFilterOnChange(keyItem, option)
+												}
 											/>
 											{option.label}
 										</Label>
