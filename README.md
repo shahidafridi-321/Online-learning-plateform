@@ -39,16 +39,14 @@ Server:
    paypal-rest-sdk: To integrate PayPal payment functionality into applications.
 
 References:
-	learn what collections and documents is ,from the MongoDB manual to get a basic idea of how a document database stores data.
+learn what collections and documents is ,from the MongoDB manual to get a basic idea of how a document database stores data.
 
 MongoDB service providers:
-	The internet is full of mongodb services providers but we will be using MongoDB Atlas.
+The internet is full of mongodb services providers but we will be using MongoDB Atlas.
 
 Challenges:
-	I have faced a problem of database connection when I was try to get connection to online mongoDB service provider “Altas MongoDB” I got error  “ETIMEOUT” I tried and research a lot but cannot find any solution at the end I decide to use mongoDB locally so I installed it on my machine.
+I have faced a problem of database connection when I was try to get connection to online mongoDB service provider “Altas MongoDB” I got error “ETIMEOUT” I tried and research a lot but cannot find any solution at the end I decide to use mongoDB locally so I installed it on my machine.
 
   <!-- 
-  on student home page added another section with title course catagories and  renders a list of  courseCatagories as buttons.
-  create studentcontext and initialize as null,Add studentcontextProvider , initialize state studentCourseList, setStudentCourseList and pass as a value to studentcontextProvider, then inside StudentHomePage consumed studentCourseList, setStudentCourseList using useContext of StudentContext. start working on backend ,inside controller folder create course-controller.js add getAllStudentViewCourses to get all the courses from database ,Add getStudentViewCourseDetails to get a single course detials from database,inside routes folder create course-routes.js add routes for all courses and a single course. configure student course routes inside server.js.
-  next i am going to client side and to directory and services file, add fetchStudentViewCourseListService service
+  now i am going to start the filtring logic for courses based on catagories,level such beginer or advance and language.
    -->

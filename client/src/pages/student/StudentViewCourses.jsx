@@ -18,7 +18,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export const StudentViewCourses = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
 		useContext(StudentContext);
-	const [sort, setSort] = useState("");
+	const [sort, setSort] = useState("price-lowtohigh");
+	const [filterOptions, setFilterOptions] = useState([]);
 
 	const fetchAllStudentViewCourses = async () => {
 		const response = await fetchStudentViewCourseListService();
