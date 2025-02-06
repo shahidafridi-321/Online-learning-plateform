@@ -59,7 +59,7 @@ export const StudentHomePage = () => {
 					{studentViewCourseList && studentViewCourseList.length > 0 ? (
 						studentViewCourseList.map((courseItem) => (
 							<div
-								key={courseItem.id + courseItem.title}
+								key={courseItem?._id}
 								className="border rounded-lg overflow-hidden shadow cursor-pointer"
 							>
 								<img
