@@ -33,9 +33,9 @@ export const StudentHomePage = () => {
 					<img
 						src={BannerImage}
 						alt="BannerImage"
-						width={"600px"}
-						height={"400px"}
-						className="w-10/12 h-[400px] rounded-lg shadow-lg"
+						width={400}
+						height={300}
+						className="w-full h-auto rounded-lg shadow-lg"
 					/>
 				</div>
 			</section>
@@ -51,6 +51,36 @@ export const StudentHomePage = () => {
 							{catagoryItem.label}
 						</Button>
 					))}
+				</div>
+			</section>
+			<section className="py-12 px-4 lg:px-8">
+				<h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+					{studentViewCourseList && studentViewCourseList.length > 0 ? (
+						studentViewCourseList.map((courseItem) => (
+							<div
+								key={courseItem.id}
+								className="border rounded-lg overflow-hidden shadow cursor-pointer"
+							>
+								<img
+									src={courseItem?.image}
+									alt={courseItem.title}
+									width={300}
+									height={150}
+									className="w-full h-40 object-cover"
+								/>
+								<div className="p-4">
+									<h3 className="font-bold mb-2">{courseItem.title}</h3>
+									<p className="text-sm text-gray-700 mb-2">
+										{courseItem.instructorName}
+									</p>
+									<p className="font-bold text-[16px]">${courseItem.pricing}</p>
+								</div>
+							</div>
+						))
+					) : (
+						<h2>No Courses Found</h2>
+					)}
 				</div>
 			</section>
 		</div>
