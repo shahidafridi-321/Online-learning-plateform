@@ -1,4 +1,6 @@
+import { courseCategories } from "@/config";
 import BannerImage from "../../../public/hero-img.jpg";
+import { Button } from "@/components/ui/button";
 
 export const StudentHomePage = () => {
 	return (
@@ -18,6 +20,20 @@ export const StudentHomePage = () => {
 						height={"400px"}
 						className="w-10/12 h-[400px] rounded-lg shadow-lg"
 					/>
+				</div>
+			</section>
+			<section className="py-8 px-4 lg:px-8 bg-gray-100">
+				<h2 className="text-2xl font-bold mb-6">Course Catagories</h2>
+				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+					{courseCategories.map((catagoryItem) => (
+						<Button
+							key={catagoryItem.id}
+							className="justify-start"
+							variant="outline"
+						>
+							{catagoryItem.label}
+						</Button>
+					))}
 				</div>
 			</section>
 		</div>
