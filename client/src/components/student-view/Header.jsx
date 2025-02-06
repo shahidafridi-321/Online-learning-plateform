@@ -3,8 +3,11 @@ import React, { useContext } from "react";
 import { AuthContext } from "@/context/auth-context";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
+	const navigate = useNavigate();
+
 	const { resetCredentials } = useContext(AuthContext);
 	const handleLogout = () => {
 		resetCredentials();
@@ -27,6 +30,9 @@ export const Header = () => {
 						<Button
 							variant="ghost"
 							className="text-[14px] md:text-[16px] font-medium"
+							onClick={() => {
+								navigate("/courses");
+							}}
 						>
 							Explore Courses
 						</Button>
