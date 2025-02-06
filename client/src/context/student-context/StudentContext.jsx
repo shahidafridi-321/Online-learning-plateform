@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { createContext } from "react";
 
-export const StudentContext = () => {
-  return (
-    <div>StudentContext</div>
-  )
-}
+export const StudentContext = createContext(null);
+
+export const StudentContextProvider = ({ children }) => {
+	return <StudentContext.Provider>{children}</StudentContext.Provider>;
+};
