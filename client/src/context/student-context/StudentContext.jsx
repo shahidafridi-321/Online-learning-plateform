@@ -1,7 +1,17 @@
-import React, { createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const StudentContext = createContext(null);
 
 export const StudentContextProvider = ({ children }) => {
-	return <StudentContext.Provider>{children}</StudentContext.Provider>;
+	const [studentCourseList, setStudentCourseList] = useState([]);
+	return (
+		<StudentContext.Provider
+			value={{
+				studentCourseList,
+				setStudentCourseList,
+			}}
+		>
+			{children}
+		</StudentContext.Provider>
+	);
 };
