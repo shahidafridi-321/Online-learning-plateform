@@ -1,8 +1,12 @@
 import { courseCategories } from "@/config";
 import BannerImage from "../../../public/hero-img.jpg";
 import { Button } from "@/components/ui/button";
+import { useContext } from "react";
+import { StudentContext } from "@/context/student-context/StudentContext";
 
 export const StudentHomePage = () => {
+	const { studentCourseList, setStudentCourseList } =
+		useContext(StudentContext);
 	return (
 		<div className="min-h-screen ">
 			<section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8">
