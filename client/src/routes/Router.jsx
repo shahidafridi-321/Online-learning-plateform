@@ -9,6 +9,7 @@ import { StudentViewCommonLayout } from "@/components/student-view/StudentViewCo
 import { StudentHomePage } from "@/pages/student/StudentHomePage";
 import { NotFoundPage } from "@/pages/not-found/NotFoundPage";
 import { AddNewCoursePage } from "@/pages/instructor/AddNewCoursePage";
+import { StudentViewCourses } from "@/pages/student/StudentViewCourses";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -50,6 +51,10 @@ export const routes = createBrowserRouter([
 			{
 				path: "/home",
 				element: <StudentHomePage />,
+			},
+			{
+				path: "/courses",
+				element: <StudentViewCourses />,
 			},
 		],
 	},
