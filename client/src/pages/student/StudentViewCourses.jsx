@@ -94,9 +94,9 @@ export const StudentViewCourses = () => {
 			<h1 className="text-3xl font-bold mb-4">All Courses</h1>
 			<div className="flex flex-col md:flex-row gap-4">
 				<aside className="w-full md:w-64 space-y-4">
-					<div className="p-4 space-y-4">
+					<div className="p-4">
 						{Object.keys(filterOptions).map((keyItem) => (
-							<div className="p-4 space-y-4" key={keyItem}>
+							<div className="p-4 space-y-4 border-b" key={keyItem}>
 								<h3 className="font-bold mb-3">{keyItem.toUpperCase()}</h3>
 								<div className="grid gap-2 mt-2">
 									{filterOptions[keyItem].map((option) => (
@@ -153,7 +153,7 @@ export const StudentViewCourses = () => {
 							</DropdownMenuContent>
 						</DropdownMenu>
 						<span className="text-sm text-gary-600 font-medium">
-							10 Results
+							{studentViewCourseList.length} Results
 						</span>
 					</div>
 					<div className="space-y-4">
