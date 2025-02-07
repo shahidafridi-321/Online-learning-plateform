@@ -20,6 +20,12 @@ export const StudentHomePage = () => {
 		fetchAllStudentViewCourses();
 	}, []);
 
+	useEffect(() => {
+		return () => {
+			sessionStorage.removeItem("filters");
+		};
+	}, []);
+
 	return (
 		<div className="min-h-screen ">
 			<section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8">
