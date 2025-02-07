@@ -5,7 +5,7 @@ export const StudentContext = createContext(null);
 export const StudentContextProvider = ({ children }) => {
 	const [studentViewCourseList, setStudentViewCourseList] = useState([]);
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	return (
 		<StudentContext.Provider
 			value={{

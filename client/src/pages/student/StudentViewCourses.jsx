@@ -15,6 +15,7 @@ import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentViewCourseListService } from "@/services";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const createSearchParamsHelper = (filterParams) => {
 	const queryParams = [];
@@ -32,8 +33,12 @@ export const StudentViewCourses = () => {
 	const [filters, setFilters] = useState({});
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const { studentViewCourseList, setStudentViewCourseList } =
-		useContext(StudentContext);
+	const {
+		studentViewCourseList,
+		setStudentViewCourseList,
+		loading,
+		setLoading,
+	} = useContext(StudentContext);
 
 	const handleFilterOnChange = (getSectionId, getCurrentOption) => {
 		let cpyFilters = { ...filters };
@@ -64,6 +69,7 @@ export const StudentViewCourses = () => {
 		const response = await fetchStudentViewCourseListService(query);
 		if (response?.success) {
 			setStudentViewCourseList(response.data);
+			setLoading(false);
 		}
 	};
 
@@ -186,6 +192,8 @@ export const StudentViewCourses = () => {
 									</CardContent>
 								</Card>
 							))
+						) : loading ? (
+							<Skeleton />
 						) : (
 							<h2 className="font-extrabold text-4xl">No Course Found</h2>
 						)}
