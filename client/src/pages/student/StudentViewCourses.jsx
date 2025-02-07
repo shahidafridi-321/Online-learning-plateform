@@ -28,12 +28,12 @@ const createSearchParamsHelper = (filterParams) => {
 };
 
 export const StudentViewCourses = () => {
-	const { studentViewCourseList, setStudentViewCourseList } =
-		useContext(StudentContext);
-
 	const [sort, setSort] = useState("price-lowtohigh");
 	const [filters, setFilters] = useState({});
 	const [searchParams, setSearchParams] = useSearchParams();
+
+	const { studentViewCourseList, setStudentViewCourseList } =
+		useContext(StudentContext);
 
 	const handleFilterOnChange = (getSectionId, getCurrentOption) => {
 		let cpyFilters = { ...filters };
@@ -77,6 +77,11 @@ export const StudentViewCourses = () => {
 		const buildQueryStringForFilters = createSearchParamsHelper(filters);
 		setSearchParams(new URLSearchParams(buildQueryStringForFilters));
 	}, [filters]);
+
+	useEffect(() => {
+		setSort("price-lowtohigh");
+		setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
+	}, []);
 
 	return (
 		<div className="container mx-auto p-4">
