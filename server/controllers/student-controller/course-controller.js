@@ -22,31 +22,24 @@ const getAllStudentViewCourses = async (req, res) => {
 
 		let sortParam = {};
 		switch (sortBy) {
-			case sortBy === "price-lowtohigh":
+			case "price-lowtohigh":
 				sortParam.pricing = 1;
 				break;
-			case sortBy === "price-hightolow":
+			case "price-hightolow":
 				sortParam.pricing = -1;
 				break;
-			case sortBy === "title-atoz":
+			case "title-atoz":
 				sortParam.title = 1;
 				break;
-			case sortBy === "title-ztoa":
+			case "title-ztoa":
 				sortParam.title = -1;
 				break;
 			default:
-				sortParam.pricing = 1
+				sortParam.pricing = 1;
 				break;
 		}
 
 		const coursesList = await Course.find(filters).sort(sortParam);
-		if (coursesList.length === 0) {
-			return res.status(404).json({
-				success: false,
-				message: "No Course Found",
-				data: [],
-			});
-		}
 
 		res.status(200).json({
 			success: true,
