@@ -13,8 +13,19 @@ import { ArrowUpDownIcon } from "lucide-react";
 import React, { useState, useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentViewCourseListService } from "@/services";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "react-router-dom";
+
+const createSearchParamsHelper = (filterParams) => {
+	const queryParams = [];
+	for (const [key, value] of Object.entries(filterParams)) {
+		if (Array.isArray(value) && value.length > 0) {
+			const paramValue = value.join(",");
+			queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+		}
+	}
+	return queryParams.join("&");
+};
 
 export const StudentViewCourses = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
@@ -44,27 +55,23 @@ export const StudentViewCourses = () => {
 		sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
 	};
 
-	const fetchAllStudentViewCourses = async () => {
-		const response = await fetchStudentViewCourseListService();
+	const fetchAllStudentViewCourses = async (filters, sort) => {
+		const query = new URLSearchParams({
+			...filters,
+			sortBy: sort,
+		});
+
+		const response = await fetchStudentViewCourseListService(query);
 		if (response?.success) {
 			setStudentViewCourseList(response.data);
 		}
 	};
 
 	useEffect(() => {
-		fetchAllStudentViewCourses();
-	}, []);
-
-	const createSearchParamsHelper = (filterParams) => {
-		const queryParams = [];
-		for (const [key, value] of Object.entries(filterParams)) {
-			if (Array.isArray(value) && value.length > 0) {
-				const paramValue = value.join(",");
-				queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
-			}
+		if (filters !== null && sort !== null) {
+			fetchAllStudentViewCourses(filters, sort);
 		}
-		return queryParams.join("&");
-	};
+	}, [filters, sort]);
 
 	useEffect(() => {
 		const buildQueryStringForFilters = createSearchParamsHelper(filters);
@@ -121,7 +128,7 @@ export const StudentViewCourses = () => {
 							<DropdownMenuContent align="end" className="w-[180px]">
 								<DropdownMenuRadioGroup
 									value={sort}
-									onChange={(value) => setSort(value)}
+									onValueChange={(value) => setSort(value)}
 								>
 									{sortOptions.map((sortItem) => (
 										<DropdownMenuRadioItem
