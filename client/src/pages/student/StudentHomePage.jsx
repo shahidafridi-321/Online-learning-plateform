@@ -85,7 +85,7 @@ export const StudentHomePage = () => {
 							</div>
 						))
 					) : (
-						<h2>No Courses Found</h2>
+						<h2 className="font-extrabold text-4xl">No Courses Found</h2>
 					)}
 				</div>
 			</section>

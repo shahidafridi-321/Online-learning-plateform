@@ -187,7 +187,7 @@ export const StudentViewCourses = () => {
 								</Card>
 							))
 						) : (
-							<h2>No Course Found</h2>
+							<h2 className="font-extrabold text-4xl">No Course Found</h2>
 						)}
 					</div>
 				</main>
