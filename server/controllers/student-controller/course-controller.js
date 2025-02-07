@@ -2,7 +2,44 @@ const Course = require("../../models/Course");
 
 const getAllStudentViewCourses = async (req, res) => {
 	try {
-		const coursesList = await Course.find({});
+		const {
+			category = [],
+			level = [],
+			primaryLanguage = [],
+			sortBy = "price-lowtohigh",
+		} = req.query;
+
+		let filters = {};
+		if (category.length) {
+			filters.category = { $in: category.split(",") };
+		}
+		if (level.length) {
+			filters.level = { $in: level.split(",") };
+		}
+		if (primaryLanguage.length) {
+			filters.primaryLanguage = { $in: primaryLanguage.split(",") };
+		}
+
+		let sortParam = {};
+		switch (sortBy) {
+			case sortBy === "price-lowtohigh":
+				sortParam.pricing = 1;
+				break;
+			case sortBy === "price-hightolow":
+				sortParam.pricing = -1;
+				break;
+			case sortBy === "title-atoz":
+				sortParam.title = 1;
+				break;
+			case sortBy === "title-ztoa":
+				sortParam.title = -1;
+				break;
+			default:
+				sortParam.pricing = 1
+				break;
+		}
+
+		const coursesList = await Course.find(filters).sort(sortParam);
 		if (coursesList.length === 0) {
 			return res.status(404).json({
 				success: false,
