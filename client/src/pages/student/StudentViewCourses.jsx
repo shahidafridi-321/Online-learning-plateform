@@ -14,7 +14,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentViewCourseListService } from "@/services";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const createSearchParamsHelper = (filterParams) => {
@@ -32,6 +32,8 @@ export const StudentViewCourses = () => {
 	const [sort, setSort] = useState("price-lowtohigh");
 	const [filters, setFilters] = useState({});
 	const [searchParams, setSearchParams] = useSearchParams();
+
+	const navigate = useNavigate();
 
 	const {
 		studentViewCourseList,
@@ -159,7 +161,11 @@ export const StudentViewCourses = () => {
 					<div className="space-y-4">
 						{studentViewCourseList && studentViewCourseList.length > 0 ? (
 							studentViewCourseList.map((courseItem) => (
-								<Card key={courseItem?._id} className="cursor-pointer">
+								<Card
+									onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+									key={courseItem?._id}
+									className="cursor-pointer"
+								>
 									<CardContent className="flex gap-4 p-4">
 										<div className="w-48 h-32 flex-shrink-0">
 											<img
