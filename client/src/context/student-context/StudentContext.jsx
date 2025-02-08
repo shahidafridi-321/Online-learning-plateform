@@ -7,6 +7,7 @@ export const StudentContextProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true);
 	const [studentViewCourseDetailsPage, setStudentViewCourseDetailsPage] =
 		useState(null);
+	const [currentCourseDetailsId, setCurrentCourseDetailsId] = useState(null);
 
 	return (
 		<StudentContext.Provider
@@ -17,6 +18,8 @@ export const StudentContextProvider = ({ children }) => {
 				setLoading,
 				studentViewCourseDetailsPage,
 				setStudentViewCourseDetailsPage,
+				currentCourseDetailsId,
+				setCurrentCourseDetailsId,
 			}}
 		>
 			{children}
