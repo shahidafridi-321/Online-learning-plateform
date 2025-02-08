@@ -80,7 +80,7 @@ export const fetchStudentViewCourseListService = async (query) => {
 
 export const fetchStudentViewCourseDetailsService = async (id) => {
 	const { data } = await axiosInstance.get(
-		`/student/course/get/detials/${id}`
+		`/student/course/get/details/${id}`
 	);
 	return data;
 };
