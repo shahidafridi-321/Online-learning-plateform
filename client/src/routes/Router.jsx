@@ -11,6 +11,7 @@ import { NotFoundPage } from "@/pages/not-found/NotFoundPage";
 import { AddNewCoursePage } from "@/pages/instructor/AddNewCoursePage";
 import { StudentViewCourses } from "@/pages/student/StudentViewCourses";
 import { StudentViewCourseDetailsPage } from "@/pages/student/StudentViewCourseDetailsPage";
+import { TextLecturePage } from "@/pages/student/TextLecturePage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -60,6 +61,10 @@ export const routes = createBrowserRouter([
 			{
 				path: "/course/details/:id",
 				element: <StudentViewCourseDetailsPage />,
+			},
+			{
+				path: "/course/details/:courseId/lecture/:lectureId",
+				element: <TextLecturePage />,
 			},
 		],
 	},
