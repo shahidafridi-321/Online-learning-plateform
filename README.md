@@ -48,5 +48,7 @@ Challenges:
 I have faced a problem of database connection when I was try to get connection to online mongoDB service provider “Altas MongoDB” I got error “ETIMEOUT” I tried and research a lot but cannot find any solution at the end I decide to use mongoDB locally so I installed it on my machine.
 
   <!-- 
-  now i am going to start the filtring logic for courses based on catagories,level such beginer or advance and language.
+  now i am going to start the filtring logic for courses based on catagories,level such beginer or advance and language.i added handleFilterOnChange function that is called when a value is checked or unchecked in select options,i also added a function createSearchParamsHelper that will create dynamic URI using useSearchParams hook by selecting multiple choices for filtering next i am going to do little changes on my backend for data filtring logic in course-controller file.so in getAllStudentViewCourses function a added logic for sorting and filtring.applied filters succefully now students can sort by low to high price and vice versa also on A to Z and vice versa and now also can filter on categories ,levels and language,use another use effect to setFilters and setSort from sessionstorage. Remove filters from sessionStorage using useEffect when visite studentHomePage.Add loading state and pass it student context and then consume it in coursepage of students when loading it shows skelton just to remove page blanking ,its done
+
+  now i am created a new page component called StudentViewCourseDetailsPage create route for it for navigations,Add onClick event to Card when clicked it navigates to that particular course details page using useNavigate hook
    -->
