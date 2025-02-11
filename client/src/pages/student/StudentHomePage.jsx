@@ -53,7 +53,7 @@ export const StudentHomePage = () => {
 			</section>
 
 			{/* Featured Courses Section */}
-			<section className="py-12 px-4 lg:px-12">
+			<section className="py-12 px-4 lg:px-12 bg-gradient-to-r from-gray-200 to-gray-400 ">
 				<h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
 					Featured Courses
 				</h2>
