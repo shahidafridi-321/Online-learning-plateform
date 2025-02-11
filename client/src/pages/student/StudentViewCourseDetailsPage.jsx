@@ -33,12 +33,14 @@ export const StudentViewCourseDetailsPage = () => {
 
 	const { id } = useParams();
 
+	// Set course ID from URL param into context
 	useEffect(() => {
 		if (id) {
 			setCurrentCourseDetailsId(id);
 		}
 	}, [id, setCurrentCourseDetailsId]);
 
+	// Clear details when leaving course details routes
 	const location = useLocation();
 	useEffect(() => {
 		if (!location.pathname.includes("/course/details")) {
@@ -51,6 +53,7 @@ export const StudentViewCourseDetailsPage = () => {
 		setCurrentCourseDetailsId,
 	]);
 
+	// Fetch course details when currentCourseDetailsId is set
 	const fetchStudentViewCourseDetails = async () => {
 		setLoading(true);
 		const response = await fetchStudentViewCourseDetailsService(
@@ -58,40 +61,39 @@ export const StudentViewCourseDetailsPage = () => {
 		);
 		if (response?.success) {
 			setStudentViewCourseDetails(response.data);
-			setLoading(false);
 		} else {
 			setStudentViewCourseDetails(null);
-			setLoading(false);
 		}
+		setLoading(false);
 	};
 
+	useEffect(() => {
+		if (currentCourseDetailsId) {
+			fetchStudentViewCourseDetails();
+		}
+	}, [currentCourseDetailsId]);
+
+	// Open the video preview dialog when a free preview video URL is available
 	useEffect(() => {
 		if (displayCurrentVideoFreepreview !== null) {
 			setShowFreePreviewDialog(true);
 		}
 	}, [displayCurrentVideoFreepreview]);
 
-	useEffect(() => {
-		if (currentCourseDetailsId !== null) {
-			fetchStudentViewCourseDetails();
-		}
-	}, [currentCourseDetailsId]);
-
-	if (loading) {
+	// Prevent rendering if still loading or course details have not been fetched
+	if (loading || !studentViewCourseDetails) {
 		return <Skeleton />;
 	}
 
-	// Find the first free preview (video) index
+	// Find the first free preview (video) index in the curriculum
 	const getIndexOfFreePreviewUrl =
-		studentViewCourseDetails !== null
-			? studentViewCourseDetails.curriculum.findIndex(
-					(item) => item.freePreview
-			  )
-			: -1;
+		studentViewCourseDetails.curriculum?.findIndex(
+			(item) => item.freePreview
+		) ?? -1;
 
 	const handleSetFreePreview = (currentItem) => {
 		if (currentItem.type === "text") {
-			// Navigate to text lecture page
+			// Navigate to text lecture page with course & lecture IDs
 			navigate(
 				`/course/details/${studentViewCourseDetails._id}/lecture/${currentItem._id}`
 			);
@@ -102,7 +104,7 @@ export const StudentViewCourseDetailsPage = () => {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 p-8">
-			<div className=" max-w-6xl mx-auto">
+			<div className="max-w-6xl mx-auto">
 				{/* Course Header */}
 				<div className="bg-white bg-opacity-80 backdrop-blur-md rounded-lg p-6 shadow-lg mb-8">
 					<h1 className="text-4xl font-bold text-gray-900 mb-2">
@@ -211,18 +213,16 @@ export const StudentViewCourseDetailsPage = () => {
 					{/* Sidebar: Video Preview & Buy Button */}
 					{getIndexOfFreePreviewUrl !== -1 &&
 						studentViewCourseDetails.curriculum[getIndexOfFreePreviewUrl]
-							.type === "video" && (
+							?.type === "video" && (
 							<aside className="w-full md:w-[500px]">
 								<Card className="sticky top-8">
 									<CardContent className="p-6">
 										<div className="aspect-video mb-6 rounded-lg overflow-hidden shadow-lg">
 											<VideoPlayer
 												url={
-													getIndexOfFreePreviewUrl !== -1
-														? studentViewCourseDetails.curriculum[
-																getIndexOfFreePreviewUrl
-														  ].videoUrl
-														: ""
+													studentViewCourseDetails.curriculum[
+														getIndexOfFreePreviewUrl
+													].videoUrl || ""
 												}
 												width="100%"
 												height="100%"

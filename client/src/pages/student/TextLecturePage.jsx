@@ -61,7 +61,6 @@ export const TextLecturePage = () => {
 
 	// Extract both courseId and lectureId from URL parameters
 	const { courseId, lectureId } = useParams();
-	console.log("Course ID:", courseId, "Lecture ID:", lectureId);
 
 	const [lectureDetails, setLectureDetails] = useState(null);
 
@@ -105,9 +104,11 @@ export const TextLecturePage = () => {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 p-8">
 			<div className="max-w-4xl mx-auto">
-				<h1 className="text-3xl font-bold mb-6 text-white">
-					{lectureDetails.title}
-				</h1>
+				<div className="mb-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 p-6 shadow-md">
+					<h1 className="text-4xl font-bold text-white">
+						{lectureDetails.title}
+					</h1>
+				</div>
 				<div className="markdown-body bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 bg-opacity-80 backdrop-blur-sm p-8 rounded-lg shadow-md my-4 text-base leading-relaxed">
 					<ReactMarkdown
 						remarkPlugins={[remarkGfm]}
