@@ -1,10 +1,10 @@
 import { courseCategories } from "@/config";
-import BannerImage from "../../../public/hero-img.jpg";
 import { Button } from "@/components/ui/button";
 import { useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentViewCourseListService } from "@/services";
 import { useNavigate } from "react-router-dom";
+import { HeroSection } from "./HeroSection";
 
 export const StudentHomePage = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
@@ -31,27 +31,8 @@ export const StudentHomePage = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50">
-			{/* Hero Section */}
-			<section className="flex flex-col lg:flex-row items-center justify-between py-12 px-4 lg:px-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-b-lg shadow-lg">
-				<div className="lg:w-1/2 text-center lg:text-left">
-					<h1 className="text-5xl font-extrabold text-white mb-6">
-						Learning that Gets You Ahead
-					</h1>
-					<p className="text-xl text-white mb-8">
-						Unlock your potential with skills for today and tomorrow.
-					</p>
-					<Button className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 font-semibold rounded-full shadow-lg">
-						Get Started
-					</Button>
-				</div>
-				<div className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
-					<img
-						src={BannerImage}
-						alt="Banner"
-						className="w-96 h-auto rounded-lg shadow-2xl"
-					/>
-				</div>
-			</section>
+			{/* Hero Section  */}
+			<HeroSection />
 
 			{/* Course Categories Section */}
 			<section className="py-12 px-4 lg:px-12">
