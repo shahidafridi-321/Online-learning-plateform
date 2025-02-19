@@ -7,7 +7,7 @@ const OrderSchema = new mongoose.Schema({
 	orderStatus: String,
 	paymentMethod: String,
 	paymentStatus: String,
-	PaymentId: String,
+	paymentId: String,
 	orderDate: Date,
 	payerId: String,
 	instructorId: String,
