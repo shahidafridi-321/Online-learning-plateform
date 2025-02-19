@@ -72,15 +72,17 @@ export const mediaBulkUploadService = async (formData, onProgressCallback) => {
 	return data;
 };
 
-
 export const fetchStudentViewCourseListService = async (query) => {
 	const { data } = await axiosInstance.get(`/student/course/get?${query}`);
 	return data;
 };
 
 export const fetchStudentViewCourseDetailsService = async (id) => {
-	const { data } = await axiosInstance.get(
-		`/student/course/get/details/${id}`
-	);
+	const { data } = await axiosInstance.get(`/student/course/get/details/${id}`);
+	return data;
+};
+
+export const createPaymentService = async (formData) => {
+	const { data } = await axiosInstance.post(`/student/order/create`, formData);
 	return data;
 };
