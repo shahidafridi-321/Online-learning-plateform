@@ -3,7 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { VideoPlayer } from "@/components/video-player/VideoPlayer";
 import { StudentContext } from "@/context/student-context/StudentContext";
-import { fetchStudentViewCourseDetailsService } from "@/services";
+import {
+	createPaymentService,
+	fetchStudentViewCourseDetailsService,
+} from "@/services";
 import { Book, CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
@@ -15,6 +18,7 @@ import {
 	DialogFooter,
 	DialogClose,
 } from "@/components/ui/dialog";
+import { AuthContext } from "@/context/auth-context";
 
 export const StudentViewCourseDetailsPage = () => {
 	const {
@@ -26,10 +30,14 @@ export const StudentViewCourseDetailsPage = () => {
 		setLoading,
 	} = useContext(StudentContext);
 
+	const { auth } = useContext(AuthContext);
+
 	const navigate = useNavigate();
 	const [displayCurrentVideoFreepreview, setDisplayCurrentVideoFreepreview] =
 		useState(null);
 	const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
+
+	const [approvalUrl, setApprovalUrl] = useState("");
 
 	const { id } = useParams();
 
@@ -85,6 +93,11 @@ export const StudentViewCourseDetailsPage = () => {
 		return <Skeleton />;
 	}
 
+	// If Approval url is found
+	if (approvalUrl !== "") {
+		window.location.href = approvalUrl;
+	}
+
 	// Find the first free preview (video) index in the curriculum
 	const getIndexOfFreePreviewUrl =
 		studentViewCourseDetails.curriculum?.findIndex(
@@ -102,6 +115,35 @@ export const StudentViewCourseDetailsPage = () => {
 		}
 	};
 
+	const handleCreatePayment = async () => {
+		const paymentPayload = {
+			userId: auth?.user?._id,
+			userName: auth?.user?.userName,
+			userEmail: auth?.user?.userEmail,
+			orderStatus: "pending",
+			paymentMethod: "paypal",
+			paymentStatus: "initiated",
+			paymentId: "",
+			orderDate: new Date(),
+			payerId: "",
+			instructorId: studentViewCourseDetails?.instructorId,
+			instructorName: studentViewCourseDetails?.instructorName,
+			courseImage: studentViewCourseDetails?.image,
+			courseTitle: studentViewCourseDetails?.title,
+			courseId: studentViewCourseDetails?._id,
+			coursePricing: studentViewCourseDetails?.pricing,
+		};
+		console.log(paymentPayload);
+		const response = await createPaymentService(paymentPayload);
+
+		if (response.success) {
+			sessionStorage.setItem(
+				"currentOrderId",
+				JSON.stringify(response?.data?.orderId)
+			);
+			setApprovalUrl(response?.data?.approveUrl);
+		}
+	};
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 p-8">
 			<div className="max-w-6xl mx-auto">
@@ -233,7 +275,10 @@ export const StudentViewCourseDetailsPage = () => {
 												${studentViewCourseDetails.pricing}
 											</span>
 										</div>
-										<Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+										<Button
+											onClick={handleCreatePayment}
+											className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+										>
 											Buy Now
 										</Button>
 									</CardContent>
