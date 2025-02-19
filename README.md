@@ -49,5 +49,5 @@ I have faced a problem of database connection when I was try to get connection t
 
   <!-- 
   craete paypal.js file that configure paypal payment using sandbox mode.create studentCourseSchema that stores courseslist the student has purchased,created Orderschema that has all the details of the course order for purchasing such as student name,id,email,courseid,title,price, payerid payment status etc.creat order-controller and Add createOrder function that will create an order ,Add capturePaymentAndFinalizeOrder function that will check whether the order was successfull or not , create order router /create and /capture routes using express router, in server.js configure the order routes
-  Add createPaymentService that sends requests to /student/order/create endpoint and Add captureAndfinalizePaymentServuce that sends requests to /student/order/capture endpoint
+  Add createPaymentService that sends requests to /student/order/create endpoint and Add captureAndfinalizePaymentServuce that sends requests to /student/order/capture endpoint,Add handleCreatePayment function that sends request to the end point,Create PaymentReturnPage component , Create student-courses-controller which has a method getCoursesByStudentId,create studentcoursesroutes,configure this routes in server.js,add fetchStudentBoughtCoursesService
    -->
