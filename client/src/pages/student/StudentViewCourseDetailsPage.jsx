@@ -115,7 +115,7 @@ export const StudentViewCourseDetailsPage = () => {
 					</p>
 					<div className="flex flex-wrap gap-4 text-sm text-gray-600">
 						<span>
-							Created by:{" "}
+							Added by :{" "}
 							<span className="font-medium">
 								{studentViewCourseDetails.instructorName}
 							</span>
