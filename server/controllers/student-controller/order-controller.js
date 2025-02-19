@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
 			orderStatus,
 			paymentMethod,
 			paymentStatus,
-			PaymentId,
+			paymentId,
 			orderDate,
 			payerId,
 			instructorId,
@@ -70,7 +70,7 @@ const createOrder = async (req, res) => {
 					orderStatus,
 					paymentMethod,
 					paymentStatus,
-					PaymentId,
+					paymentId,
 					orderDate,
 					payerId,
 					instructorId,
@@ -101,4 +101,84 @@ const createOrder = async (req, res) => {
 			message: "Payment was unsuccessful!",
 		});
 	}
+};
+
+const capturePaymentAndFinalizeOrder = async (req, res) => {
+	try {
+		const { paymentId, payerId, orderId } = req.body;
+
+		const order = await Order.findById(orderId);
+		if (!order) {
+			return res.status(404).json({
+				success: false,
+				message: "Order Not Found",
+			});
+		}
+
+		order.paymentStatus = "paid";
+		order.orderStatus = "confirmed";
+		order.paymentId = paymentId;
+		order.payerId = payerId;
+
+		await order.save();
+
+		const studentCourses = await StudentCourses.findOne({
+			userId: order.userId,
+		});
+
+		if (studentCourses) {
+			studentCourses.courses.push({
+				courseId: order.courseId,
+				title: order.courseTitle,
+				instructorId: order.instructorId,
+				instructorName: order.instructorName,
+				courseImage: order.courseImage,
+				dateOfParchase: order.orderDate,
+			});
+			await studentCourses.save();
+		} else {
+			const newStudentCourse = new StudentCourses({
+				userId: order.userId,
+				courses: {
+					courseId: order.courseId,
+					title: order.courseTitle,
+					instructorId: order.instructorId,
+					instructorName: order.instructorName,
+					courseImage: order.courseImage,
+					dateOfParchase: order.orderDate,
+				},
+			});
+			await newStudentCourse.save();
+		}
+
+		// Update course schema's student prop
+
+		await Course.findByIdAndUpdate(order.courseId, {
+			$addToSet: {
+				students: {
+					studentId: order.userId,
+					studentName: order.userName,
+					studentEmail: order.userEmail,
+					paidAmount: order.coursePricing,
+				},
+			},
+		});
+
+		res.status(200).json({
+			success: true,
+			message: "Order confirmed",
+			data: order,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Payment was unsuccessful!",
+		});
+	}
+};
+
+module.exports = {
+	createOrder,
+	capturePaymentAndFinalizeOrder,
 };
