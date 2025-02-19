@@ -33,7 +33,7 @@ const createOrder = async (req, res) => {
 				return_url: `${process.env.CLIENT_URL}/payment-return`,
 				cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
 			},
-			transictions: [
+			transactions: [
 				{
 					item_list: {
 						items: [
