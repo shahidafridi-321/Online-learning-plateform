@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth-routes/index");
 const mediaRoutes = require("./routes/instructor-routes/media-routes");
 const instructorCourseRoutes = require("./routes/instructor-routes/course-routes");
 const studentCourseRoutes = require("./routes/student-routes/course-routes");
+const studentViewOrderRoutes = require("./routes/student-routes/order-routes");
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -33,6 +34,7 @@ app.use("/auth", authRoutes);
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", instructorCourseRoutes);
 app.use("/student/course", studentCourseRoutes);
+app.use("/student/order", studentViewOrderRoutes);
 
 app.use((req, res, next) => {
 	console.log(`${req.method} ${req.path}`);
