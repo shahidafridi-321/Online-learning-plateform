@@ -14,6 +14,7 @@ import { StudentViewCourseDetailsPage } from "@/pages/student/StudentViewCourseD
 import { TextLecturePage } from "@/pages/student/TextLecturePage";
 import { PaypalPaymentReturnPage } from "@/pages/student/PaypalPaymentReturnPage";
 import { StudentCoursesPage } from "@/pages/student/StudentCoursesPage";
+import { CourseProgressPage } from "@/pages/student/CourseProgressPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -75,6 +76,10 @@ export const routes = createBrowserRouter([
 			{
 				path: "/student-courses",
 				element: <StudentCoursesPage />,
+			},
+			{
+				path: "/course-progress/:id",
+				element: <CourseProgressPage />,
 			},
 		],
 	},
