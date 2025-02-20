@@ -5,11 +5,14 @@ import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentBoughtCoursesService } from "@/services";
 import { Eye } from "lucide-react";
 import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const StudentCoursesPage = () => {
 	const { studentBoughtCoursesList, setStudentBoughtCoursesList } =
 		useContext(StudentContext);
 	const { auth } = useContext(AuthContext);
+
+	const navigate = useNavigate();
 
 	const fetchStudentBoughtCourses = async () => {
 		const response = await fetchStudentBoughtCoursesService(auth?.user?._id);
@@ -41,7 +44,12 @@ export const StudentCoursesPage = () => {
 								</p>
 							</CardContent>
 							<CardFooter>
-								<Button className="flex-1">
+								<Button
+									onClick={() =>
+										navigate(`/course-progress/${course?.courseId}`)
+									}
+									className="flex-1"
+								>
 									<Eye className="mr-2 h-4 w-4" />
 									View
 								</Button>
