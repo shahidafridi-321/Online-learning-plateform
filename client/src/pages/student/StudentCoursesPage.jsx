@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentBoughtCoursesService } from "@/services";
-import { Watch } from "lucide-react";
+import { Eye } from "lucide-react";
 import React, { useContext, useEffect } from "react";
 
 export const StudentCoursesPage = () => {
@@ -42,8 +42,8 @@ export const StudentCoursesPage = () => {
 							</CardContent>
 							<CardFooter>
 								<Button className="flex-1">
-									<Watch className="mr-2 h-4 w-4" />
-									Start watching
+									<Eye className="mr-2 h-4 w-4" />
+									View
 								</Button>
 							</CardFooter>
 						</Card>
