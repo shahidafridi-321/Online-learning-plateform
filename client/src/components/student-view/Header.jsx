@@ -31,7 +31,9 @@ export const Header = () => {
 							variant="ghost"
 							className="text-[14px] md:text-[16px] font-medium"
 							onClick={() => {
-								navigate("/courses");
+								location.pathname.includes("/courses")
+									? null
+									: navigate("/courses");
 							}}
 						>
 							Explore Courses
