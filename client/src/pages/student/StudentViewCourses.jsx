@@ -12,10 +12,14 @@ import { filterOptions, sortOptions } from "@/config";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useState, useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
-import { fetchStudentViewCourseListService } from "@/services";
+import {
+	checkCoursePurchaseInfoService,
+	fetchStudentViewCourseListService,
+} from "@/services";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AuthContext } from "@/context/auth-context";
 
 const createSearchParamsHelper = (filterParams) => {
 	const queryParams = [];
@@ -32,6 +36,7 @@ export const StudentViewCourses = () => {
 	const [sort, setSort] = useState("price-lowtohigh");
 	const [filters, setFilters] = useState({});
 	const [searchParams, setSearchParams] = useSearchParams();
+	const { auth } = useContext(AuthContext);
 
 	const navigate = useNavigate();
 
@@ -41,6 +46,20 @@ export const StudentViewCourses = () => {
 		loading,
 		setLoading,
 	} = useContext(StudentContext);
+
+	const handleCourseNavigate = async (getCurrentCourseId) => {
+		const response = await checkCoursePurchaseInfoService(
+			getCurrentCourseId,
+			auth?.user?._id
+		);
+		if (response?.success) {
+			if (response?.data) {
+				navigate(`/course-progress/${getCurrentCourseId}`);
+			} else {
+				navigate(`/course/details/${getCurrentCourseId}`);
+			}
+		}
+	};
 
 	const handleFilterOnChange = (getSectionId, getCurrentOption) => {
 		let cpyFilters = { ...filters };
@@ -175,9 +194,7 @@ export const StudentViewCourses = () => {
 								studentViewCourseList.map((courseItem) => (
 									<Card
 										key={courseItem?._id}
-										onClick={() =>
-											navigate(`/course/details/${courseItem?._id}`)
-										}
+										onClick={() => handleCourseNavigate(courseItem?._id)}
 										className="cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
 									>
 										<CardContent className="flex gap-6 p-6">
