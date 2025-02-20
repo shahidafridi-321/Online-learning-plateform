@@ -1,4 +1,5 @@
 const Course = require("../../models/Course");
+const StudentCourses = require("../../models/StudentCourses");
 
 const getAllStudentViewCourses = async (req, res) => {
 	try {
@@ -79,7 +80,27 @@ const getStudentViewCourseDetails = async (req, res) => {
 	}
 };
 
+const checkCoursePurchaseInfo = async (req, res) => {
+	try {
+		const { id, studentId } = req.params;
+		const studentCourses = await StudentCourses.findOne({ userId: studentId });
+		const ifStudentAlreadyBoughtCurrentCourse =
+			studentCourses.courses.findIndex((item) => item.courseId === id) > -1;
+		res.status(200).json({
+			success: true,
+			data: ifStudentAlreadyBoughtCurrentCourse,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Something went wrong,fetching course details error",
+		});
+	}
+};
+
 module.exports = {
 	getAllStudentViewCourses,
 	getStudentViewCourseDetails,
+	checkCoursePurchaseInfo,
 };
