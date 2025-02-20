@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { VideoPlayer } from "@/components/video-player/VideoPlayer";
 import { StudentContext } from "@/context/student-context/StudentContext";
 import {
+	checkCoursePurchaseInfoService,
 	createPaymentService,
 	fetchStudentViewCourseDetailsService,
 } from "@/services";
@@ -64,6 +65,18 @@ export const StudentViewCourseDetailsPage = () => {
 	// Fetch course details when currentCourseDetailsId is set
 	const fetchStudentViewCourseDetails = async () => {
 		setLoading(true);
+		const checkCoursePurchaseInfoResponse =
+			await checkCoursePurchaseInfoService(
+				currentCourseDetailsId,
+				auth?.user?._id
+			);
+		if (
+			checkCoursePurchaseInfoResponse.success &&
+			checkCoursePurchaseInfoResponse.data
+		) {
+			navigate(`/course-progress/${currentCourseDetailsId}`);
+			return;
+		}
 		const response = await fetchStudentViewCourseDetailsService(
 			currentCourseDetailsId
 		);
