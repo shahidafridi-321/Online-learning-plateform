@@ -9,7 +9,7 @@ const markCurrentLectureAsViewed = async (req, res) => {
 		console.log(error);
 		res.status(500).json({
 			success: false,
-			message: "Error Occured in Current course progress",
+			message: "Error Occured in Current course Marked as view",
 		});
 	}
 };
@@ -26,3 +26,13 @@ const getCurrentCourseProgress = async (req, res) => {
 };
 
 // reset course progress
+const resetCurrentCourseProgress = async (req, res) => {
+	try {
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Error Occured in Current course Reset",
+		});
+	}
+};
