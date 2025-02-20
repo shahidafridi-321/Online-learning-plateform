@@ -45,10 +45,13 @@ const getCurrentCourseProgress = async (req, res) => {
 		const currentUserCourseProgress = await CourseProgress.findOne({
 			userId,
 			courseId,
-		}).populate("courseId");
+		});
 
 		// the current user has that course or not if yes then checks if the progress is started yet or not
-		if (currentUserCourseProgress.lectureProgress.length === 0) {
+		if (
+			!currentUserCourseProgress ||
+			currentUserCourseProgress?.lectureProgress?.length === 0
+		) {
 			const course = await Course.findById(courseId);
 
 			//if no course is found against the current user id
@@ -71,11 +74,12 @@ const getCurrentCourseProgress = async (req, res) => {
 			});
 		}
 
+		const courseDetails = await Course.findById(courseId);
 		// returns the current user course progress
 		res.status(200).json({
 			success: true,
 			data: {
-				courseDetails: currentUserCourseProgress.courseId,
+				courseDetails,
 				progress: currentUserCourseProgress.lectureProgress,
 				completed: currentUserCourseProgress.completed,
 				completionDate: currentUserCourseProgress.completionDate,
