@@ -3,7 +3,16 @@ const Course = require("../../models/Course");
 const StudentCourse = require("../../models/StudentCourses");
 
 // mark current lecture as viewed
-
+const markCurrentLectureAsViewed = async (req, res) => {
+	try {
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Error Occured in Current course progress",
+		});
+	}
+};
 // get our  current course progress
 const getCurrentCourseProgress = async (req, res) => {
 	try {
