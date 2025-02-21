@@ -137,3 +137,13 @@ export const markLectureAsViewedService = async (
 	return data;
 };
 
+export const resetCourseProgressService = async (userId, courseId) => {
+	const { data } = await axiosInstance.post(
+		`/student/course-progress/reset-progress`,
+		{
+			userId,
+			courseId,
+		}
+	);
+	return data;
+};
