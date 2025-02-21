@@ -6,7 +6,7 @@ const StudentCourse = require("../../models/StudentCourses");
 const markCurrentLectureAsViewed = async (req, res) => {
 	try {
 		const { userId, courseId, lectureId } = req.body;
-		let progress = await CourseProgress.find({
+		let progress = await CourseProgress.findOne({
 			userId,
 			courseId,
 		});
@@ -14,9 +14,7 @@ const markCurrentLectureAsViewed = async (req, res) => {
 			progress = new CourseProgress({
 				userId,
 				courseId,
-				/* 	completed: true,
-				completionDate: new Date(), */
-				lectureProgress: [
+				lecturesProgress: [
 					{
 						lectureId,
 						viewed: true,
@@ -26,14 +24,14 @@ const markCurrentLectureAsViewed = async (req, res) => {
 			});
 			await progress.save();
 		} else {
-			const lectureProgress = progress.lectureProgress.find(
+			const lectureProgress = progress.lecturesProgress.find(
 				(item) => item.lectureId === lectureId
 			);
 			if (lectureProgress) {
 				lectureProgress.viewed = true;
 				lectureProgress.dateViewed = new Date();
 			} else {
-				progress.lectureProgress.push({
+				progress.lecturesProgress.push({
 					lectureId,
 					viewed: true,
 					dateViewed: new Date(),
@@ -42,7 +40,7 @@ const markCurrentLectureAsViewed = async (req, res) => {
 			await progress.save();
 		}
 
-		const course = Course.findById(courseId);
+		const course = await Course.findById(courseId);
 		if (!course) {
 			return res.status(404).json({
 				success: false,
@@ -52,8 +50,8 @@ const markCurrentLectureAsViewed = async (req, res) => {
 
 		// Checks Is all the lectures are viewed ro not
 		const allLeturesViewed =
-			progress.lectureProgress.length === course.curriculum.length &&
-			progress.lectureProgress.every((item) => item.viewed);
+			progress.lecturesProgress.length === course.curriculum.length &&
+			progress.lecturesProgress.every((item) => item.viewed);
 
 		if (allLeturesViewed) {
 			progress.completed = true;
@@ -76,85 +74,70 @@ const markCurrentLectureAsViewed = async (req, res) => {
 };
 // get our  current course progress
 const getCurrentCourseProgress = async (req, res) => {
-	try {
-		// get current userId and courseid
-		const { userId, courseId } = req.params;
+  try {
+    const { userId, courseId } = req.params;
 
-		//check how many courses the current user have purchased
-		const studentPurchasedCourses = await StudentCourse.findOne({
-			userId,
-		});
+    const studentPurchasedCourses = await StudentCourse.findOne({ userId });
+    const isCurrentCoursePurchasedByCurrentUser =
+      studentPurchasedCourses?.courses?.findIndex(
+        (item) => item.courseId === courseId
+      ) > -1;
 
-		//checks the current course is purchased by the user or not
-		const isCurrentCoursePurchasedByCurrentUser =
-			studentPurchasedCourses?.courses?.findIndex(
-				(item) => item.courseId === courseId
-			) > -1;
+    if (!isCurrentCoursePurchasedByCurrentUser) {
+      return res.status(200).json({
+        success: true,
+        data: { isPurchased: false },
+        message: "You Need To Purchase The Course To Access It!",
+      });
+    }
 
-		// if the current course is not purchased by the user do this
-		if (!isCurrentCoursePurchasedByCurrentUser) {
-			return res.status(200).json({
-				success: true,
-				data: {
-					isPurchased: false,
-				},
-				message: "You Need To Purchase The Course To Access It!",
-			});
-		}
+    const currentUserCourseProgress = await CourseProgress.findOne({
+      userId,
+      courseId,
+    });
 
-		// gets the current user course progress from database using courseProgress schema
-		const currentUserCourseProgress = await CourseProgress.findOne({
-			userId,
-			courseId,
-		});
+    if (
+      !currentUserCourseProgress ||
+      currentUserCourseProgress?.lecturesProgress?.length === 0
+    ) {
+      const course = await Course.findById(courseId);
+      if (!course) {
+        return res.status(404).json({
+          success: false,
+          message: "Course Not Found!",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "No Progress found, you can start watching the course",
+        data: {
+          courseDetails: course,
+          progress: [],
+          isPurchased: true,
+        },
+      });
+    }
 
-		// the current user has that course or not if yes then checks if the progress is started yet or not
-		if (
-			!currentUserCourseProgress ||
-			currentUserCourseProgress?.lectureProgress?.length === 0
-		) {
-			const course = await Course.findById(courseId);
-
-			//if no course is found against the current user id
-			if (!course) {
-				return res.status(404).json({
-					success: false,
-					message: "Course Not Found!",
-				});
-			}
-
-			//the current user not start course yet
-			return res.status(200).json({
-				success: true,
-				message: "No Progress found, you can start watching the course",
-				data: {
-					courseDetails: course,
-					progress: [],
-					isPurchased: true,
-				},
-			});
-		}
-
-		const courseDetails = await Course.findById(courseId);
-		// returns the current user course progress
-		res.status(200).json({
-			success: true,
-			data: {
-				courseDetails,
-				progress: currentUserCourseProgress.lectureProgress,
-				completed: currentUserCourseProgress.completed,
-				completionDate: currentUserCourseProgress.completionDate,
-				isPurchased: true,
-			},
-		});
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({
-			success: false,
-			message: "Error Occured in Current course progress",
-		});
-	}
+    const courseDetails = await Course.findById(courseId);
+    res.status(200).json({
+      success: true,
+      data: {
+        courseDetails,
+        progress: currentUserCourseProgress.lecturesProgress,
+        completed: currentUserCourseProgress.completed,
+        completionDate: currentUserCourseProgress.completionDate,
+        isPurchased: true,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error Occured in Current course progress",
+    });
+  }
 };
+
 
 // reset course progress
 const resetCurrentCourseProgress = async (req, res) => {
