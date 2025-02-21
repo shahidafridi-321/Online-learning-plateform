@@ -115,7 +115,7 @@ export function VideoPlayer({
 		};
 	}, []);
 
-	/* useEffect(() => {
+	useEffect(() => {
 		if (played === 1) {
 			onProgressUpdate({
 				...progressData,
@@ -123,7 +123,7 @@ export function VideoPlayer({
 			});
 		}
 	}, [played]);
- */
+
 	return (
 		<div
 			ref={playerContainerRef}
