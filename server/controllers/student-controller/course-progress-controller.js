@@ -5,6 +5,67 @@ const StudentCourse = require("../../models/StudentCourses");
 // mark current lecture as viewed
 const markCurrentLectureAsViewed = async (req, res) => {
 	try {
+		const { userId, courseId, lectureId } = req.body;
+		let progress = await CourseProgress.find({
+			userId,
+			courseId,
+		});
+		if (!progress) {
+			progress = new CourseProgress({
+				userId,
+				courseId,
+				/* 	completed: true,
+				completionDate: new Date(), */
+				lectureProgress: [
+					{
+						lectureId,
+						viewed: true,
+						dateViewed: new Date(),
+					},
+				],
+			});
+			await progress.save();
+		} else {
+			const lectureProgress = progress.lectureProgress.find(
+				(item) => item.lectureId === lectureId
+			);
+			if (lectureProgress) {
+				lectureProgress.viewed = true;
+				lectureProgress.dateViewed = new Date();
+			} else {
+				progress.lectureProgress.push({
+					lectureId,
+					viewed: true,
+					dateViewed: new Date(),
+				});
+			}
+			await progress.save();
+		}
+
+		const course = Course.findById(courseId);
+		if (!course) {
+			return res.status(404).json({
+				success: false,
+				message: "Course Not Found",
+			});
+		}
+
+		// Checks Is all the lectures are viewed ro not
+		const allLeturesViewed =
+			progress.lectureProgress.length === course.curriculum.length &&
+			progress.lectureProgress.every((item) => item.viewed);
+
+		if (allLeturesViewed) {
+			progress.completed = true;
+			progress.completionDate = new Date();
+			await progress.save();
+		}
+
+		res.status(200).json({
+			success: true,
+			message: "Lecture Marked as completed",
+			data: progress,
+		});
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({
