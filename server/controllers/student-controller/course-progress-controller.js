@@ -151,9 +151,10 @@ const resetCurrentCourseProgress = async (req, res) => {
 				message: "No Progress Found",
 			});
 		}
-		progress.lectureProgress = [];
+		// Clear the correct field
+		progress.lecturesProgress = [];
 		progress.completed = false;
-		completionDate = null;
+		progress.completionDate = null;
 		await progress.save();
 
 		res.status(200).json({
@@ -169,6 +170,7 @@ const resetCurrentCourseProgress = async (req, res) => {
 		});
 	}
 };
+
 
 module.exports = {
 	markCurrentLectureAsViewed,
