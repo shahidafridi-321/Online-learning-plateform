@@ -5,11 +5,24 @@ import { StudentContext } from "@/context/student-context/StudentContext";
 import { fetchStudentViewCourseListService } from "@/services";
 import { useNavigate } from "react-router-dom";
 import { HeroSection } from "./HeroSection";
+import { AuthContext } from "@/context/auth-context";
+import { checkCoursePurchaseInfoService } from "@/services";
 
 export const StudentHomePage = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
 		useContext(StudentContext);
+	const { auth } = useContext(AuthContext);
 	const navigate = useNavigate();
+
+	const handleNavigateToCoursesPage = async (getCurrentId) => {
+		sessionStorage.removeItem("filters");
+		const currentFilter = {
+			category: [getCurrentId],
+		};
+
+		sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+		navigate("/courses");
+	};
 
 	const fetchAllStudentViewCourses = async () => {
 		const response = await fetchStudentViewCourseListService();
@@ -18,16 +31,30 @@ export const StudentHomePage = () => {
 		}
 	};
 
+	const handleCourseNavigate = async (getCurrentCourseId) => {
+		const response = await checkCoursePurchaseInfoService(
+			getCurrentCourseId,
+			auth?.user?._id
+		);
+		if (response?.success) {
+			if (response?.data) {
+				navigate(`/course-progress/${getCurrentCourseId}`);
+			} else {
+				navigate(`/course/details/${getCurrentCourseId}`);
+			}
+		}
+	};
+
 	useEffect(() => {
 		fetchAllStudentViewCourses();
 	}, []);
 
 	// Clear filters on unmount
-	useEffect(() => {
+	/* useEffect(() => {
 		return () => {
 			sessionStorage.removeItem("filters");
 		};
-	}, []);
+	}, []); */
 
 	return (
 		<div className="min-h-screen bg-gray-50">
@@ -45,6 +72,7 @@ export const StudentHomePage = () => {
 							key={categoryItem.id}
 							className="justify-center bg-white text-gray-800 border border-gray-200 hover:bg-gray-50 rounded-full py-2 shadow transition transform hover:-translate-y-1"
 							variant="outline"
+							onClick={() => handleNavigateToCoursesPage(categoryItem.id)}
 						>
 							{categoryItem.label}
 						</Button>
@@ -62,7 +90,7 @@ export const StudentHomePage = () => {
 						studentViewCourseList.map((courseItem) => (
 							<div
 								key={courseItem?._id}
-								onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+								onClick={() => handleCourseNavigate(courseItem._id)}
 								className="cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl bg-white rounded-lg overflow-hidden"
 							>
 								<img
