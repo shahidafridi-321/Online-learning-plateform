@@ -17,6 +17,7 @@ export function VideoPlayer({
 	width = "100%",
 	height = "100%",
 	url,
+	onEnded,
 	onProgressUpdate,
 	progressData,
 }) {
@@ -32,6 +33,13 @@ export function VideoPlayer({
 	const playerContainerRef = useRef(null);
 	const controlsTimeoutRef = useRef(null);
 
+	// When the URL changes, auto play the new video.
+	useEffect(() => {
+		if (url) {
+			setPlaying(true);
+		}
+	}, [url]);
+
 	function handlePlayAndPause() {
 		setPlaying(!playing);
 	}
@@ -43,11 +51,15 @@ export function VideoPlayer({
 	}
 
 	function handleRewind() {
-		playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
+		if (playerRef.current) {
+			playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+		}
 	}
 
 	function handleForward() {
-		playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
+		if (playerRef.current) {
+			playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+		}
 	}
 
 	function handleToggleMute() {
@@ -55,17 +67,19 @@ export function VideoPlayer({
 	}
 
 	function handleSeekChange(newValue) {
-		setPlayed(newValue[0]);
+		setPlayed(newValue[0] / 100);
 		setSeeking(true);
 	}
 
 	function handleSeekMouseUp() {
 		setSeeking(false);
-		playerRef.current?.seekTo(played);
+		if (playerRef.current) {
+			playerRef.current.seekTo(played);
+		}
 	}
 
 	function handleVolumeChange(newValue) {
-		setVolume(newValue[0]);
+		setVolume(newValue[0] / 100);
 	}
 
 	function pad(string) {
@@ -77,18 +91,16 @@ export function VideoPlayer({
 		const hh = date.getUTCHours();
 		const mm = date.getUTCMinutes();
 		const ss = pad(date.getUTCSeconds());
-
 		if (hh) {
 			return `${hh}:${pad(mm)}:${ss}`;
 		}
-
 		return `${mm}:${ss}`;
 	}
 
 	const handleFullScreen = useCallback(() => {
 		if (!isFullScreen) {
-			if (playerContainerRef?.current.requestFullscreen) {
-				playerContainerRef?.current?.requestFullscreen();
+			if (playerContainerRef.current.requestFullscreen) {
+				playerContainerRef.current.requestFullscreen();
 			}
 		} else {
 			if (document.exitFullscreen) {
@@ -107,29 +119,25 @@ export function VideoPlayer({
 		const handleFullScreenChange = () => {
 			setIsFullScreen(document.fullscreenElement);
 		};
-
 		document.addEventListener("fullscreenchange", handleFullScreenChange);
-
 		return () => {
 			document.removeEventListener("fullscreenchange", handleFullScreenChange);
 		};
 	}, []);
 
+	// Optional progress update (if you want to report progress continuously)
 	useEffect(() => {
-		if (played === 1) {
-			onProgressUpdate({
-				...progressData,
-				progressValue: played,
-			});
+		if (played === 1 && onProgressUpdate) {
+			onProgressUpdate({ ...progressData, progressValue: played });
 		}
-	}, [played]);
+	}, [played, onProgressUpdate, progressData]);
 
 	return (
 		<div
 			ref={playerContainerRef}
-			className={`relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ease-in-out 
-      ${isFullScreen ? "w-screen h-screen" : ""}
-      `}
+			className={`relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ease-in-out ${
+				isFullScreen ? "w-screen h-screen" : ""
+			}`}
 			style={{ width, height }}
 			onMouseMove={handleMouseMove}
 			onMouseLeave={() => setShowControls(false)}
@@ -144,6 +152,9 @@ export function VideoPlayer({
 				volume={volume}
 				muted={muted}
 				onProgress={handleProgress}
+				onEnded={() => {
+					if (onEnded) onEnded();
+				}}
 			/>
 			{showControls && (
 				<div
@@ -155,7 +166,7 @@ export function VideoPlayer({
 						value={[played * 100]}
 						max={100}
 						step={0.1}
-						onValueChange={(value) => handleSeekChange([value[0] / 100])}
+						onValueChange={(value) => handleSeekChange(value)}
 						onValueCommit={handleSeekMouseUp}
 						className="w-full mb-4"
 					/>
@@ -205,14 +216,14 @@ export function VideoPlayer({
 								value={[volume * 100]}
 								max={100}
 								step={1}
-								onValueChange={(value) => handleVolumeChange([value[0] / 100])}
-								className="w-24 "
+								onValueChange={(value) => handleVolumeChange(value)}
+								className="w-24"
 							/>
 						</div>
 						<div className="flex items-center space-x-2">
 							<div className="text-white">
-								{formatTime(played * (playerRef?.current?.getDuration() || 0))}/{" "}
-								{formatTime(playerRef?.current?.getDuration() || 0)}
+								{formatTime(played * (playerRef.current?.getDuration() || 0))}/{" "}
+								{formatTime(playerRef.current?.getDuration() || 0)}
 							</div>
 							<Button
 								className="text-white bg-transparent hover:text-white hover:bg-gray-700"
