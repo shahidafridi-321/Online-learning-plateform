@@ -83,9 +83,16 @@ const getStudentViewCourseDetails = async (req, res) => {
 const checkCoursePurchaseInfo = async (req, res) => {
 	try {
 		const { id, studentId } = req.params;
+		// Find the student's purchased courses
 		const studentCourses = await StudentCourses.findOne({ userId: studentId });
-		const ifStudentAlreadyBoughtCurrentCourse =
-			studentCourses.courses.findIndex((item) => item.courseId === id) > -1;
+
+		// If no record exists, the student hasn't purchased any course
+		let ifStudentAlreadyBoughtCurrentCourse = false;
+		if (studentCourses && studentCourses.courses) {
+			ifStudentAlreadyBoughtCurrentCourse =
+				studentCourses.courses.findIndex((item) => item.courseId === id) > -1;
+		}
+
 		res.status(200).json({
 			success: true,
 			data: ifStudentAlreadyBoughtCurrentCourse,
@@ -94,7 +101,7 @@ const checkCoursePurchaseInfo = async (req, res) => {
 		console.log(error);
 		res.status(500).json({
 			success: false,
-			message: "Something went wrong,fetching course details error",
+			message: "Something went wrong, fetching course details error",
 		});
 	}
 };
