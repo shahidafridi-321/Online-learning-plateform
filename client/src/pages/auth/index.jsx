@@ -1,9 +1,11 @@
 import { GraduationCapIcon } from "lucide-react";
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CommonForm } from "@/components/ui/common-form";
 import { signInFormControls, signUpFormControls } from "@/config";
+import { registerService } from "@/services";
+import { ToastContainer, toast } from "react-toastify";
 
 import {
 	Card,
@@ -22,14 +24,12 @@ export const AuthPage = () => {
 		setSignInFormData,
 		signUpFormData,
 		setSignUpFormData,
-		handleRegisterUser,
 		handleLoginUser,
 	} = useContext(AuthContext);
 
 	const handleTabChange = (value) => {
 		setActiveTab(value);
 	};
-
 	const checkIfSignInFormIsvalid = () => {
 		return (
 			signInFormData &&
@@ -47,9 +47,32 @@ export const AuthPage = () => {
 		);
 	};
 
+	const handleRegisterUser = async (e) => {
+		e.preventDefault();
+
+		try {
+			const data = await registerService(signUpFormData);
+
+			if (!data || !data.success) {
+				toast.error("Registration Failed!");
+				return;
+			}
+			toast.success("Registration Successful");
+			setSignUpFormData({
+				userName: "",
+				userEmail: "",
+				password: "",
+			});
+		} catch (error) {
+			console.error("Registration Error:", error);
+			toast.error(`Registration Failed! ${error.response.data.message}`);
+		}
+	};
+
 	return (
 		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
 			<header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-300 bg-white/50 backdrop-blur-sm">
+				<ToastContainer />
 				<Link
 					to="/"
 					className="flex items-center space-x-2 hover:opacity-80 transition-opacity"

@@ -13,12 +13,6 @@ export const AuthProvider = ({ children }) => {
 	});
 	const [loading, setLoading] = useState(true);
 
-	const handleRegisterUser = async (e) => {
-		e.preventDefault();
-		const data = await registerService(signUpFormData);
-		return data;
-	};
-
 	const handleLoginUser = async (e) => {
 		e.preventDefault();
 		const data = await loginService(signInFormData);
@@ -85,7 +79,7 @@ export const AuthProvider = ({ children }) => {
 				setSignInFormData,
 				signUpFormData,
 				setSignUpFormData,
-				handleRegisterUser,
+				/* handleRegisterUser, */
 				handleLoginUser,
 				auth,
 				loading,
