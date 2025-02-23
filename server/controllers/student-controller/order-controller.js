@@ -107,7 +107,7 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
 	try {
 		const { paymentId, payerId, orderId } = req.body;
 
-		const order = await Order.findById(orderId);
+		let order = await Order.findById(orderId);
 		if (!order) {
 			return res.status(404).json({
 				success: false,
@@ -139,14 +139,16 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
 		} else {
 			const newStudentCourse = new StudentCourses({
 				userId: order.userId,
-				courses: {
-					courseId: order.courseId,
-					title: order.courseTitle,
-					instructorId: order.instructorId,
-					instructorName: order.instructorName,
-					courseImage: order.courseImage,
-					dateOfParchase: order.orderDate,
-				},
+				courses: [
+					{
+						courseId: order.courseId,
+						title: order.courseTitle,
+						instructorId: order.instructorId,
+						instructorName: order.instructorName,
+						courseImage: order.courseImage,
+						dateOfParchase: order.orderDate,
+					},
+				],
 			});
 			await newStudentCourse.save();
 		}
