@@ -22,64 +22,45 @@ import {
 import { AuthContext } from "@/context/auth-context";
 
 export const StudentViewCourseDetailsPage = () => {
+	// Use context values for course details and loading
 	const {
 		studentViewCourseDetails,
 		setStudentViewCourseDetails,
-		currentCourseDetailsId,
-		setCurrentCourseDetailsId,
 		loading,
 		setLoading,
 	} = useContext(StudentContext);
-
 	const { auth } = useContext(AuthContext);
-
 	const navigate = useNavigate();
+	const { id } = useParams();
+	const location = useLocation();
+
 	const [displayCurrentVideoFreepreview, setDisplayCurrentVideoFreepreview] =
 		useState(null);
 	const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
-
 	const [approvalUrl, setApprovalUrl] = useState("");
 
-	const { id } = useParams();
-
-	// Set course ID from URL param into context
+	// When the course id in the URL changes, clear previous details and fetch new ones
 	useEffect(() => {
 		if (id) {
-			setCurrentCourseDetailsId(id);
+			setStudentViewCourseDetails(null); // Clear previous course details
+			fetchCourseDetails(id);
 		}
-	}, [id, setCurrentCourseDetailsId]);
+	}, [id]);
 
-	// Clear details when leaving course details routes
-	const location = useLocation();
-	useEffect(() => {
-		if (!location.pathname.includes("/course/details")) {
-			setStudentViewCourseDetails(null);
-			setCurrentCourseDetailsId(null);
-		}
-	}, [
-		location.pathname,
-		setStudentViewCourseDetails,
-		setCurrentCourseDetailsId,
-	]);
-
-	// Fetch course details when currentCourseDetailsId is set
-	const fetchStudentViewCourseDetails = async () => {
+	// Fetch course details using the id from useParams directly
+	const fetchCourseDetails = async (courseId) => {
 		setLoading(true);
-		const checkCoursePurchaseInfoResponse =
-			await checkCoursePurchaseInfoService(
-				currentCourseDetailsId,
-				auth?.user?._id
-			);
-		if (
-			checkCoursePurchaseInfoResponse.success &&
-			checkCoursePurchaseInfoResponse.data
-		) {
-			navigate(`/course-progress/${currentCourseDetailsId}`);
+		// Check if the course is purchased; if so, navigate to course progress page
+		const purchaseResponse = await checkCoursePurchaseInfoService(
+			courseId,
+			auth?.user?._id
+		);
+		if (purchaseResponse.success && purchaseResponse.data) {
+			navigate(`/course-progress/${courseId}`);
 			return;
 		}
-		const response = await fetchStudentViewCourseDetailsService(
-			currentCourseDetailsId
-		);
+		// Otherwise, fetch the course details
+		const response = await fetchStudentViewCourseDetailsService(courseId);
 		if (response?.success) {
 			setStudentViewCourseDetails(response.data);
 		} else {
@@ -88,38 +69,39 @@ export const StudentViewCourseDetailsPage = () => {
 		setLoading(false);
 	};
 
+	// Clear details when leaving the course details route
 	useEffect(() => {
-		if (currentCourseDetailsId) {
-			fetchStudentViewCourseDetails();
+		if (!location.pathname.includes("/course/details")) {
+			setStudentViewCourseDetails(null);
 		}
-	}, [currentCourseDetailsId]);
+	}, [location.pathname]);
 
-	// Open the video preview dialog when a free preview video URL is available
+	// Open the free preview dialog if a free preview video URL is set
 	useEffect(() => {
 		if (displayCurrentVideoFreepreview !== null) {
 			setShowFreePreviewDialog(true);
 		}
 	}, [displayCurrentVideoFreepreview]);
 
-	// Prevent rendering if still loading or course details have not been fetched
+	// While loading or if no course details, show a skeleton loader
 	if (loading || !studentViewCourseDetails) {
 		return <Skeleton />;
 	}
 
-	// If Approval url is found
+	// If an approval URL is present, redirect to it
 	if (approvalUrl !== "") {
 		window.location.href = approvalUrl;
 	}
 
-	// Find the first free preview (video) index in the curriculum
+	// Find the first free preview video in the curriculum
 	const getIndexOfFreePreviewUrl =
 		studentViewCourseDetails.curriculum?.findIndex(
 			(item) => item.freePreview
 		) ?? -1;
 
+	// Handle free preview click; navigate to text lecture page or set video URL for preview
 	const handleSetFreePreview = (currentItem) => {
 		if (currentItem.type === "text") {
-			// Navigate to text lecture page with course & lecture IDs
 			navigate(
 				`/course/details/${studentViewCourseDetails._id}/lecture/${currentItem._id}`
 			);
@@ -128,6 +110,7 @@ export const StudentViewCourseDetailsPage = () => {
 		}
 	};
 
+	// Handle payment creation for purchasing the course
 	const handleCreatePayment = async () => {
 		const paymentPayload = {
 			userId: auth?.user?._id,
@@ -147,7 +130,6 @@ export const StudentViewCourseDetailsPage = () => {
 			coursePricing: studentViewCourseDetails?.pricing,
 		};
 		const response = await createPaymentService(paymentPayload);
-
 		if (response.success) {
 			sessionStorage.setItem(
 				"currentOrderId",
