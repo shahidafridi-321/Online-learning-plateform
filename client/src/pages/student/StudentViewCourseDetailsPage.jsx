@@ -157,6 +157,7 @@ export const StudentViewCourseDetailsPage = () => {
 			setApprovalUrl(response?.data?.approveUrl);
 		}
 	};
+
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 p-8">
 			<div className="max-w-6xl mx-auto">
@@ -225,8 +226,14 @@ export const StudentViewCourseDetailsPage = () => {
 							</CardContent>
 						</Card>
 						<Card className="mb-8">
-							<CardHeader>
+							<CardHeader className="flex flex-row justify-between items-center">
 								<CardTitle>Course Content</CardTitle>
+								<Button
+									onClick={handleCreatePayment}
+									className="bg-indigo-600 hover:bg-indigo-700 text-white"
+								>
+									Buy Now
+								</Button>
 							</CardHeader>
 							<CardContent>
 								<ul className="space-y-4">
