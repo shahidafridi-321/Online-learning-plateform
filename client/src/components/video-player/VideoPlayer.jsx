@@ -34,11 +34,11 @@ export function VideoPlayer({
 	const controlsTimeoutRef = useRef(null);
 
 	// When the URL changes, auto play the new video.
-	useEffect(() => {
+	/* useEffect(() => {
 		if (url) {
 			setPlaying(true);
 		}
-	}, [url]);
+	}, []); */
 
 	function handlePlayAndPause() {
 		setPlaying(!playing);
