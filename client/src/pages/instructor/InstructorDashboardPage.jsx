@@ -30,7 +30,7 @@ export const InstructorDashboardPage = () => {
 			icon: BarChart,
 			label: "Dashboard",
 			value: "dashboard",
-			component: <InstructorDashboard />,
+			component: <InstructorDashboard listOfCourses={instructorCoursesList} />,
 		},
 		{
 			icon: Book,
@@ -50,6 +50,8 @@ export const InstructorDashboardPage = () => {
 		resetCredentials();
 		sessionStorage.clear();
 	};
+
+	console.log(instructorCoursesList);
 
 	return (
 		<div className="flex min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
