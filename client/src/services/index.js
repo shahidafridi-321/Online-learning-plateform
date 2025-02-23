@@ -35,10 +35,10 @@ export const mediaDeleteService = async (id) => {
 	return data;
 };
 
-export const fetchInstructorCourseListService = async () => {
-	const { data } = await axiosInstance.get(`/instructor/course/get`);
+export const fetchInstructorCourseListService = async (id) => {
+	const { data } = await axiosInstance.get(`/instructor/course/get/${id}`);
 	return data;
-};
+}; /*  */
 
 export const addNewCourseService = async (formData) => {
 	const { data } = await axiosInstance.post(`/instructor/course/add`, formData);
