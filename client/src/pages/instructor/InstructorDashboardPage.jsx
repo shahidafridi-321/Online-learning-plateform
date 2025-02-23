@@ -13,9 +13,10 @@ export const InstructorDashboardPage = () => {
 	const { resetCredentials } = useContext(AuthContext);
 	const { instructorCoursesList, setInstructorCoursesList } =
 		useContext(InstructorContext);
+	const { auth } = useContext(AuthContext);
 
-	const fetchAllCourses = async (params) => {
-		const response = await fetchInstructorCourseListService();
+	const fetchAllCourses = async () => {
+		const response = await fetchInstructorCourseListService(auth?.user._id);
 		if (response?.success) {
 			setInstructorCoursesList(response.data);
 		}
