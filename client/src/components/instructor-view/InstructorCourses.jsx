@@ -55,16 +55,13 @@ export const InstructorCourses = ({ listOfCourses }) => {
 						<TableBody>
 							{listOfCourses && listOfCourses.length > 0
 								? listOfCourses.map((course) => (
-										<TableRow key={course.title}>
+										<TableRow key={course._id}>
 											<TableCell className="font-medium">
 												{course?.title}
 											</TableCell>
 											<TableCell>{course?.students?.length}</TableCell>
 											<TableCell>
-												$
-												{course?.students?.length
-													? course?.students?.length * course?.pricing
-													: course?.pricing}
+												${course?.students?.length * course?.pricing}
 											</TableCell>
 											<TableCell className="text-right">
 												<Button
