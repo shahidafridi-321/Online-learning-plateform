@@ -153,6 +153,17 @@ export const CourseProgressPage = () => {
 		}
 	};
 
+	//
+	const handleLectureChange = (lectureId) => {
+		const nextLecture =
+			studentCurrentCourseProgress?.courseDetails.curriculum.find(
+				(lecture) => lecture._id === lectureId
+			);
+		if (nextLecture) {
+			setCurrentLecture(nextLecture);
+		}
+	};
+
 	useEffect(() => {
 		fetchCurrentCourseProgress();
 	}, [id]);
@@ -229,7 +240,7 @@ export const CourseProgressPage = () => {
 					</div>
 				</div>
 				<div
-					className={`fixed top-[134px] right-0 bottom-0 w-[400px] border-l border-gray-700 transition-all duration-300 ${
+					className={`absolute right-0 w-[400px] border-l border-gray-700 transition-all duration-300 ${
 						isSideBarOpen ? "translate-x-0" : "translate-x-full"
 					}`}
 				>
@@ -257,15 +268,20 @@ export const CourseProgressPage = () => {
 												key={lecture?._id}
 												className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
 											>
-												{studentCurrentCourseProgress?.progress?.find(
-													(progressItem) =>
-														progressItem.lectureId === lecture?._id
-												)?.viewed ? (
-													<CircleCheckBigIcon className="h-5 w-5 text-green-500" />
-												) : (
-													<Circle className="h-5 w-5 text-green-500" />
-												)}
-												<span>{lecture?.title}</span>
+												<Button
+													variant="ghost"
+													onClick={() => handleLectureChange(lecture?._id)}
+												>
+													{studentCurrentCourseProgress?.progress?.find(
+														(progressItem) =>
+															progressItem.lectureId === lecture?._id
+													)?.viewed ? (
+														<CircleCheckBigIcon className="h-5 w-5 text-green-500" />
+													) : (
+														<Circle className="h-5 w-5 text-green-500" />
+													)}
+													<span>{lecture?.title}</span>
+												</Button>
 											</div>
 										)
 									)}
