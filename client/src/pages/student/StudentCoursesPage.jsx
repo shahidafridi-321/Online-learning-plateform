@@ -27,7 +27,9 @@ export const StudentCoursesPage = () => {
 	}, []);
 	return (
 		<div className="p-4">
-			<h1 className="text-3xl mb-8 font-bold">My Courses</h1>
+			<h1 className="text-3xl mb-8 font-bold">
+				Hi, <span className="italic">{auth?.user.userName}</span>
+			</h1>
 			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
 				{studentBoughtCoursesList && studentBoughtCoursesList.length > 0 ? (
 					studentBoughtCoursesList.map((course) => (
