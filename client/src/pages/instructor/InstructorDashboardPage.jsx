@@ -52,8 +52,6 @@ export const InstructorDashboardPage = () => {
 		sessionStorage.clear();
 	};
 
-	console.log(instructorCoursesList);
-
 	return (
 		<div className="flex min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
 			{/* Sidebar */}

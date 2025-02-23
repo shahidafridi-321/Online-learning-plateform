@@ -39,7 +39,6 @@ export const CourseSetting = () => {
 			}
 		}
 	};
-	console.log(courseLandingFormData);
 
 	return (
 		<Card>

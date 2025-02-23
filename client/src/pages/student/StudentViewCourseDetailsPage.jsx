@@ -146,7 +146,6 @@ export const StudentViewCourseDetailsPage = () => {
 			courseId: studentViewCourseDetails?._id,
 			coursePricing: studentViewCourseDetails?.pricing,
 		};
-		console.log(paymentPayload);
 		const response = await createPaymentService(paymentPayload);
 
 		if (response.success) {

@@ -40,8 +40,6 @@ export const InstructorDashboard = ({ listOfCourses }) => {
 		};
 	};
 
-	console.log(calculateTotalStudentsAndProfit());
-
 	const config = [
 		{
 			icon: Users,
