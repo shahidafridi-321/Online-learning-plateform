@@ -8,6 +8,11 @@ export const registerService = async (formData) => {
 	return data;
 };
 
+export const verifyEmailService = async (formData) => {
+	const { data } = await axiosInstance.post("/auth/verify-email", formData);
+	return data;
+};
+
 export const loginService = async (formData) => {
 	const { data } = await axiosInstance.post("/auth/login", formData);
 	return data;
