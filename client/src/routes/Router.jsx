@@ -15,6 +15,7 @@ import { TextLecturePage } from "@/pages/student/TextLecturePage";
 import { PaypalPaymentReturnPage } from "@/pages/student/PaypalPaymentReturnPage";
 import { StudentCoursesPage } from "@/pages/student/StudentCoursesPage";
 import { CourseProgressPage } from "@/pages/student/CourseProgressPage";
+import { EmailVerificationPage } from "@/pages/email-verification/EmailVerificationPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -32,6 +33,10 @@ export const routes = createBrowserRouter([
 	{
 		path: "/auth",
 		element: <ProtectedRoute element={<AuthPage />} />,
+	},
+	{
+		path: "/verify-email",
+		element: <ProtectedRoute element={<EmailVerificationPage />} />,
 	},
 	{
 		path: "/instructor",
