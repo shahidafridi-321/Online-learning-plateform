@@ -1,6 +1,6 @@
 import { GraduationCapIcon } from "lucide-react";
 import React, { useContext, useState } from "react";
-import { data, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CommonForm } from "@/components/ui/common-form";
 import { signInFormControls, signUpFormControls } from "@/config";
@@ -18,6 +18,7 @@ import { AuthContext } from "@/context/auth-context";
 
 export const AuthPage = () => {
 	const [activeTab, setActiveTab] = useState("signin");
+	const navigate = useNavigate();
 
 	const {
 		signInFormData,
@@ -30,6 +31,7 @@ export const AuthPage = () => {
 	const handleTabChange = (value) => {
 		setActiveTab(value);
 	};
+
 	const checkIfSignInFormIsvalid = () => {
 		return (
 			signInFormData &&
@@ -38,6 +40,7 @@ export const AuthPage = () => {
 		);
 	};
 
+	//check only for name, email, and password
 	const checkIfSignUpFormIsvalid = () => {
 		return (
 			signUpFormData &&
@@ -49,23 +52,34 @@ export const AuthPage = () => {
 
 	const handleRegisterUser = async (e) => {
 		e.preventDefault();
-
 		try {
-			const data = await registerService(signUpFormData);
+			const { userName, userEmail, password } = signUpFormData;
 
-			if (!data || !data.success) {
+			const regResponse = await registerService({
+				userName,
+				userEmail,
+				password,
+			});
+			if (!regResponse || !regResponse.success) {
 				toast.error("Registration Failed!");
 				return;
 			}
-			toast.success("Registration Successful");
+			toast.success(
+				"Registration Successful. Please check your email for the verification code."
+			);
+			// clear the registration form
 			setSignUpFormData({
 				userName: "",
 				userEmail: "",
 				password: "",
 			});
+			// redirect the user to  verification page
+			navigate("/verify-email");
 		} catch (error) {
 			console.error("Registration Error:", error);
-			toast.error(`Registration Failed! ${error.response.data.message}`);
+			toast.error(
+				`Registration Failed! ${error.response?.data?.message || error.message}`
+			);
 		}
 	};
 
@@ -94,23 +108,21 @@ export const AuthPage = () => {
 					<TabsList className="grid w-full grid-cols-2 rounded-lg bg-gray-100/50 backdrop-blur-sm p-1.5 gap-1.5 mb-6">
 						<TabsTrigger
 							value="signin"
-							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all
-                ${
-									activeTab === "signin"
-										? "bg-white shadow-md text-purple-600"
-										: "text-gray-600 hover:bg-white/50"
-								}`}
+							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all ${
+								activeTab === "signin"
+									? "bg-white shadow-md text-purple-600"
+									: "text-gray-600 hover:bg-white/50"
+							}`}
 						>
 							Sign In
 						</TabsTrigger>
 						<TabsTrigger
 							value="signup"
-							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all
-                ${
-									activeTab === "signup"
-										? "bg-white shadow-md text-purple-600"
-										: "text-gray-600 hover:bg-white/50"
-								}`}
+							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all ${
+								activeTab === "signup"
+									? "bg-white shadow-md text-purple-600"
+									: "text-gray-600 hover:bg-white/50"
+							}`}
 						>
 							Sign Up
 						</TabsTrigger>
