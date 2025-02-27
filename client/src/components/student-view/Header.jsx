@@ -1,60 +1,76 @@
-import { GraduationCapIcon, TvMinimalPlay } from "lucide-react";
-import React, { useContext } from "react";
+import { GraduationCapIcon, MoonIcon, Sun, TvMinimalPlay } from "lucide-react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/context/auth-context";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
 	const navigate = useNavigate();
-
+	const [darkMode, setDarkMode] = useState(false);
 	const { resetCredentials } = useContext(AuthContext);
+
+	useEffect(() => {
+		if (darkMode) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}, [darkMode]);
+
 	const handleLogout = () => {
 		resetCredentials();
 		sessionStorage.clear();
+		navigate("/auth");
 	};
+
 	return (
-		<header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-300 bg-white/50 backdrop-blur-sm">
-			<div className="flex w-full items-center justify-between">
-				<div className="flex items-center justify-between space-x-4">
-					<Link
-						to="/"
-						className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
-					>
-						<GraduationCapIcon className="h-8 w-8 text-gray-800 animate-bounce" />
-						<span className="font-bold text-2xl lg:text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+		<header className="px-6 py-4 bg-white dark:bg-gray-900 shadow-md">
+			<div className="max-w-7xl mx-auto flex items-center justify-between">
+				{/* Left Side: Logo & Navigation */}
+				<div className="flex items-center space-x-4">
+					<Link to="/" className="flex items-center space-x-2">
+						<GraduationCapIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+						<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
 							Learn For Fun
 						</span>
 					</Link>
-					<div className="flex items-center space-x-1">
-						<Button
-							variant="ghost"
-							className="text-[14px] md:text-[16px] font-medium"
-							onClick={() => {
-								location.pathname.includes("/courses")
-									? null
-									: navigate("/courses");
-							}}
-						>
-							Explore Courses
-						</Button>
-					</div>
+					<Button
+						variant="ghost"
+						onClick={() => navigate("/courses")}
+						className="text-lg dark:text-gray-300"
+					>
+						Explore Courses
+					</Button>
 				</div>
-				<div className="flex items-center space-x-4">
-					<div className="flex gap-4 items-center">
-						<div
-							onClick={() => navigate("/student-courses")}
-							className="flex items-center gap-3 cursor-pointer"
-						>
-							<span className="font-extrabold md:text-xl text-[14px]">
-								My Courses
-							</span>
-							<TvMinimalPlay className="w-8 h-8 cursor-pointer" />
-						</div>
-						<Button className="" onClick={handleLogout}>
-							Sign Out
-						</Button>
+
+				{/* Right Side: User Actions */}
+				<div className="flex items-center space-x-6">
+					<div
+						onClick={() => navigate("/student-courses")}
+						className="flex items-center cursor-pointer"
+					>
+						<TvMinimalPlay className="h-8 w-8 text-gray-700 dark:text-gray-300" />
+						<span className="ml-2 text-xl font-semibold text-gray-800 dark:text-gray-200">
+							My Courses
+						</span>
 					</div>
+					<Button
+						onClick={handleLogout}
+						className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+					>
+						Sign Out
+					</Button>
+					<Button
+						variant="ghost"
+						onClick={() => setDarkMode(!darkMode)}
+						className="p-2 rounded-full"
+					>
+						{darkMode ? (
+							<Sun className="h-6 w-6 text-yellow-500" />
+						) : (
+							<MoonIcon className="h-6 w-6 text-gray-700" />
+						)}
+					</Button>
 				</div>
 			</div>
 		</header>

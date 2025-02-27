@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -22,6 +23,8 @@ import {
 	ChevronRight,
 	Circle,
 	CircleCheckBigIcon,
+	Copy,
+	LockIcon,
 } from "lucide-react";
 import { VideoPlayer } from "@/components/video-player/VideoPlayer";
 import { AuthContext } from "@/context/auth-context";
@@ -32,7 +35,6 @@ import {
 	resetCourseProgressService,
 } from "@/services";
 
-// CodeBlock for rendering code with syntax highlighting
 const CodeBlock = ({ node, inline, className, children, ...props }) => {
 	const [copied, setCopied] = useState(false);
 	const match = /language-(\w+)/.exec(className || "");
@@ -46,31 +48,45 @@ const CodeBlock = ({ node, inline, className, children, ...props }) => {
 
 	if (inline) {
 		return (
-			<code className={className} {...props}>
+			<code
+				className={`${className} bg-gray-700 px-1.5 py-0.5 rounded`}
+				{...props}
+			>
 				{children}
 			</code>
 		);
-	} else {
-		return (
-			<div className="relative my-4">
+	}
+
+	return (
+		<div className="relative my-6 group">
+			<div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity" />
+			<div className="relative">
 				<button
 					onClick={copyToClipboard}
-					className="absolute right-2 top-2 z-10 bg-gray-200 text-gray-800 rounded px-2 py-1 text-xs hover:bg-gray-300"
+					className="absolute right-3 top-3 z-10 flex items-center gap-1.5 bg-gray-800/80 text-gray-300 rounded-lg px-3 py-1.5 text-sm hover:bg-gray-700/80 transition-colors"
 				>
-					{copied ? "Copied!" : "Copy"}
+					{copied ? (
+						<CircleCheckBigIcon className="h-4 w-4 text-green-400" />
+					) : (
+						<Copy className="h-4 w-4" />
+					)}
 				</button>
 				<SyntaxHighlighter
-					language={match ? match[1] : ""}
+					language={match?.[1] || ""}
 					style={oneDark}
-					showLineNumbers={true}
-					customStyle={{ borderRadius: "0.5rem" }}
+					showLineNumbers
+					customStyle={{
+						borderRadius: "0.75rem",
+						padding: "1.5rem",
+						background: "#1E1E1E",
+					}}
 					{...props}
 				>
 					{code}
 				</SyntaxHighlighter>
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
 export const CourseProgressPage = () => {
@@ -149,7 +165,7 @@ export const CourseProgressPage = () => {
 			setCurrentLecture(null);
 			setShowConfetti(false);
 			setShowCourseCompleteDialog(false);
-			await fetchCurrentCourseProgress(); // This should load the first lecture again
+			await fetchCurrentCourseProgress();
 		}
 	};
 
@@ -178,152 +194,222 @@ export const CourseProgressPage = () => {
 	}, [showConfetti]);
 
 	return (
-		<div className="flex flex-col bg-[#1c1d1f] text-white">
-			{showConfetti && <ReactConfetti />}
-			<div className="flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700">
-				<div className="flex items-center space-x-4">
+		<div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
+			{showConfetti && (
+				<ReactConfetti
+					numberOfPieces={300}
+					recycle={false}
+					colors={["#6366F1", "#8B5CF6", "#EC4899", "#3B82F6"]}
+					className="w-full h-full"
+				/>
+			)}
+
+			<header className="sticky top-0 z-50 bg-gray-800/90 backdrop-blur-sm border-b border-gray-700">
+				<div className="container mx-auto px-4 py-3 flex items-center justify-between">
+					<div className="flex items-center gap-4">
+						<Button
+							onClick={() => navigate("/student-courses")}
+							variant="ghost"
+							className="text-gray-300 hover:bg-gray-700/50 hover:text-white transition-colors rounded-lg"
+						>
+							<ChevronLeft className="h-5 w-5 mr-2" />
+							<span className="hidden sm:inline">My Courses</span>
+						</Button>
+						<h1 className="text-xl font-bold truncate max-w-[400px] bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+							{studentCurrentCourseProgress?.courseDetails?.title}
+						</h1>
+					</div>
+
 					<Button
-						className="text-white"
+						onClick={() => setIsSideBarOpen(!isSideBarOpen)}
 						variant="ghost"
-						size="sm"
-						onClick={() => navigate("/student-courses")}
+						className="text-gray-300 hover:bg-gray-700/50 rounded-lg"
 					>
-						<ChevronLeft className="h-4 w-4 mr-2" />
-						Back to My Courses Page
+						{isSideBarOpen ? (
+							<ChevronRight className="w-6 h-6" />
+						) : (
+							<ChevronLeft className="w-6 h-6" />
+						)}
 					</Button>
-					<h1 className="text-lg font-bold hidden md:block">
-						{studentCurrentCourseProgress?.courseDetails?.title}
-					</h1>
 				</div>
-				<Button onClick={() => setIsSideBarOpen(!isSideBarOpen)}>
-					{isSideBarOpen ? (
-						<ChevronRight className="w-5 h-5" />
-					) : (
-						<ChevronLeft className="w-5 h-5" />
-					)}
-				</Button>
-			</div>
-			<div className="flex flex-1">
-				<div
-					className={`flex-1 ${
-						isSideBarOpen ? "mr-[400px]" : ""
-					} transition-all duration-300`}
-				>
-					{currentLecture &&
-						(currentLecture?.type === "video" ? (
+			</header>
+
+			<main className="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 transition-all duration-300">
+				<section className="flex-1 space-y-8">
+					{currentLecture?.type === "video" ? (
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							className="rounded-2xl overflow-hidden shadow-2xl bg-gray-800"
+						>
 							<VideoPlayer
-								key={currentLecture._id} // Force remount when lecture changes
+								key={currentLecture._id}
 								width="100%"
-								height="550px"
+								height="500px"
 								url={currentLecture?.videoUrl}
 								onEnded={handleVideoEnded}
 							/>
-						) : (
-							<div className="markdown-body bg-[#1c1d1f] bg-opacity-80 backdrop-blur-sm p-8 rounded-lg shadow-md my-4 text-base leading-relaxed">
-								<ReactMarkdown
-									remarkPlugins={[remarkGfm]}
-									components={{ code: CodeBlock }}
-									className="text-gray-200"
-								>
-									{currentLecture.textContent}
-								</ReactMarkdown>
-								<button
-									/* onClick={handleNextLecture} */
-									onClick={updateCourseProgress}
-								>
-									Mark as Completed
-								</button>
-							</div>
-						))}
-					<div className="p-6 bg-[#1c1d1f]">
-						<h2 className="text-2xl font-bold mb-2">{currentLecture?.title}</h2>
-					</div>
-				</div>
-				<div
-					className={`absolute right-0 w-[400px] border-l border-gray-700 transition-all duration-300 ${
-						isSideBarOpen ? "translate-x-0" : "translate-x-full"
-					}`}
+						</motion.div>
+					) : (
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							className="markdown-body bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700"
+						>
+							<ReactMarkdown
+								remarkPlugins={[remarkGfm]}
+								components={{ code: CodeBlock }}
+								className="prose prose-invert max-w-none"
+							>
+								{currentLecture?.textContent}
+							</ReactMarkdown>
+							<Button
+								onClick={updateCourseProgress}
+								className="mt-6 w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg py-6 text-lg"
+							>
+								Mark as Completed
+							</Button>
+						</motion.div>
+					)}
+
+					{currentLecture && (
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							className="bg-gray-800/50 p-6 rounded-xl border border-gray-700"
+						>
+							<h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+								{currentLecture?.title}
+							</h2>
+						</motion.div>
+					)}
+				</section>
+
+				<motion.aside
+					animate={{ width: isSideBarOpen ? 400 : 0 }}
+					transition={{ type: "spring", stiffness: 300, damping: 30 }}
+					className="h-[calc(100vh-140px)] overflow-hidden  border-gray-700 rounded-2xl ml-2"
 				>
-					<Tabs defaultValue="content" className="h-full flex flex-col">
-						<TabsList className="grid bg-[#1c1d1f] w-full grid-cols-2 p-0 h-14">
-							<TabsTrigger
-								value="content"
-								className="bg-white text-black rounded-none h-full"
+					{isSideBarOpen && (
+						<div className="w-[400px] h-full bg-gray-800/90 backdrop-blur-xl p-6">
+							<Tabs
+								defaultValue="content"
+								className="h-full flex flex-col gap-4"
 							>
-								Course Content
-							</TabsTrigger>
-							<TabsTrigger
-								value="overview"
-								className="bg-white text-black rounded-none h-full"
-							>
-								Overview
-							</TabsTrigger>
-						</TabsList>
-						<TabsContent value="content">
-							<ScrollArea className="h-full">
-								<div className="p-4 space-y-4">
-									{studentCurrentCourseProgress?.courseDetails?.curriculum?.map(
-										(lecture) => (
-											<div
-												key={lecture?._id}
-												className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
-											>
-												<Button
-													variant="ghost"
-													onClick={() => handleLectureChange(lecture?._id)}
-												>
-													{studentCurrentCourseProgress?.progress?.find(
-														(progressItem) =>
-															progressItem.lectureId === lecture?._id
-													)?.viewed ? (
-														<CircleCheckBigIcon className="h-5 w-5 text-green-500" />
-													) : (
-														<Circle className="h-5 w-5 text-green-500" />
-													)}
-													<span>{lecture?.title}</span>
-												</Button>
-											</div>
-										)
-									)}
-								</div>
-							</ScrollArea>
-						</TabsContent>
-						<TabsContent value="overview" className="flex-1 overflow-hidden">
-							<ScrollArea className="h-full">
-								<div className="p-4">
-									<h2 className="text-xl font-bold mb-4">About this course</h2>
-									<p className="text-gray-400">
-										{studentCurrentCourseProgress?.courseDetails?.description}
-									</p>
-								</div>
-							</ScrollArea>
-						</TabsContent>
-					</Tabs>
-				</div>
-			</div>
+								<TabsList className="bg-gray-900/50 rounded-lg p-1">
+									<TabsTrigger
+										value="content"
+										className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-4 py-3 rounded-md text-gray-300 hover:text-white transition-colors flex-1"
+									>
+										Content
+									</TabsTrigger>
+									<TabsTrigger
+										value="overview"
+										className="data-[state=active]:bg-blue-600 data-[state=active]:text-white px-4 py-3 rounded-md text-gray-300 hover:text-white transition-colors flex-1"
+									>
+										Overview
+									</TabsTrigger>
+								</TabsList>
+
+								<TabsContent value="content" className="flex-1 overflow-hidden">
+									<ScrollArea className="h-full pr-4">
+										<h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
+											Course Content
+										</h2>
+										<div className="space-y-2">
+											{studentCurrentCourseProgress?.courseDetails?.curriculum?.map(
+												(lecture) => (
+													<motion.div
+														key={lecture?._id}
+														initial={{ opacity: 0, x: 20 }}
+														animate={{ opacity: 1, x: 0 }}
+														className={`group flex items-center p-3 rounded-lg transition-colors ${
+															currentLecture?._id === lecture?._id
+																? "bg-gradient-to-r from-purple-600/30 to-blue-600/30 border border-purple-500/50"
+																: "hover:bg-gray-700/30"
+														}`}
+													>
+														<Button
+															variant="ghost"
+															onClick={() => handleLectureChange(lecture?._id)}
+															className="w-full justify-start gap-3 hover:bg-transparent"
+														>
+															{studentCurrentCourseProgress?.progress?.find(
+																(p) => p.lectureId === lecture?._id
+															)?.viewed ? (
+																<CircleCheckBigIcon className="h-5 w-5 text-green-400 flex-shrink-0" />
+															) : (
+																<Circle className="h-5 w-5 text-gray-500 flex-shrink-0" />
+															)}
+															<span className="text-left text-gray-200 group-hover:text-white transition-colors">
+																{lecture?.title}
+															</span>
+														</Button>
+													</motion.div>
+												)
+											)}
+										</div>
+									</ScrollArea>
+								</TabsContent>
+
+								<TabsContent
+									value="overview"
+									className="flex-1 overflow-hidden"
+								>
+									<ScrollArea className="h-full pr-4">
+										<div className="space-y-6">
+											<h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+												Course Overview
+											</h2>
+											<p className="text-gray-300 leading-relaxed">
+												{
+													studentCurrentCourseProgress?.courseDetails
+														?.description
+												}
+											</p>
+										</div>
+									</ScrollArea>
+								</TabsContent>
+							</Tabs>
+						</div>
+					)}
+				</motion.aside>
+			</main>
+
 			<Dialog open={lockCourse}>
-				<DialogContent className="sm:w-[425px]">
+				<DialogContent className="bg-gray-800 border-gray-700 rounded-2xl">
 					<DialogHeader>
-						<DialogTitle>You Can&apos;t View This Page</DialogTitle>
-						<DialogDescription>
-							Please purchase this course to access
+						<DialogTitle className="text-2xl bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+							Course Locked 🔒
+						</DialogTitle>
+						<DialogDescription className="text-gray-300 mt-4 text-center">
+							<LockIcon className="h-16 w-16 mx-auto text-purple-400 mb-4" />
+							Purchase this course to unlock premium content
 						</DialogDescription>
 					</DialogHeader>
 				</DialogContent>
 			</Dialog>
+
 			<Dialog open={showCourseCompleteDialog}>
-				<DialogContent showOverlay={false} className="sm:w-[425px]">
+				<DialogContent className="bg-gradient-to-br from-purple-900 to-gray-900 border-gray-700 rounded-2xl">
 					<DialogHeader>
-						<DialogTitle>Congrats, You Finished the Course!</DialogTitle>
-						<DialogDescription className="flex flex-col gap-3">
-							<Label>You have completed the course</Label>
-							<span className="flex flex-row gap-3">
-								<Button onClick={() => navigate("/student-courses")}>
-									My Courses Page
-								</Button>
-								<Button onClick={handleReWatchCourse}>Rewatch Course</Button>
-							</span>
-						</DialogDescription>
+						<DialogTitle className="text-3xl font-bold text-center mb-6">
+							🎉 Course Completed!
+						</DialogTitle>
+						<div className="flex flex-col items-center gap-4">
+							<Button
+								onClick={() => navigate("/student-courses")}
+								className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-6 rounded-xl text-lg"
+							>
+								View My Courses
+							</Button>
+							<Button
+								onClick={handleReWatchCourse}
+								className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-6 rounded-xl text-lg"
+							>
+								Rewatch Course
+							</Button>
+						</div>
 					</DialogHeader>
 				</DialogContent>
 			</Dialog>

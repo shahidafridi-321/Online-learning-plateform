@@ -49,28 +49,21 @@ export const StudentHomePage = () => {
 		fetchAllStudentViewCourses();
 	}, []);
 
-	// Clear filters on unmount
-	/* useEffect(() => {
-		return () => {
-			sessionStorage.removeItem("filters");
-		};
-	}, []); */
-
 	return (
-		<div className="min-h-screen bg-gray-50">
-			{/* Hero Section  */}
+		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+			{/* Hero Section */}
 			<HeroSection />
 
 			{/* Course Categories Section */}
 			<section className="py-12 px-4 lg:px-12">
-				<h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+				<h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center">
 					Course Categories
 				</h2>
 				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
 					{courseCategories.map((categoryItem) => (
 						<Button
 							key={categoryItem.id}
-							className="justify-center bg-white text-gray-800 border border-gray-200 hover:bg-gray-50 rounded-full py-2 shadow transition transform hover:-translate-y-1"
+							className="justify-center bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full py-2 shadow transition transform hover:-translate-y-1"
 							variant="outline"
 							onClick={() => handleNavigateToCoursesPage(categoryItem.id)}
 						>
@@ -81,8 +74,8 @@ export const StudentHomePage = () => {
 			</section>
 
 			{/* Featured Courses Section */}
-			<section className="py-12 px-4 lg:px-12 bg-gradient-to-r from-gray-200 to-gray-400 ">
-				<h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+			<section className="py-12 px-4 lg:px-12 bg-gradient-to-r from-gray-200 to-gray-400 dark:from-gray-800 dark:to-gray-900">
+				<h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center">
 					Featured Courses
 				</h2>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -91,7 +84,7 @@ export const StudentHomePage = () => {
 							<div
 								key={courseItem?._id}
 								onClick={() => handleCourseNavigate(courseItem._id)}
-								className="cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl bg-white rounded-lg overflow-hidden"
+								className="cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl bg-white dark:bg-gray-900 rounded-lg overflow-hidden"
 							>
 								<img
 									src={courseItem?.image}
@@ -99,23 +92,23 @@ export const StudentHomePage = () => {
 									className="w-full h-56 object-cover"
 								/>
 								<div className="p-4">
-									<h3 className="text-2xl font-semibold text-gray-800 mb-2">
+									<h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
 										{courseItem?.title}
 									</h3>
-									<p className="text-sm text-gray-600 mb-2">
+									<p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
 										By{" "}
 										<span className="font-bold">
 											{courseItem.instructorName}
 										</span>
 									</p>
-									<p className="text-lg font-bold text-indigo-600">
+									<p className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
 										${courseItem.pricing}
 									</p>
 								</div>
 							</div>
 						))
 					) : (
-						<h2 className="text-4xl font-extrabold text-center text-gray-700">
+						<h2 className="text-4xl font-extrabold text-center text-gray-700 dark:text-gray-300">
 							No Courses Found
 						</h2>
 					)}

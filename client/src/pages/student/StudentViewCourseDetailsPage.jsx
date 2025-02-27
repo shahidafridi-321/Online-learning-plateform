@@ -22,7 +22,6 @@ import {
 import { AuthContext } from "@/context/auth-context";
 
 export const StudentViewCourseDetailsPage = () => {
-	// Use context values for course details and loading
 	const {
 		studentViewCourseDetails,
 		setStudentViewCourseDetails,
@@ -39,18 +38,18 @@ export const StudentViewCourseDetailsPage = () => {
 	const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
 	const [approvalUrl, setApprovalUrl] = useState("");
 
-	// When the course id in the URL changes, clear previous details and fetch new ones
+	// Clear previous details and fetch new ones when the id changes
 	useEffect(() => {
 		if (id) {
-			setStudentViewCourseDetails(null); // Clear previous course details
+			setStudentViewCourseDetails(null);
 			fetchCourseDetails(id);
 		}
 	}, [id]);
 
-	// Fetch course details using the id from useParams directly
+	// Fetch course details
 	const fetchCourseDetails = async (courseId) => {
 		setLoading(true);
-		// Check if the course is purchased; if so, navigate to course progress page
+		// If course is purchased, navigate to course progress page
 		const purchaseResponse = await checkCoursePurchaseInfoService(
 			courseId,
 			auth?.user?._id
@@ -59,7 +58,7 @@ export const StudentViewCourseDetailsPage = () => {
 			navigate(`/course-progress/${courseId}`);
 			return;
 		}
-		// Otherwise, fetch the course details
+		// Otherwise, fetch course details
 		const response = await fetchStudentViewCourseDetailsService(courseId);
 		if (response?.success) {
 			setStudentViewCourseDetails(response.data);
@@ -69,26 +68,26 @@ export const StudentViewCourseDetailsPage = () => {
 		setLoading(false);
 	};
 
-	// Clear details when leaving the course details route
+	// Clear details when leaving course details route
 	useEffect(() => {
 		if (!location.pathname.includes("/course/details")) {
 			setStudentViewCourseDetails(null);
 		}
 	}, [location.pathname]);
 
-	// Open the free preview dialog if a free preview video URL is set
+	// Open free preview dialog if a free preview video URL is set
 	useEffect(() => {
 		if (displayCurrentVideoFreepreview !== null) {
 			setShowFreePreviewDialog(true);
 		}
 	}, [displayCurrentVideoFreepreview]);
 
-	// While loading or if no course details, show a skeleton loader
+	// Show loader while waiting for data
 	if (loading || !studentViewCourseDetails) {
 		return <Skeleton />;
 	}
 
-	// If an approval URL is present, redirect to it
+	// Redirect if approval URL is available
 	if (approvalUrl !== "") {
 		window.location.href = approvalUrl;
 	}
@@ -99,7 +98,7 @@ export const StudentViewCourseDetailsPage = () => {
 			(item) => item.freePreview
 		) ?? -1;
 
-	// Handle free preview click; navigate to text lecture page or set video URL for preview
+	// Handle free preview click
 	const handleSetFreePreview = (currentItem) => {
 		if (currentItem.type === "text") {
 			navigate(
@@ -138,21 +137,20 @@ export const StudentViewCourseDetailsPage = () => {
 			setApprovalUrl(response?.data?.approveUrl);
 		}
 	};
-
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 p-8">
+		<div className="min-h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 p-8">
 			<div className="max-w-6xl mx-auto">
 				{/* Course Header */}
-				<div className="bg-white bg-opacity-80 backdrop-blur-md rounded-lg p-6 shadow-lg mb-8">
-					<h1 className="text-4xl font-bold text-gray-900 mb-2">
+				<div className="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 backdrop-blur-md rounded-lg p-6 shadow-lg mb-8">
+					<h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
 						{studentViewCourseDetails.title}
 					</h1>
-					<p className="text-xl text-gray-700 mb-4">
+					<p className="text-xl text-gray-700 dark:text-gray-300 mb-4">
 						{studentViewCourseDetails.subtitle}
 					</p>
-					<div className="flex flex-wrap gap-4 text-sm text-gray-600">
+					<div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
 						<span>
-							Added by :{" "}
+							Added by:{" "}
 							<span className="font-medium">
 								{studentViewCourseDetails.instructorName}
 							</span>
@@ -164,7 +162,7 @@ export const StudentViewCourseDetailsPage = () => {
 							</span>
 						</span>
 						<span className="flex items-center gap-1">
-							<Globe className="w-4 h-4" />{" "}
+							<Globe className="w-4 h-4" />
 							{studentViewCourseDetails.primaryLanguage}
 						</span>
 						<span>
@@ -179,39 +177,45 @@ export const StudentViewCourseDetailsPage = () => {
 				<div className="flex flex-col md:flex-row gap-8">
 					{/* Main Content */}
 					<main className="flex-grow">
-						<Card className="mb-8">
+						<Card className="mb-8 border border-gray-200 dark:border-gray-700">
 							<CardHeader>
-								<CardTitle>What You Will Learn</CardTitle>
+								<CardTitle className="text-gray-900 dark:text-gray-100">
+									What You Will Learn
+								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<ul className="list-disc list-inside space-y-2">
+								<ul className="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-100">
 									{studentViewCourseDetails.objectives
 										.split(",")
 										.map((objective, index) => (
 											<li key={index} className="flex items-center">
 												<CheckCircle className="mr-2 text-green-500 w-5 h-5" />
-												<span className="text-gray-800">{objective}</span>
+												<span>{objective}</span>
 											</li>
 										))}
 								</ul>
 							</CardContent>
 						</Card>
-						<Card className="mb-8">
+						<Card className="mb-8 border border-gray-200 dark:border-gray-700">
 							<CardHeader>
-								<CardTitle>Course Description</CardTitle>
+								<CardTitle className="text-gray-900 dark:text-gray-100">
+									Course Description
+								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<p className="text-lg text-gray-800">
+								<p className="text-lg text-gray-800 dark:text-gray-100">
 									{studentViewCourseDetails.description}
 								</p>
 							</CardContent>
 						</Card>
-						<Card className="mb-8">
+						<Card className="mb-8 border border-gray-200 dark:border-gray-700">
 							<CardHeader className="flex flex-row justify-between items-center">
-								<CardTitle>Course Content</CardTitle>
+								<CardTitle className="text-gray-900 dark:text-gray-100">
+									Course Content
+								</CardTitle>
 								<Button
 									onClick={handleCreatePayment}
-									className="bg-indigo-600 hover:bg-indigo-700 text-white"
+									className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg"
 								>
 									Buy Now
 								</Button>
@@ -258,9 +262,9 @@ export const StudentViewCourseDetailsPage = () => {
 						studentViewCourseDetails.curriculum[getIndexOfFreePreviewUrl]
 							?.type === "video" && (
 							<aside className="w-full md:w-[500px]">
-								<Card className="sticky top-8">
+								<Card className="sticky top-8 border border-gray-200 dark:border-gray-700">
 									<CardContent className="p-6">
-										<div className="aspect-video mb-6 rounded-lg overflow-hidden shadow-lg">
+										<div className="aspect-video mb-6 rounded-lg overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
 											<VideoPlayer
 												url={
 													studentViewCourseDetails.curriculum[
@@ -272,13 +276,13 @@ export const StudentViewCourseDetailsPage = () => {
 											/>
 										</div>
 										<div className="mb-4">
-											<span className="text-3xl font-bold text-gray-900">
+											<span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
 												${studentViewCourseDetails.pricing}
 											</span>
 										</div>
 										<Button
 											onClick={handleCreatePayment}
-											className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+											className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg"
 										>
 											Buy Now
 										</Button>
@@ -297,11 +301,13 @@ export const StudentViewCourseDetailsPage = () => {
 					setDisplayCurrentVideoFreepreview(null);
 				}}
 			>
-				<DialogContent className="w-[800px]">
+				<DialogContent className="w-[800px] bg-white dark:bg-gray-800">
 					<DialogHeader>
-						<DialogTitle>Course Preview</DialogTitle>
+						<DialogTitle className="text-gray-900 dark:text-gray-100">
+							Course Preview
+						</DialogTitle>
 					</DialogHeader>
-					<div className="aspect-video rounded-lg overflow-hidden shadow-lg flex items-center justify-center">
+					<div className="aspect-video rounded-lg overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
 						<VideoPlayer
 							url={displayCurrentVideoFreepreview}
 							width="100%"
@@ -315,7 +321,7 @@ export const StudentViewCourseDetailsPage = () => {
 								<p
 									key={index}
 									onClick={() => handleSetFreePreview(filteredItem)}
-									className="cursor-pointer text-lg font-medium text-indigo-600 hover:underline"
+									className="cursor-pointer text-lg font-medium text-indigo-600 hover:underline dark:text-indigo-400"
 								>
 									{filteredItem?.title}
 								</p>

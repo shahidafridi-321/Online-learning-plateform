@@ -6,13 +6,11 @@ import { useNavigate } from "react-router-dom";
 import BannerImage from "../../../public/hero-img.jpg";
 
 export const HeroSection = () => {
-	// This state tracks whether the typing effect is complete
+	// State for typewriter effect
 	const [headingComplete, setHeadingComplete] = useState(false);
-	// This state tracks if the typewriter effect has already run
 	const [hasTyped, setHasTyped] = useState(false);
 	const navigate = useNavigate();
 
-	// Check localStorage on mount to see if we've already typed the heading
 	useEffect(() => {
 		if (localStorage.getItem("heroTyped") === "true") {
 			setHasTyped(true);
@@ -20,7 +18,6 @@ export const HeroSection = () => {
 		}
 	}, []);
 
-	// Function to render the heading text: animated if not typed before, else static
 	const renderHeading = () => {
 		if (!hasTyped) {
 			return (
@@ -46,14 +43,16 @@ export const HeroSection = () => {
 			return "Empower Your Future, One Course at a Time";
 		}
 	};
-
 	return (
-		<section className="flex flex-col lg:flex-row items-center justify-between py-12 px-4 lg:px-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-b-lg shadow-lg">
+		<section
+			className="flex flex-col lg:flex-row items-center justify-between 
+                 py-12 px-4 lg:px-12 bg-gradient-to-r from-blue-500 to-purple-600 
+                 dark:from-indigo-900 dark:to-purple-900 rounded-b-lg shadow-lg"
+		>
 			<div className="lg:w-1/2 text-center lg:text-left">
 				<div className="text-5xl font-extrabold text-white mb-6">
 					{renderHeading()}
 				</div>
-
 				{headingComplete && (
 					<motion.p
 						className="text-xl text-white mb-8"
@@ -66,7 +65,6 @@ export const HeroSection = () => {
 						thrive with the skills you need for tomorrow.
 					</motion.p>
 				)}
-
 				{headingComplete && (
 					<motion.div
 						initial={{ opacity: 0 }}
@@ -75,7 +73,9 @@ export const HeroSection = () => {
 					>
 						<Button
 							onClick={() => navigate("/courses")}
-							className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 font-semibold rounded-full shadow-lg"
+							className="bg-white text-blue-600 dark:bg-gray-200 dark:text-blue-700 
+                         hover:bg-gray-100 dark:hover:bg-gray-300 px-8 py-4 font-semibold 
+                         rounded-full shadow-lg"
 						>
 							Get Started
 						</Button>
