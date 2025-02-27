@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "./Header";
+import { Footer } from "./Footer";
 
 export const StudentViewCommonLayout = () => {
 	const location = useLocation();
@@ -13,6 +14,7 @@ export const StudentViewCommonLayout = () => {
 		>
 			{!location.pathname.includes("course-progress") && <Header />}
 			<Outlet />
+			{!location.pathname.includes("course-progress") && <Footer />}
 		</div>
 	);
 };
