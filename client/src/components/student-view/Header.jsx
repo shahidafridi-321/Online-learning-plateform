@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 export const Header = () => {
 	const navigate = useNavigate();
 	const [darkMode, setDarkMode] = useState(false);
-	const { resetCredentials } = useContext(AuthContext);
+	const { resetCredentials, auth } = useContext(AuthContext);
 
 	useEffect(() => {
 		if (darkMode) {
@@ -58,7 +58,7 @@ export const Header = () => {
 						onClick={handleLogout}
 						className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
 					>
-						Sign Out
+						{auth?.user ? "Sign Out" : "Sign In"}
 					</Button>
 					<Button
 						variant="ghost"
