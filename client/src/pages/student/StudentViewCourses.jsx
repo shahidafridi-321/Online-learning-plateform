@@ -215,10 +215,10 @@ export const StudentViewCourses = () => {
 													className="px-4 py-2 text-gray-900 dark:text-gray-100 hover:bg-indigo-50 dark:hover:bg-indigo-900 flex items-center gap-2"
 												>
 													{sortItem.id === "price-lowtohigh" && (
-														<ArrowUpIcon className="w-4 h-4" />
+														<ArrowUpIcon className="ml-2 w-4 h-4" />
 													)}
 													{sortItem.id === "price-hightolow" && (
-														<ArrowDownIcon className="w-4 h-4" />
+														<ArrowDownIcon className="ml-2 w-4 h-4" />
 													)}
 													{sortItem.label}
 												</DropdownMenuRadioItem>
