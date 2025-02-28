@@ -160,3 +160,8 @@ export const createReviewService = async (reviewData) => {
 	);
 	return data;
 };
+
+export const getAllReviews = async () => {
+	const { data } = await axiosInstance.get("/student/get/reviews");
+	return data;
+};
