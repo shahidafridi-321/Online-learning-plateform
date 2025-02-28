@@ -185,3 +185,53 @@ export const filterOptions = {
 	level: courseLevelOptions,
 	primaryLanguage: languageOptions,
 };
+
+export const initialReviewFormData = {
+	userName: "",
+	quote: "",
+	role: "",
+};
+const reviewRoleOptions = [
+	{ id: "teacher", label: "Teacher" },
+	{ id: "freelancer", label: "Freelancer" },
+	{ id: "entrepreneur", label: "Entrepreneur" },
+	{ id: "college-Student", label: "College Student" },
+	{ id: "web-developer", label: "Web Developer" },
+	{ id: "backend-developer", label: "Backend Developer" },
+	{ id: "data-scientist", label: "Data Scientist" },
+	{ id: "machine-learning-expert", label: "Machine Learning Expert" },
+	{
+		id: "artificial-intelligence-expert",
+		label: "Artificial Intelligence Expert",
+	},
+	{ id: "cloud-computing-expert", label: "Cloud Computing Expert" },
+	{ id: "cyber-security-engineer", label: "Cyber Security Engineer" },
+	{ id: "mobile-developer", label: "Mobile Developer" },
+	{ id: "game-developer", label: "Game Developer" },
+	{ id: "software-engineer", label: "Software Engineer" },
+];
+
+export const reviewFormControls = [
+	{
+		name: "userName",
+		label: "Your Name",
+		placeholder: "Enter Your  Name",
+		type: "text",
+		componentType: "input",
+	},
+	{
+		name: "quote",
+		label: "Write Comment",
+		placeholder: "What You Think About This Plateform",
+		type: "text",
+		componentType: "textarea",
+	},
+	{
+		name: "role",
+		label: "Select Your Role",
+		placeholder: "",
+		type: "text",
+		componentType: "select",
+		options: reviewRoleOptions,
+	},
+];
