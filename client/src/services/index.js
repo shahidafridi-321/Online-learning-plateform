@@ -104,7 +104,7 @@ export const captureAndFinalizePaymentService = async (
 	});
 	return data;
 };
-
+/*  */
 export const fetchStudentBoughtCoursesService = async (studentId) => {
 	const { data } = await axiosInstance.get(
 		`/student/courses-bought/get/${studentId}`
@@ -149,6 +149,14 @@ export const resetCourseProgressService = async (userId, courseId) => {
 			userId,
 			courseId,
 		}
+	);
+	return data;
+};
+
+export const createReviewService = async (reviewData) => {
+	const { data } = await axiosInstance.post(
+		"/student/create/review",
+		reviewData
 	);
 	return data;
 };
