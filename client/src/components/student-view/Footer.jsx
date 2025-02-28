@@ -6,7 +6,7 @@ export const Footer = () => {
 		<footer className="py-12 px-4 lg:px-12 bg-gray-800 dark:bg-gray-900 text-white">
 			<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 				<div>
-					<h3 className="text-2xl font-bold mb-4">EduPlatform</h3>
+					<h3 className="text-2xl font-bold mb-4">Learn For Fun</h3>
 					<p className="text-gray-400">
 						Empowering learners worldwide with accessible, high-quality
 						education.
@@ -52,20 +52,29 @@ export const Footer = () => {
 				</div>
 				<div>
 					<h3 className="text-xl font-bold mb-4">Connect</h3>
-					<div className="flex space-x-4">
-						<a href="#" className="hover:text-indigo-400 transition">
-							Facebook
-						</a>
-						<a href="#" className="hover:text-indigo-400 transition">
-							Twitter
-						</a>
-						<a href="#" className="hover:text-indigo-400 transition">
-							Instagram
-						</a>
-						<a href="#" className="hover:text-indigo-400 transition">
-							LinkedIn
-						</a>
-					</div>
+					<ul className="space-y-2">
+						<li>
+							<a href="#" className="hover:text-indigo-400 transition">
+								Facebook
+							</a>
+						</li>
+						<li>
+							<a href="#" className="hover:text-indigo-400 transition">
+								Twitter
+							</a>
+						</li>
+						<li>
+							<a href="#" className="hover:text-indigo-400 transition">
+								Instagram
+							</a>
+						</li>
+
+						<li>
+							<a href="#" className="hover:text-indigo-400 transition">
+								LinkedIn
+							</a>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div className="mt-10 text-center text-gray-400">
