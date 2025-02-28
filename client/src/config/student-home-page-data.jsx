@@ -83,7 +83,7 @@ export const features = [
 	},
 ];
 
-export const testimonials = [
+export let testimonials = [
 	{
 		quote:
 			"This platform completely changed how I approach learning. The courses are exceptional!",
