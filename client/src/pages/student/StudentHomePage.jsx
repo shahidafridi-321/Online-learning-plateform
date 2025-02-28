@@ -2,26 +2,20 @@ import { courseCategories } from "@/config";
 import { Button } from "@/components/ui/button";
 import { useContext, useEffect, useState } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
-import { fetchStudentViewCourseListService } from "@/services";
+import { fetchStudentViewCourseListService, getAllReviews } from "@/services";
 import { Link, useNavigate } from "react-router-dom";
 import { HeroSection } from "./HeroSection";
 import { AuthContext } from "@/context/auth-context";
 import { checkCoursePurchaseInfoService } from "@/services";
-import {
-	features,
-	testimonials,
-	learningPaths,
-} from "@/config/student-home-page-data";
-import { InstructorContext } from "@/context/instructor-context/InstructorContext";
-import { Footer } from "@/components/student-view/Footer";
+import { features, learningPaths } from "@/config/student-home-page-data";
 
 export const StudentHomePage = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
 		useContext(StudentContext);
-	const { instructorCoursesList } = useContext(InstructorContext);
 	const { auth } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
+	const [testimonials, setTestimonials] = useState([]);
 
 	// Navigation handler for course categories
 	const handleNavigateToCoursesPage = async (getCurrentId) => {
@@ -66,6 +60,15 @@ export const StudentHomePage = () => {
 	// Data for Why Choose Us Section
 
 	// Data for Testimonials Section
+	const fetchReviews = async () => {
+		const response = await getAllReviews();
+		if (response.success) {
+			setTestimonials(response.data);
+		}
+	};
+	useEffect(() => {
+		fetchReviews();
+	}, []);
 
 	// Data for Learning Paths Section
 
@@ -242,12 +245,12 @@ export const StudentHomePage = () => {
 							<div className="flex items-center">
 								<img
 									src={testimonial.image}
-									alt={testimonial.name}
+									alt={testimonial.userName}
 									className="w-14 h-14 rounded-full mr-4 border-2 border-indigo-600 dark:border-indigo-400"
 								/>
 								<div>
 									<h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-										{testimonial.name}
+										{testimonial.userName}
 									</h4>
 									<p className="text-sm text-gray-500 dark:text-gray-400">
 										{testimonial.role}
