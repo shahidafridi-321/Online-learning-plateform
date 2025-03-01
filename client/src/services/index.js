@@ -166,7 +166,17 @@ export const getAllReviews = async () => {
 	return data;
 };
 
+export const getLatestReviewsService = async () => {
+	const { data } = await axiosInstance.get("/student/get/latest-reviews");
+	return data;
+};
+
 export const approveReviewService = async (id) => {
 	const { data } = await axiosInstance.post(`/student/update/review/${id}`);
+	return data;
+};
+
+export const rejectReviewService = async (id) => {
+	const { data } = await axiosInstance.delete(`/student/delete/review/${id}`);
 	return data;
 };
