@@ -25,6 +25,28 @@ const createReview = async (req, res) => {
 	}
 };
 
+const getLatestReviews = async (req, res) => {
+	try {
+		const latestReviews = await Reviews.find().sort({ date: -1 }).limit(4);
+		if (!latestReviews) {
+			return res.status(404).json({
+				success: false,
+				message: "No Reviews Found!",
+			});
+		}
+		res.status(200).json({
+			success: true,
+			data: latestReviews,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			success: false,
+			message: "SomeThing went wrong, Can not limit Reviews",
+		});
+	}
+};
+
 const getAllReviews = async (req, res) => {
 	try {
 		const reviews = await Reviews.find({});
@@ -81,4 +103,36 @@ const approveReview = async (req, res) => {
 	}
 };
 
-module.exports = { createReview, getAllReviews, approveReview };
+const deleteReview = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const isReviewPresent = await Reviews.findById(id);
+		if (!isReviewPresent) {
+			return res.status(404).json({
+				success: false,
+				message: "No review found",
+			});
+		}
+		await Reviews.findByIdAndDelete(id);
+
+		res.status(200).json({
+			success: true,
+			message: "Review Rejection successful",
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			success: false,
+			message: "SomeThing went wrong , could not find review!",
+		});
+	}
+};
+
+module.exports = {
+	createReview,
+	getAllReviews,
+	approveReview,
+	deleteReview,
+	getLatestReviews,
+};
+
