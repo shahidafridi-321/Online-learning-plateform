@@ -12,6 +12,7 @@ export const StudentContextProvider = ({ children }) => {
 
 	const [studentCurrentCourseProgress, setStudentCurrentCourseProgress] =
 		useState({});
+	const [testimonials, setTestimonials] = useState([]);
 
 	return (
 		<StudentContext.Provider
@@ -28,6 +29,8 @@ export const StudentContextProvider = ({ children }) => {
 				setStudentBoughtCoursesList,
 				studentCurrentCourseProgress,
 				setStudentCurrentCourseProgress,
+				testimonials,
+				setTestimonials,
 			}}
 		>
 			{children}
