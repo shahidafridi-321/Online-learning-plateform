@@ -8,9 +8,11 @@ export const CourseLanding = () => {
 	const { courseLandingFormData, setCourseLandingFormData } =
 		useContext(InstructorContext);
 	return (
-		<Card>
+		<Card className="bg-white dark:bg-gray-800 shadow-md rounded-lg">
 			<CardHeader>
-				<CardTitle>Course Landing</CardTitle>
+				<CardTitle className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+					Course Landing Page
+				</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<FormControls
