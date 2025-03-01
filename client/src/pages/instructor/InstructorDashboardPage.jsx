@@ -7,6 +7,8 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/auth-context";
 import { InstructorContext } from "@/context/instructor-context/InstructorContext";
 import { fetchInstructorCourseListService } from "@/services";
+import { InstructorHeader } from "@/components/instructor-view/InstructorHeader"; // Adjust path as needed
+import { InstructorFooter } from "@/components/instructor-view/InstructorFooter"; // Adjust path as needed
 
 export const InstructorDashboardPage = () => {
 	const [activeTab, setActiveTab] = useState("dashboard");
@@ -53,48 +55,52 @@ export const InstructorDashboardPage = () => {
 	};
 
 	return (
-		<div className="flex min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
-			{/* Sidebar */}
-			<aside className="w-64 bg-white shadow-lg p-6 hidden md:block">
-				<h2 className="text-2xl font-bold mb-6">Instructor View</h2>
-				<nav className="space-y-2">
-					{menuItems.map((menuItem) => (
-						<Button
-							key={menuItem.value}
-							className={`w-full flex items-center justify-start text-lg py-3 rounded-lg transition-all font-medium `}
-							onClick={
-								menuItem.value === "logout"
-									? handleLogout
-									: () => setActiveTab(menuItem.value)
-							}
-							variant={activeTab === menuItem.value ? "secondary" : "ghost"}
-						>
-							<menuItem.icon
-								className={`mr-3 h-5 w-5 ${
-									activeTab === menuItem.value
-										? "text-gray-900"
-										: "text-gray-600"
-								}`}
-							/>
-							{menuItem.label}
-						</Button>
-					))}
-				</nav>
-			</aside>
-
-			{/* Main Content */}
-			<main className="flex-1 p-8 overflow-y-auto">
-				<div className="max-w-7xl mx-auto">
-					<h1 className="text-3xl font-bold mb-8">Dashboard</h1>
-					<Tabs value={activeTab} onValueChange={setActiveTab}>
+		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
+			<InstructorHeader />
+			<div className="flex flex-1">
+				{/* Sidebar */}
+				<aside className="w-64 bg-white shadow-lg p-6 hidden md:block">
+					<h2 className="text-2xl font-bold mb-6">Instructor View</h2>
+					<nav className="space-y-2">
 						{menuItems.map((menuItem) => (
-							<TabsContent key={menuItem.value} value={menuItem.value}>
-								{menuItem.component !== null ? menuItem.component : null}
-							</TabsContent>
+							<Button
+								key={menuItem.value}
+								className={`w-full flex items-center justify-start text-lg py-3 rounded-lg transition-all font-medium`}
+								onClick={
+									menuItem.value === "logout"
+										? handleLogout
+										: () => setActiveTab(menuItem.value)
+								}
+								variant={activeTab === menuItem.value ? "secondary" : "ghost"}
+							>
+								<menuItem.icon
+									className={`mr-3 h-5 w-5 ${
+										activeTab === menuItem.value
+											? "text-gray-900"
+											: "text-gray-600"
+									}`}
+								/>
+								{menuItem.label}
+							</Button>
 						))}
-					</Tabs>
-				</div>
-			</main>
+					</nav>
+				</aside>
+
+				{/* Main Content */}
+				<main className="flex-1 p-8 overflow-y-auto">
+					<div className="max-w-7xl mx-auto">
+						<h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+						<Tabs value={activeTab} onValueChange={setActiveTab}>
+							{menuItems.map((menuItem) => (
+								<TabsContent key={menuItem.value} value={menuItem.value}>
+									{menuItem.component !== null ? menuItem.component : null}
+								</TabsContent>
+							))}
+						</Tabs>
+					</div>
+				</main>
+			</div>
+			<InstructorFooter />
 		</div>
 	);
 };

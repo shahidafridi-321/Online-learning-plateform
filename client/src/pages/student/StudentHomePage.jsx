@@ -2,12 +2,16 @@ import { courseCategories } from "@/config";
 import { Button } from "@/components/ui/button";
 import { useContext, useEffect, useState } from "react";
 import { StudentContext } from "@/context/student-context/StudentContext";
-import { fetchStudentViewCourseListService, getAllReviews } from "@/services";
-import { Link, useNavigate } from "react-router-dom";
+import {
+	fetchStudentViewCourseListService,
+	getLatestReviewsService,
+} from "@/services";
+import { useNavigate } from "react-router-dom";
 import { HeroSection } from "./HeroSection";
 import { AuthContext } from "@/context/auth-context";
 import { checkCoursePurchaseInfoService } from "@/services";
 import { features, learningPaths } from "@/config/student-home-page-data";
+import { format } from "date-fns";
 
 export const StudentHomePage = () => {
 	const { studentViewCourseList, setStudentViewCourseList } =
@@ -57,11 +61,9 @@ export const StudentHomePage = () => {
 		fetchCourses();
 	}, []);
 
-	// Data for Why Choose Us Section
-
-	// Data for Testimonials Section
+	// Fetch testimonials
 	const fetchReviews = async () => {
-		const response = await getAllReviews();
+		const response = await getLatestReviewsService();
 		if (response.success) {
 			setTestimonials(response.data);
 		}
@@ -69,8 +71,6 @@ export const StudentHomePage = () => {
 	useEffect(() => {
 		fetchReviews();
 	}, []);
-
-	// Data for Learning Paths Section
 
 	return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -148,7 +148,6 @@ export const StudentHomePage = () => {
 				)}
 			</section>
 
-			{/* Learning Paths Section */}
 			<section className="py-16 px-4 lg:px-12 bg-gray-100 dark:bg-gray-800">
 				<h2 className="text-4xl font-extrabold text-gray-800 dark:text-gray-100 mb-10 text-center">
 					Explore Learning Paths
@@ -178,7 +177,6 @@ export const StudentHomePage = () => {
 				</div>
 			</section>
 
-			{/* Why Choose Us Section with Statistics */}
 			<section className="py-16 px-4 lg:px-12 bg-white dark:bg-gray-900">
 				<h2 className="text-4xl font-extrabold text-gray-800 dark:text-gray-100 mb-10 text-center">
 					Why Choose Us
@@ -209,9 +207,10 @@ export const StudentHomePage = () => {
 					</div>
 					<div>
 						<h3 className="text-5xl font-bold text-indigo-600 dark:text-indigo-400">
-							{studentViewCourseList.reduce((acc, cur) => {
-								return acc + cur.students.length;
-							}, 0)}
+							{studentViewCourseList.reduce(
+								(acc, cur) => acc + cur.students.length,
+								0
+							)}
 						</h3>
 						<p className="text-gray-600 dark:text-gray-300">
 							Students Enrolled
@@ -228,7 +227,6 @@ export const StudentHomePage = () => {
 				</div>
 			</section>
 
-			{/* Testimonials Section with Enhanced Design */}
 			<section className="py-16 px-4 lg:px-12 bg-gradient-to-r from-gray-200 to-indigo-100 dark:from-gray-800 dark:to-indigo-900">
 				<h2 className="text-4xl font-extrabold text-gray-800 dark:text-gray-100 mb-10 text-center">
 					What Our Students Say
@@ -256,6 +254,9 @@ export const StudentHomePage = () => {
 										<p className="text-sm text-gray-500 dark:text-gray-400">
 											{testimonial.role}
 										</p>
+										<p className="text-sm text-gray-500 dark:text-gray-400">
+											{format(new Date(testimonial.date), "MMMM d, yyyy")}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -264,7 +265,23 @@ export const StudentHomePage = () => {
 				</div>
 			</section>
 
-			{/* Call to Action Section with Newsletter */}
+			{/* Share Your Experience Section */}
+			<section className="py-16 px-4 lg:px-12 bg-gradient-to-r from-indigo-100 to-gray-200 dark:from-indigo-900 dark:to-gray-800 text-center">
+				<h2 className="text-4xl font-extrabold text-gray-800 dark:text-gray-100 mb-6">
+					Share Your Experience
+				</h2>
+				<p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+					Loved our courses? Tell us about your journey and help others discover
+					great learning!
+				</p>
+				<Button
+					className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg"
+					onClick={() => navigate("/create-course-review")}
+				>
+					Leave a Review
+				</Button>
+			</section>
+
 			<section className="py-16 px-4 lg:px-12 text-center bg-indigo-700 dark:bg-indigo-900 text-white">
 				<h2 className="text-4xl font-extrabold mb-6">
 					Ready to Transform Your Future?
