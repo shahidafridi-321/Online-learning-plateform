@@ -20,7 +20,10 @@ import {
 
 export const Header = () => {
 	const navigate = useNavigate();
-	const [darkMode, setDarkMode] = useState(false);
+	const [darkMode, setDarkMode] = useState(() => {
+		const savedMode = localStorage.getItem("darkMode");
+		return savedMode ? JSON.parse(savedMode) : false;
+	});
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const { resetCredentials, auth } = useContext(AuthContext);
 
@@ -31,7 +34,14 @@ export const Header = () => {
 		} else {
 			document.documentElement.classList.remove("dark");
 		}
+		// Save the current preference to localStorage
+		localStorage.setItem("darkMode", JSON.stringify(darkMode));
 	}, [darkMode]);
+
+	// Toggle function for the dark mode button
+	const toggleDarkMode = () => {
+		setDarkMode((prevMode) => !prevMode);
+	};
 
 	// Close dropdown when resizing to desktop
 	useEffect(() => {
@@ -111,20 +121,10 @@ export const Header = () => {
 						<DropdownMenuItem className="px-4 py-2 text-gray-900 dark:text-gray-100 hover:bg-indigo-50 dark:hover:bg-indigo-900">
 							<Button
 								variant="ghost"
-								onClick={() => setDarkMode(!darkMode)}
+								onClick={toggleDarkMode}
 								className="w-full flex items-center text-gray-900 dark:text-gray-100"
 							>
-								{darkMode ? (
-									<>
-										<Sun className="h-5 w-5 text-yellow-500 mr-2" />
-										<span>Light Mode</span>
-									</>
-								) : (
-									<>
-										<MoonIcon className="h-5 w-5 text-gray-700 mr-2" />
-										<span>Dark Mode</span>
-									</>
-								)}
+								{darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
 							</Button>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
@@ -146,7 +146,7 @@ export const Header = () => {
 					</Button>
 					<Button
 						variant="ghost"
-						onClick={() => setDarkMode(!darkMode)}
+						onClick={toggleDarkMode}
 						className="p-2 rounded-full"
 					>
 						{darkMode ? (
