@@ -10,8 +10,8 @@ export const CommonForm = ({
 	formData,
 	setFormData,
 	isButtonDisabled = false,
-	isSubmitting = false, // New prop for loading state
-	errors = {}, // New prop for form-wide errors
+	isSubmitting = false,
+	errors = {},
 }) => {
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
@@ -19,7 +19,7 @@ export const CommonForm = ({
 				formControls={formControls}
 				formData={formData}
 				setFormData={setFormData}
-				errors={errors} // Pass errors to FormControls
+				errors={errors}
 			/>
 			<Button
 				type="submit"
