@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 
-const Reviews = mongoose.Schema({
+const ReviewsSchema = mongoose.Schema({
 	userName: String,
 	image: String,
 	role: String,
 	quote: String,
 	date: Date,
+	approved: Boolean,
 });
 
-module.exports = mongoose.model("review", Reviews);
+module.exports = mongoose.model("review", ReviewsSchema);
