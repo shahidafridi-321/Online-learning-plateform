@@ -234,31 +234,33 @@ export const StudentHomePage = () => {
 					What Our Students Say
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-					{testimonials.map((testimonial, index) => (
-						<div
-							key={index}
-							className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
-						>
-							<p className="text-gray-600 dark:text-gray-300 mb-4 italic">
-								&quot;{testimonial.quote}&quot;
-							</p>
-							<div className="flex items-center">
-								<img
-									src={testimonial.image}
-									alt={testimonial.userName}
-									className="w-14 h-14 rounded-full mr-4 border-2 border-indigo-600 dark:border-indigo-400"
-								/>
-								<div>
-									<h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-										{testimonial.userName}
-									</h4>
-									<p className="text-sm text-gray-500 dark:text-gray-400">
-										{testimonial.role}
-									</p>
+					{testimonials.map((testimonial, index) =>
+						testimonial?.approved ? (
+							<div
+								key={index}
+								className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+							>
+								<p className="text-gray-600 dark:text-gray-300 mb-4 italic">
+									&quot;{testimonial.quote}&quot;
+								</p>
+								<div className="flex items-center">
+									<img
+										src={testimonial.image}
+										alt={testimonial.userName}
+										className="w-14 h-14 rounded-full mr-4 border-2 border-indigo-600 dark:border-indigo-400"
+									/>
+									<div>
+										<h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+											{testimonial.userName}
+										</h4>
+										<p className="text-sm text-gray-500 dark:text-gray-400">
+											{testimonial.role}
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
-					))}
+						) : null
+					)}
 				</div>
 			</section>
 
