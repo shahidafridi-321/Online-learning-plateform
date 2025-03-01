@@ -17,6 +17,7 @@ import { StudentCoursesPage } from "@/pages/student/StudentCoursesPage";
 import { CourseProgressPage } from "@/pages/student/CourseProgressPage";
 import { EmailVerificationPage } from "@/pages/email-verification/EmailVerificationPage";
 import { StudentReviewPage } from "@/pages/student/StudentReviewPage";
+import { ReviewApproveRejectPage } from "@/pages/super-admin/ReviewApproveRejectPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -90,6 +91,10 @@ export const routes = createBrowserRouter([
 			{
 				path: "/create-course-review",
 				element: <StudentReviewPage />,
+			},
+			{
+				path: "/admin/approve-reject-review",
+				element: <ReviewApproveRejectPage />,
 			},
 		],
 	},
