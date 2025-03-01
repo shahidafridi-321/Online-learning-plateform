@@ -165,3 +165,8 @@ export const getAllReviews = async () => {
 	const { data } = await axiosInstance.get("/student/get/reviews");
 	return data;
 };
+
+export const approveReviewService = async (id) => {
+	const { data } = await axiosInstance.post(`/student/update/review/${id}`);
+	return data;
+};
