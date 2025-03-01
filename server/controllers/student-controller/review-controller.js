@@ -24,14 +24,15 @@ const createReview = async (req, res) => {
 		});
 	}
 };
-
 const getLatestReviews = async (req, res) => {
 	try {
-		const latestReviews = await Reviews.find().sort({ date: -1 }).limit(4);
-		if (!latestReviews) {
+		const latestReviews = await Reviews.find({ approved: true })
+			.sort({ date: -1 })
+			.limit(4);
+		if (!latestReviews || latestReviews.length === 0) {
 			return res.status(404).json({
 				success: false,
-				message: "No Reviews Found!",
+				message: "No Approved Reviews Found!",
 			});
 		}
 		res.status(200).json({
@@ -42,7 +43,7 @@ const getLatestReviews = async (req, res) => {
 		console.log(error);
 		res.status(400).json({
 			success: false,
-			message: "SomeThing went wrong, Can not limit Reviews",
+			message: "Something went wrong, cannot fetch reviews",
 		});
 	}
 };
@@ -135,4 +136,3 @@ module.exports = {
 	deleteReview,
 	getLatestReviews,
 };
-
