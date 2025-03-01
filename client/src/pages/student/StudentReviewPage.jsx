@@ -18,12 +18,8 @@ import { UserCircle2 } from "lucide-react"; // Added for placeholder icon
 
 export const StudentReviewPage = () => {
 	const navigate = useNavigate();
-	const {
-		mediaUploadProgress,
-		setMediaUploadProgress,
-		mediaUploadProgressPercentage,
-		setMediaUploadProgressPercentage,
-	} = useContext(InstructorContext);
+	const { setMediaUploadProgress, setMediaUploadProgressPercentage } =
+		useContext(InstructorContext);
 
 	const [reviewFormData, setReviewFormData] = useState(initialReviewFormData);
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -69,7 +65,7 @@ export const StudentReviewPage = () => {
 				const response = await createReviewService(finalReviewData);
 				if (response.success) {
 					setSubmissionStatus("success");
-					setTimeout(() => navigate("/"), 3000); // Redirect after 3 seconds
+					setTimeout(() => navigate("/home"), 3000); // Redirect after 3 seconds
 				} else {
 					setSubmissionStatus("error");
 				}
@@ -157,7 +153,7 @@ export const StudentReviewPage = () => {
 						isButtonDisabled={
 							!validateReviewForm() || submissionStatus === "submitting"
 						}
-						errors={{}} // Assuming errors are handled elsewhere
+						errors={{}}
 					/>
 					{submissionStatus === "error" && (
 						<motion.p
