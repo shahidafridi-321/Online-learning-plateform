@@ -18,6 +18,7 @@ import { CourseProgressPage } from "@/pages/student/CourseProgressPage";
 import { EmailVerificationPage } from "@/pages/email-verification/EmailVerificationPage";
 import { StudentReviewPage } from "@/pages/student/StudentReviewPage";
 import { ReviewApproveRejectPage } from "@/pages/super-admin/ReviewApproveRejectPage";
+import { AdminCommonLayout } from "@/components/admin-view/AdminCommonLayout";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -92,10 +93,29 @@ export const routes = createBrowserRouter([
 				path: "/create-course-review",
 				element: <StudentReviewPage />,
 			},
+		],
+	},
+	{
+		path: "/admin",
+		element: <ProtectedRoute element={<AdminCommonLayout />} />,
+		children: [
 			{
-				path: "/admin/approve-reject-review",
+				path: "approve-reject-review",
 				element: <ReviewApproveRejectPage />,
 			},
+			// Future admin home page
+			// {
+			//   path: "dashboard",
+			//   element: <AdminDashboardPage />,
+			// },
+			// {
+			//   path: "courses",
+			//   element: <AdminCoursesPage />,
+			// },
+			// {
+			//   path: "users",
+			//   element: <AdminUsersPage />,
+			// },
 		],
 	},
 	{
