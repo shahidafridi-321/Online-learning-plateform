@@ -9,6 +9,7 @@ const createReview = async (req, res) => {
 			image,
 			quote,
 			date: new Date(),
+			approved: false,
 		});
 		await newReview.save();
 		res.status(200).json({
@@ -47,4 +48,37 @@ const getAllReviews = async (req, res) => {
 	}
 };
 
-module.exports = { createReview, getAllReviews };
+const approveReview = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const review = await Reviews.findById(id);
+		if (!review) {
+			return res.status(404).json({
+				success: false,
+				message: "No review found",
+			});
+		}
+
+		if (review.approved) {
+			return res.status(500).json({
+				success: false,
+				message: "Review already approved!",
+			});
+		}
+		review.approved = true;
+		review.save();
+		res.status(200).json({
+			success: true,
+			message: "Review approved successfully!",
+			data: review,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			success: false,
+			message: "SomeThing went wrong , could not find review!",
+		});
+	}
+};
+
+module.exports = { createReview, getAllReviews, approveReview };
