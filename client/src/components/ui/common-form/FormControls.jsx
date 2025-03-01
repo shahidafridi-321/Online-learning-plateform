@@ -10,10 +10,16 @@ import {
 } from "../select";
 import { Textarea } from "../textarea";
 
-export const FormControls = ({ formControls = [], formData, setFormData }) => {
+export const FormControls = ({
+	formControls = [],
+	formData,
+	setFormData,
+	errors = {},
+}) => {
 	const renderComponentByType = (getControlItem) => {
 		let element = null;
 		const currentControlItemValue = formData[getControlItem.name] || "";
+		const errorMessage = errors[getControlItem.name];
 
 		switch (getControlItem.componentType) {
 			case "input":
@@ -30,7 +36,11 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 								[getControlItem.name]: e.target.value,
 							})
 						}
-						className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400"
+						className={`w-full px-4 py-2.5 text-sm md:text-base rounded-lg border ${
+							errorMessage
+								? "border-red-500 dark:border-red-500"
+								: "border-gray-300 dark:border-gray-700"
+						} focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-300 focus:border-transparent transition-all placeholder-gray-400 dark:placeholder-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900`}
 					/>
 				);
 				break;
@@ -42,15 +52,23 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 						}
 						value={currentControlItemValue}
 					>
-						<SelectTrigger className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 bg-white">
-							<SelectValue placeholder={getControlItem.label} />
+						<SelectTrigger
+							className={`w-full px-4 py-2.5 text-sm md:text-base rounded-lg border ${
+								errorMessage
+									? "border-red-500 dark:border-red-500"
+									: "border-gray-300 dark:border-gray-700"
+							} focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-300 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
+						>
+							<SelectValue
+								placeholder={getControlItem.placeholder || getControlItem.label}
+							/>
 						</SelectTrigger>
-						<SelectContent className="rounded-lg border border-gray-300 shadow-lg mt-1">
+						<SelectContent className="rounded-lg border border-gray-300 dark:border-gray-700 shadow-lg mt-1 bg-white dark:bg-gray-900">
 							{getControlItem.options?.map((optionsItem) => (
 								<SelectItem
 									key={optionsItem.id}
 									value={optionsItem.id}
-									className="text-sm md:text-base px-4 py-2.5 hover:bg-gray-50 focus:bg-gray-100"
+									className="text-sm md:text-base px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800 text-gray-900 dark:text-gray-100"
 								>
 									{optionsItem.label}
 								</SelectItem>
@@ -59,7 +77,6 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 					</Select>
 				);
 				break;
-
 			case "textarea":
 				element = (
 					<Textarea
@@ -73,11 +90,14 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 								[getControlItem.name]: e.target.value,
 							})
 						}
-						className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 min-h-[100px] placeholder-gray-400 transition-all"
+						className={`w-full px-4 py-2.5 text-sm md:text-base rounded-lg border ${
+							errorMessage
+								? "border-red-500 dark:border-red-500"
+								: "border-gray-300 dark:border-gray-700"
+						} focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-300 min-h-[100px] placeholder-gray-400 dark:placeholder-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 transition-all`}
 					/>
 				);
 				break;
-
 			default:
 				element = (
 					<Input
@@ -92,24 +112,37 @@ export const FormControls = ({ formControls = [], formData, setFormData }) => {
 								[getControlItem.name]: e.target.value,
 							})
 						}
-						className="w-full px-4 py-2.5 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400"
+						className={`w-full px-4 py-2.5 text-sm md:text-base rounded-lg border ${
+							errorMessage
+								? "border-red-500 dark:border-red-500"
+								: "border-gray-300 dark:border-gray-700"
+						} focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-300 focus:border-transparent transition-all placeholder-gray-400 dark:placeholder-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900`}
 					/>
 				);
 				break;
 		}
 		return element;
 	};
+
 	return (
 		<div className="flex flex-col gap-4 sm:gap-5">
 			{formControls.map((controlItem) => (
 				<div key={controlItem.name} className="space-y-2">
 					<Label
 						htmlFor={controlItem.name}
-						className="text-sm font-medium text-gray-700 sm:text-base"
+						className="text-sm font-medium text-gray-700 dark:text-gray-200 sm:text-base"
 					>
 						{controlItem.label}
+						{controlItem.required && (
+							<span className="text-red-500 dark:text-red-500 ml-1">*</span>
+						)}
 					</Label>
 					{renderComponentByType(controlItem)}
+					{errors[controlItem.name] && (
+						<p className="text-red-500 dark:text-red-500 text-sm mt-1">
+							{errors[controlItem.name]}
+						</p>
+					)}
 				</div>
 			))}
 		</div>
