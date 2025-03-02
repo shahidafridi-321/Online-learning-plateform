@@ -19,7 +19,7 @@ export const RouteGuard = ({ authenticated, user, element, loading }) => {
 	} else {
 		if (user.role === "admin") {
 			if (!location.pathname.startsWith("/admin")) {
-				return <Navigate to="/admin/approve-reject-review" />;
+				return <Navigate to="/admin/dashboard" />;
 			}
 		} else if (user.role === "instructor") {
 			if (!location.pathname.startsWith("/instructor")) {
@@ -41,7 +41,7 @@ export const RouteGuard = ({ authenticated, user, element, loading }) => {
 			location.pathname === "/verify-email"
 		) {
 			if (user.role === "admin") {
-				return <Navigate to="/admin/approve-reject-review" />;
+				return <Navigate to="/admin" />;
 			} else if (user.role === "instructor") {
 				return <Navigate to="/instructor" />;
 			} else {
