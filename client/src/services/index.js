@@ -155,7 +155,7 @@ export const resetCourseProgressService = async (userId, courseId) => {
 
 export const createReviewService = async (reviewData) => {
 	const { data } = await axiosInstance.post(
-		"/student/create/review",
+		"/student/reviews/create/review",
 		reviewData
 	);
 	return data;
