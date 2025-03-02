@@ -21,6 +21,7 @@ import { ReviewApproveRejectPage } from "@/pages/super-admin/ReviewApproveReject
 import { AdminCommonLayout } from "@/components/admin-view/AdminCommonLayout";
 import { StudentEmailVerificationPage } from "@/pages/student/StudentEmailVerificationPage";
 import { AdminDashboardPage } from "@/pages/super-admin/AdminDashboardPage";
+import { AdminCoursesPage } from "@/pages/super-admin/AdminCoursesPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -128,6 +129,7 @@ export const routes = createBrowserRouter([
 		children: [
 			{ path: "dashboard", element: <AdminDashboardPage /> },
 			{ path: "approve-reject-review", element: <ReviewApproveRejectPage /> },
+			{ path: "courses", element: <AdminCoursesPage /> },
 		],
 	},
 	{
