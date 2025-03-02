@@ -162,21 +162,58 @@ export const createReviewService = async (reviewData) => {
 };
 
 export const getAllReviews = async () => {
-	const { data } = await axiosInstance.get("/student/get/reviews");
+	const { data } = await axiosInstance.get("/student/reviews/get/reviews");
 	return data;
 };
 
 export const getLatestReviewsService = async () => {
-	const { data } = await axiosInstance.get("/student/get/latest-reviews");
+	const { data } = await axiosInstance.get(
+		"/student/reviews/get/latest-reviews"
+	);
 	return data;
 };
 
 export const approveReviewService = async (id) => {
-	const { data } = await axiosInstance.post(`/student/update/review/${id}`);
+	const { data } = await axiosInstance.post(
+		`/student/reviews/update/review/${id}`
+	);
 	return data;
 };
 
 export const rejectReviewService = async (id) => {
-	const { data } = await axiosInstance.delete(`/student/delete/review/${id}`);
+	const { data } = await axiosInstance.delete(
+		`/student/reviews/delete/review/${id}`
+	);
+	return data;
+};
+
+export const subscribeService = async (formData) => {
+	const { data } = await axiosInstance.post(
+		"/student/subscriptions/subscribe-email",
+		formData
+	);
+	return data;
+};
+
+export const verifySubscribeEmailService = async (formData) => {
+	const { data } = await axiosInstance.post(
+		"/student/subscriptions/verify-email",
+		formData
+	);
+	return data;
+};
+
+export const fetchAllCoursesService = async () => {
+	const { data } = await axiosInstance.get("/admin/courses/all");
+	return data;
+};
+
+export const fetchAllUsersService = async () => {
+	const { data } = await axiosInstance.get("/admin/users/all");
+	return data;
+};
+
+export const fetchAllReviewsService = async () => {
+	const { data } = await axiosInstance.get("/admin/reviews/all");
 	return data;
 };
