@@ -5,6 +5,7 @@ import { StudentContext } from "@/context/student-context/StudentContext";
 import {
 	fetchStudentViewCourseListService,
 	getLatestReviewsService,
+	subscribeService,
 } from "@/services";
 import { useNavigate } from "react-router-dom";
 import { HeroSection } from "./HeroSection";
@@ -23,7 +24,7 @@ export const StudentHomePage = () => {
 	const { auth } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
-	console.log(testimonials);
+	const [subscribeFieldValue, setSubscribeFieldValue] = useState("");
 
 	// Navigation handler for course categories
 	const handleNavigateToCoursesPage = async (getCurrentId) => {
@@ -55,6 +56,31 @@ export const StudentHomePage = () => {
 			);
 		}
 	};
+
+	// Handles the subscription input value change
+	const handleSubscribeFieldValueChange = (e) => {
+		setSubscribeFieldValue(e.target.value);
+	};
+
+	const handleSubscribeSubmition = async (e) => {
+		e.preventDefault();
+		try {
+			const response = await subscribeService({
+				userEmail: subscribeFieldValue,
+			});
+			if (response.success) {
+				navigate("/student/email-verification", {
+					state: { email: subscribeFieldValue },
+				});
+			}
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+	console.log(subscribeFieldValue);
 
 	useEffect(() => {
 		const fetchCourses = async () => {
@@ -306,17 +332,23 @@ export const StudentHomePage = () => {
 						Get Started
 					</Button>
 				</div>
+
 				<div className="max-w-md mx-auto">
 					<p className="text-lg mb-4">
 						Stay updated with our latest courses and offers!
 					</p>
-					<form className="flex">
+					<form className="flex" onSubmit={handleSubscribeSubmition}>
 						<input
 							type="email"
 							placeholder="Your email address"
 							className="flex-1 p-3 rounded-l-lg text-gray-800 focus:outline-none"
+							value={subscribeFieldValue}
+							onChange={handleSubscribeFieldValueChange}
 						/>
-						<Button className="bg-indigo-500 h-full hover:bg-indigo-600 rounded-l-none rounded-r-lg p-4">
+						<Button
+							type="submit"
+							className="bg-indigo-500 h-full hover:bg-indigo-600 rounded-l-none rounded-r-lg p-4"
+						>
 							Subscribe
 						</Button>
 					</form>
