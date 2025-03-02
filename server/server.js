@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+
+// Routes imports
 const authRoutes = require("./routes/auth-routes/index");
 const mediaRoutes = require("./routes/instructor-routes/media-routes");
 const instructorCourseRoutes = require("./routes/instructor-routes/course-routes");
@@ -11,28 +13,38 @@ const studentViewOrderRoutes = require("./routes/student-routes/order-routes");
 const studentCoursesRoutes = require("./routes/student-routes/student-courses-routes");
 const studentCourseProgressRoutes = require("./routes/student-routes/course-progress-routes");
 const studentReviewRoutes = require("./routes/student-routes/review-routes");
+const studentSubscription = require("./routes/student-routes/subscription-routes");
+const adminRoutes = require("./routes/admin-routes/admin-routes");
 
 const app = express();
 const PORT = process.env.PORT || 5002;
 const MONGO_URI = process.env.MONGO_URI;
 
+// Middleware configuration
 app.use(express.json());
-app.use(morgan("tiny"));
+app.use(morgan("dev"));
 app.use(
 	cors({
-		origin: "*", // Allow requests from any origin
-		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow specific HTTP methods
-		allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+		origin: process.env.ALLOWED_ORIGINS?.split(",") || "*",
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+		credentials: true,
 	})
 );
 
-//database connection
+// Database connection with modern options
 mongoose
-	.connect(MONGO_URI)
-	.then(() => console.log(`${MONGO_URI} is conneted`))
-	.catch((e) => console.log(e));
+	.connect(MONGO_URI, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
+	.then(() => console.log(`Connected to MongoDB at ${MONGO_URI}`))
+	.catch((err) => {
+		console.error("MongoDB connection error:", err);
+		process.exit(1);
+	});
 
-// routes configuration
+// Route configuration
 app.use("/auth", authRoutes);
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", instructorCourseRoutes);
@@ -40,21 +52,31 @@ app.use("/student/course", studentCourseRoutes);
 app.use("/student/order", studentViewOrderRoutes);
 app.use("/student/courses-bought", studentCoursesRoutes);
 app.use("/student/course-progress", studentCourseProgressRoutes);
-app.use("/student", studentReviewRoutes);
+app.use("/student/reviews", studentReviewRoutes);
+app.use("/student/subscriptions", studentSubscription);
+app.use("/admin", adminRoutes);
 
 app.use((req, res, next) => {
-	console.log(`${req.method} ${req.path}`);
+	console.log(`${req.method} ${req.path} - ${req.ip}`);
 	next();
 });
 
+// Error handling middleware
 app.use((err, req, res, next) => {
-	console.log(err.stack);
-	res.status(500).json({
+	console.error(`[${new Date().toISOString()}] Error:`, err.stack);
+	res.status(err.statusCode || 500).json({
 		success: false,
-		message: "Something went wrong",
+		message:
+			process.env.NODE_ENV === "development"
+				? err.message
+				: "Something went wrong",
+		...(process.env.NODE_ENV === "development" && { stack: err.stack }),
 	});
 });
 
 app.listen(PORT, () => {
-	console.log(`Server is now running on port ${PORT}`);
+	console.log(
+		`Server running in ${process.env.NODE_ENV || "development"} mode`
+	);
+	console.log(`Listening on port ${PORT}`);
 });
