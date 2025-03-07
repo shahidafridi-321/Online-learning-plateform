@@ -23,6 +23,7 @@ import { StudentEmailVerificationPage } from "@/pages/student/StudentEmailVerifi
 import { AdminDashboardPage } from "@/pages/super-admin/AdminDashboardPage";
 import { AdminCoursesPage } from "@/pages/super-admin/AdminCoursesPage";
 import { InstructorNotificationsPage } from "@/pages/instructor/InstructorNotificationsPage";
+import { AdminUsersPage } from "@/pages/super-admin/AdminUsersPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -135,6 +136,10 @@ export const routes = createBrowserRouter([
 			{ path: "dashboard", element: <AdminDashboardPage /> },
 			{ path: "approve-reject-review", element: <ReviewApproveRejectPage /> },
 			{ path: "courses", element: <AdminCoursesPage /> },
+			{
+				path: "users",
+				element: <AdminUsersPage />,
+			},
 		],
 	},
 	{
