@@ -44,7 +44,7 @@ const getAllStudentViewCourses = async (req, res) => {
 
 		res.status(200).json({
 			success: true,
-			data: coursesList,
+			data: coursesList.filter((course) => course.isPublished),
 		});
 	} catch (error) {
 		console.log(error);
