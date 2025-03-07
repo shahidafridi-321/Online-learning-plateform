@@ -1,9 +1,9 @@
-import { fetchAllCoursesService } from "@/services";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, XCircle, CheckCircle } from "lucide-react";
+import { fetchAllCoursesService } from "@/services";
 import {
 	approveCourseService,
 	rejectCourseService,
@@ -14,6 +14,8 @@ export const AdminCoursesPage = () => {
 	const [coursesList, setCoursesList] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [sortBy, setSortBy] = useState("unapproved");
+	const [sortOrder, setSortOrder] = useState("desc");
 	const { toast } = useToast();
 
 	const fetchCourses = async () => {
@@ -40,7 +42,7 @@ export const AdminCoursesPage = () => {
 		try {
 			const response = await approveCourseService(courseId);
 			if (response.success) {
-				fetchCourses();
+				await fetchCourses();
 				toast({
 					title: "Success",
 					description: "Course approved successfully.",
@@ -66,7 +68,7 @@ export const AdminCoursesPage = () => {
 		try {
 			const response = await rejectCourseService(courseId);
 			if (response.success) {
-				fetchCourses();
+				await fetchCourses();
 				toast({
 					title: "Success",
 					description: "Course rejected successfully.",
@@ -87,6 +89,21 @@ export const AdminCoursesPage = () => {
 			});
 		}
 	};
+
+	const sortedCourses = coursesList.sort((a, b) => {
+		if (sortBy === "unapproved") {
+			return a.isPublished === b.isPublished ? 0 : a.isPublished ? 1 : -1;
+		}
+		if (sortBy === "title") {
+			return sortOrder === "asc"
+				? a.title.localeCompare(b.title)
+				: b.title.localeCompare(a.title);
+		}
+
+		return sortOrder === "asc"
+			? a._id.localeCompare(b._id)
+			: b._id.localeCompare(a._id);
+	});
 
 	if (loading) {
 		return (
@@ -123,18 +140,44 @@ export const AdminCoursesPage = () => {
 	return (
 		<div className="bg-gray-100 dark:bg-gray-900 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-7xl mx-auto">
-				<header className="mb-8">
-					<h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-						Admin Courses Management
-					</h1>
-					<p className="mt-2 text-gray-600 dark:text-gray-400">
-						{coursesList.filter((courseItem) => !courseItem.isPublished).length}{" "}
-						courses pending approval
-					</p>
+				<header className="mb-8 flex flex-col sm:flex-row justify-between items-center">
+					<div>
+						<h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
+							Admin Courses Management
+						</h1>
+						<p className="mt-2 text-gray-600 dark:text-gray-400">
+							{
+								coursesList.filter((courseItem) => !courseItem.isPublished)
+									.length
+							}{" "}
+							courses pending approval
+						</p>
+					</div>
+					<div className="mt-4 sm:mt-0 flex space-x-2">
+						<select
+							value={sortBy}
+							onChange={(e) => setSortBy(e.target.value)}
+							className="border border-gray-300 dark:border-gray-700 rounded-md p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+						>
+							<option value="unapproved">Unapproved First</option>
+							<option value="title">Title</option>
+							<option value="_id">Date Added</option>
+						</select>
+						{sortBy !== "unapproved" && (
+							<select
+								value={sortOrder}
+								onChange={(e) => setSortOrder(e.target.value)}
+								className="border border-gray-300 dark:border-gray-700 rounded-md p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+							>
+								<option value="desc">Descending</option>
+								<option value="asc">Ascending</option>
+							</select>
+						)}
+					</div>
 				</header>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-					{coursesList.map((courseItem, index) => (
+					{sortedCourses.map((courseItem, index) => (
 						<motion.div
 							key={courseItem?._id}
 							initial={{ opacity: 0, y: 20 }}
@@ -186,16 +229,26 @@ export const AdminCoursesPage = () => {
 									</Button>
 									<div className="flex space-x-2">
 										<Button
-											className="flex-1 bg-green-500 hover:bg-green-600 text-white"
-											onClick={() => handleApprove(courseItem._id)}
+											className={
+												courseItem.isPublished
+													? "flex-1 bg-red-500 hover:bg-red-600 text-white"
+													: "flex-1 bg-green-500 hover:bg-green-600 text-white"
+											}
+											onClick={
+												courseItem.isPublished
+													? () => handleReject(courseItem._id)
+													: () => handleApprove(courseItem._id)
+											}
 										>
-											Approve
-										</Button>
-										<Button
-											className="flex-1 bg-red-500 hover:bg-red-600 text-white"
-											onClick={() => handleReject(courseItem._id)}
-										>
-											Reject
+											{courseItem.isPublished ? (
+												<>
+													<XCircle className="h-4 w-4 mr-2" /> Reject
+												</>
+											) : (
+												<>
+													<CheckCircle className="h-4 w-4 mr-2" /> Approve
+												</>
+											)}
 										</Button>
 									</div>
 								</div>
