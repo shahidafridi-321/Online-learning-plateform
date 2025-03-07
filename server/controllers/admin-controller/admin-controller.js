@@ -5,7 +5,7 @@ const Reviews = require("../../models/Reviews");
 
 const getAllCourses = async (req, res) => {
 	try {
-		const courses = await Courses.find({});
+		const courses = await Courses.find().sort({ date: -1 }).limit(12);
 		if (!courses) {
 			return res.status(404).json({
 				success: false,
