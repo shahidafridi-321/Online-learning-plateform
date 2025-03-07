@@ -19,6 +19,7 @@ import {
 	Tooltip,
 	Legend,
 } from "chart.js";
+import { InstructorNotificationsPage } from "./InstructorNotificationsPage";
 
 // Register Chart.js components
 ChartJS.register(
@@ -138,6 +139,11 @@ export const InstructorDashboardPage = () => {
 			label: "Courses",
 			value: "courses",
 			component: <InstructorCourses listOfCourses={instructorCoursesList} />,
+		},
+		{
+			label: "Notifications",
+			value: "notifications",
+			component: <InstructorNotificationsPage />,
 		},
 		{
 			label: "Logout",
