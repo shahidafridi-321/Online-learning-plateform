@@ -22,6 +22,7 @@ import { AdminCommonLayout } from "@/components/admin-view/AdminCommonLayout";
 import { StudentEmailVerificationPage } from "@/pages/student/StudentEmailVerificationPage";
 import { AdminDashboardPage } from "@/pages/super-admin/AdminDashboardPage";
 import { AdminCoursesPage } from "@/pages/super-admin/AdminCoursesPage";
+import { InstructorNotificationsPage } from "@/pages/instructor/InstructorNotificationsPage";
 
 const ProtectedRoute = ({ element }) => {
 	const { auth, loading } = useContext(AuthContext);
@@ -55,6 +56,10 @@ export const routes = createBrowserRouter([
 	{
 		path: "/instructor/edit-course/:courseId",
 		element: <ProtectedRoute element={<AddNewCoursePage />} />,
+	},
+	{
+		path: "/instructor/notifications",
+		element: <ProtectedRoute element={<InstructorNotificationsPage />} />,
 	},
 	{
 		path: "/",
