@@ -93,7 +93,6 @@ export const AddNewCoursePage = () => {
 			...courseLandingFormData,
 			students: [],
 			curriculum: courseCurriculumFormData,
-			isPublished: true,
 		};
 
 		try {
