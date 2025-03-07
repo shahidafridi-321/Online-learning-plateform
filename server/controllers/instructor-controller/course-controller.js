@@ -4,6 +4,7 @@ const addNewCourse = async (req, res) => {
 	try {
 		const courseData = req.body;
 		const newlyCreatedCourse = new Course(courseData);
+		newlyCreatedCourse.isPublished = false;
 		const saveCourse = await newlyCreatedCourse.save();
 		if (saveCourse) {
 			return res.status(201).json({
