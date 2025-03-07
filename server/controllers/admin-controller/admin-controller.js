@@ -73,4 +73,42 @@ const getAllUsers = async (req, res) => {
 		});
 	}
 };
-module.exports = { getAllCourses, getAllReviews, getAllUsers };
+
+const updateUser = async (req, res) => {
+	try {
+		const { userId } = req.params;
+		const { role, isVerified } = req.body;
+
+		if (!userId) {
+			return res.status(400).json({
+				success: false,
+				message: "Invalid user ID",
+			});
+		}
+
+		const user = await Users.findById(userId);
+		if (!user) {
+			return res.status(404).json({
+				success: false,
+				message: "User not found",
+			});
+		}
+
+		if (role) user.role = role;
+		if (typeof isVerified === "boolean") user.isVerified = isVerified;
+		await user.save();
+
+		res.status(200).json({
+			success: true,
+			message: "User updated successfully",
+			data: user,
+		});
+	} catch (error) {
+		console.error("Error updating user:", error);
+		res.status(500).json({
+			success: false,
+			message: "Internal server error while updating user",
+		});
+	}
+};
+module.exports = { getAllCourses, getAllReviews, getAllUsers, updateUser };
