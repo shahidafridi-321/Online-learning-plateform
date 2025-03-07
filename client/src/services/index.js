@@ -217,3 +217,15 @@ export const fetchAllReviewsService = async () => {
 	const { data } = await axiosInstance.get("/admin/reviews/all");
 	return data;
 };
+
+export const updateUserService = async (userId, updates) => {
+	try {
+		const { data } = await axiosInstance.put(`/admin/users/${userId}`, updates);
+		return data;
+	} catch (error) {
+		return {
+			success: false,
+			message: error.response?.data?.message || "Failed to update user",
+		};
+	}
+};
