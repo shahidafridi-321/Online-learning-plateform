@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const authRoutes = require("./routes/auth-routes/index");
 const mediaRoutes = require("./routes/instructor-routes/media-routes");
 const instructorCourseRoutes = require("./routes/instructor-routes/course-routes");
+const instructorNotificationsRoutes = require("./routes/instructor-routes/instructor-notifications-routes.js");
 const studentCourseRoutes = require("./routes/student-routes/course-routes");
 const studentViewOrderRoutes = require("./routes/student-routes/order-routes");
 const studentCoursesRoutes = require("./routes/student-routes/student-courses-routes");
@@ -15,6 +16,7 @@ const studentCourseProgressRoutes = require("./routes/student-routes/course-prog
 const studentReviewRoutes = require("./routes/student-routes/review-routes");
 const studentSubscription = require("./routes/student-routes/subscription-routes");
 const adminRoutes = require("./routes/admin-routes/admin-routes");
+const adminCourseRoutes = require("./routes/admin-routes/admin-course-routes");
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -48,6 +50,7 @@ mongoose
 app.use("/auth", authRoutes);
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", instructorCourseRoutes);
+app.use("/instructor", instructorNotificationsRoutes);
 app.use("/student/course", studentCourseRoutes);
 app.use("/student/order", studentViewOrderRoutes);
 app.use("/student/courses-bought", studentCoursesRoutes);
@@ -55,6 +58,7 @@ app.use("/student/course-progress", studentCourseProgressRoutes);
 app.use("/student/reviews", studentReviewRoutes);
 app.use("/student/subscriptions", studentSubscription);
 app.use("/admin", adminRoutes);
+app.use("/admin", adminCourseRoutes);
 
 app.use((req, res, next) => {
 	console.log(`${req.method} ${req.path} - ${req.ip}`);
