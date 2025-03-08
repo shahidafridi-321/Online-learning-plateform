@@ -3,7 +3,7 @@ import Typewriter from "typewriter-effect";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import BannerImage from "../../../public/hero-img.jpg";
+import BannerImage from "../../../public/course8.webp";
 import {
 	AcademicCapIcon,
 	BookOpenIcon,
@@ -51,8 +51,8 @@ export const HeroSection = () => {
 
 	return (
 		<section
-			className="flex flex-col lg:flex-row items-center justify-between 
-                 py-12 px-4 lg:px-12 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 
+			className="flex flex-col min-h-screen lg:flex-row items-center mt-6 justify-between 
+                 py-12 lg:py-0 px-4 lg:pl-12 lg:pr-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 
                  dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 rounded-b-lg shadow-lg"
 		>
 			<div className="lg:w-1/2 text-center lg:text-left relative">
@@ -140,11 +140,11 @@ export const HeroSection = () => {
 			</div>
 
 			{/* Image */}
-			<div className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
+			<div className="flex-1 mt-8 lg:mt-0 flex justify-center">
 				<motion.img
 					src={BannerImage}
 					alt="Banner"
-					className="w-full max-w-sm rounded-lg shadow-2xl border-4 border-white"
+					className="w-full shadow-2xl border-none"
 					initial={{ opacity: 0, scale: 0.95 }}
 					animate={{ opacity: 1, scale: 1 }}
 					transition={{ duration: 0.8, ease: "easeOut" }}
