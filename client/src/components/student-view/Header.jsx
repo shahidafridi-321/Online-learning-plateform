@@ -17,6 +17,7 @@ import {
 	DropdownMenuTrigger,
 	DropdownMenuItem,
 } from "../ui/dropdown-menu";
+import { motion } from "framer-motion";
 
 export const Header = () => {
 	const navigate = useNavigate();
@@ -27,14 +28,14 @@ export const Header = () => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const { resetCredentials, auth } = useContext(AuthContext);
 
-	// Toggle dark mode
+	// add and remove dark mode
 	useEffect(() => {
 		if (darkMode) {
 			document.documentElement.classList.add("dark");
 		} else {
 			document.documentElement.classList.remove("dark");
 		}
-		// Save the current preference to localStorage
+		// Save current mode
 		localStorage.setItem("darkMode", JSON.stringify(darkMode));
 	}, [darkMode]);
 
@@ -71,7 +72,14 @@ export const Header = () => {
 				{/* Left Side: Logo & Navigation */}
 				<div className="flex items-center space-x-4">
 					<Link to="/" className="flex items-center space-x-2">
-						<GraduationCapIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+						<motion.div
+							className=" text-white hidden lg:block"
+							animate={{ y: [0, -10, 0] }}
+							transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+						>
+							<GraduationCapIcon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+						</motion.div>
+
 						<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
 							Learn For Fun
 						</span>
