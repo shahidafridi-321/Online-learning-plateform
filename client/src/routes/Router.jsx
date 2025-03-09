@@ -109,27 +109,6 @@ export const routes = createBrowserRouter([
 		],
 	},
 	{
-		/* path: "/admin",
-		element: <ProtectedRoute element={<AdminDashboardPage />} />,
-		children: [
-			{
-				path: "approve-reject-review",
-				element: <ReviewApproveRejectPage />,
-			},
-			{
-				path: "dashboard",
-				element: <AdminDashboardPage />,
-			}, */
-		// {
-		//   path: "courses",
-		//   element: <AdminCoursesPage />,
-		// },
-		// {
-		//   path: "users",
-		//   element: <AdminUsersPage />,
-		// },
-		//],
-
 		path: "/admin",
 		element: <ProtectedRoute element={<AdminCommonLayout />} />,
 		children: [
