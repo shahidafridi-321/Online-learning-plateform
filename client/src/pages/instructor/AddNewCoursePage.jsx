@@ -17,8 +17,8 @@ import {
 	courseLandingInitialFormData,
 } from "@/config";
 import { useNavigate, useParams } from "react-router-dom";
-import { InstructorHeader } from "@/components/instructor-view/InstructorHeader"; // Adjust path as needed
-import { InstructorFooter } from "@/components/instructor-view/InstructorFooter"; // Adjust path as needed
+import { InstructorHeader } from "@/components/instructor-view/InstructorHeader";
+import { InstructorFooter } from "@/components/instructor-view/InstructorFooter";
 import { motion } from "framer-motion";
 import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 
@@ -39,6 +39,7 @@ export const AddNewCoursePage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [submissionStatus, setSubmissionStatus] = useState("idle");
+	const [existingStudents, setExistingStudents] = useState([]);
 
 	const isEmpty = (value) => {
 		if (Array.isArray(value)) {
@@ -91,7 +92,7 @@ export const AddNewCoursePage = () => {
 			instructorName: auth?.user?.userName,
 			date: new Date(),
 			...courseLandingFormData,
-			students: [],
+			students: currentEditedCourseId ? existingStudents : [],
 			curriculum: courseCurriculumFormData,
 		};
 
@@ -109,7 +110,7 @@ export const AddNewCoursePage = () => {
 				setCourseLandingFormData(courseLandingInitialFormData);
 				setCourseCurriculumFormData(courseCurriculumInitialFormData);
 				setCurrentEditedCourseId(null);
-				setTimeout(() => navigate("/instructor"), 3000); // Redirect after 3 seconds
+				setTimeout(() => navigate("/instructor"), 3000);
 			} else {
 				setError(response.message || "Failed to save the course.");
 				setSubmissionStatus("error");
@@ -142,6 +143,7 @@ export const AddNewCoursePage = () => {
 				setCourseCurriculumFormData(
 					response?.data?.curriculum || courseCurriculumInitialFormData
 				);
+				setExistingStudents(response?.data?.students || []);
 			} else {
 				setError(response.message || "Failed to load course details.");
 			}
@@ -242,7 +244,7 @@ export const AddNewCoursePage = () => {
 									{ value: "curriculum", label: "Curriculum" },
 									{ value: "course-landing-page", label: "Landing Page" },
 									{ value: "settings", label: "Settings" },
-								].map((tab, index) => (
+								].map((tab) => (
 									<TabsTrigger
 										key={tab.value}
 										value={tab.value}
