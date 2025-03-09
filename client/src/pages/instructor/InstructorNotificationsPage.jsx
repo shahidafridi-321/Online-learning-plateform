@@ -17,7 +17,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "react-sonner";
 
 export const InstructorNotificationsPage = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,6 @@ export const InstructorNotificationsPage = () => {
 	const [filter, setFilter] = useState("all");
 	const [sortOrder, setSortOrder] = useState("desc");
 	const { auth } = useContext(AuthContext);
-	const { toast } = useToast();
 
 	const fetchAllNotifications = async () => {
 		if (!auth?.user?._id) {
@@ -58,17 +57,13 @@ export const InstructorNotificationsPage = () => {
 						n._id === notificationId ? { ...n, isRead: true } : n
 					)
 				);
-				toast({
-					title: "Success",
+				toast.success("Success", {
 					description: "Notification marked as read.",
-					variant: "success",
 				});
 			}
 		} catch (err) {
-			toast({
-				title: "Error",
+			toast.error("Error", {
 				description: "Failed to mark notification as read.",
-				variant: "destructive",
 			});
 		}
 	};
@@ -78,17 +73,13 @@ export const InstructorNotificationsPage = () => {
 			const response = await deleteNotificationService(notificationId);
 			if (response.success) {
 				setNotifications(notifications.filter((n) => n._id !== notificationId));
-				toast({
-					title: "Success",
+				toast.success("Success", {
 					description: "Notification deleted.",
-					variant: "success",
 				});
 			}
 		} catch (err) {
-			toast({
-				title: "Error",
+			toast.error("Error", {
 				description: "Failed to delete notification.",
-				variant: "destructive",
 			});
 		}
 	};
@@ -257,7 +248,7 @@ export const InstructorNotificationsPage = () => {
 											Received: {new Date(notification.date).toLocaleString()}
 										</p>
 										<Link
-											to={`/instructor/courses/${notification.courseId}`}
+											to={`/instructor/edit-course/${notification.courseId}`}
 											className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-medium"
 											aria-label={`View details for course ${notification.courseTitle}`}
 										>

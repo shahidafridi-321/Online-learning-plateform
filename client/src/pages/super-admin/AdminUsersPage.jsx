@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Loader2, AlertCircle, CheckCircle, XCircle, Edit } from "lucide-react";
 import { fetchAllUsersService, updateUserService } from "@/services";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "react-sonner";
 
 export const AdminUsersPage = () => {
 	const [usersList, setUsersList] = useState([]);
@@ -13,7 +13,6 @@ export const AdminUsersPage = () => {
 	const [filter, setFilter] = useState("all");
 	const [sortBy, setSortBy] = useState("_id");
 	const [sortOrder, setSortOrder] = useState("desc");
-	const { toast } = useToast();
 
 	const fetchUsers = async () => {
 		setLoading(true);
@@ -47,21 +46,19 @@ export const AdminUsersPage = () => {
 						user._id === userId ? { ...user, isVerified: newVerified } : user
 					)
 				);
-				toast({
-					title: "Success",
+				toast.success("Success", {
 					description: `User ${
 						newVerified ? "verified" : "unverified"
 					} successfully.`,
-					variant: "success",
 				});
 			} else {
-				throw new Error(response.message);
+				throw new Error(
+					response.message || "Failed to update user verification."
+				);
 			}
 		} catch (err) {
-			toast({
-				title: "Error",
-				description: "Failed to update user verification.",
-				variant: "destructive",
+			toast.error("Error", {
+				description: err.message || "Failed to update user verification.",
 			});
 		}
 	};
@@ -76,19 +73,15 @@ export const AdminUsersPage = () => {
 						user._id === userId ? { ...user, role: newRole } : user
 					)
 				);
-				toast({
-					title: "Success",
+				toast.success("Success", {
 					description: `User role changed to ${newRole}.`,
-					variant: "success",
 				});
 			} else {
-				throw new Error(response.message);
+				throw new Error(response.message || "Failed to change user role.");
 			}
 		} catch (err) {
-			toast({
-				title: "Error",
-				description: "Failed to change user role.",
-				variant: "destructive",
+			toast.error("Error", {
+				description: err.message || "Failed to change user role.",
 			});
 		}
 	};
