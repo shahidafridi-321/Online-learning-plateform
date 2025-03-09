@@ -36,7 +36,6 @@ export const InstructorHeader = () => {
 
 	const menuItems = [
 		{ label: "Dashboard", path: "/instructor" },
-		{ label: "Courses", path: "/instructor/courses" },
 		{ label: "Create New Course", path: "/instructor/create-new-course" },
 		{ label: "Logout", action: handleLogout },
 	];
