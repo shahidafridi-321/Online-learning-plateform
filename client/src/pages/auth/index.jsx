@@ -1,12 +1,10 @@
-import { GraduationCapIcon } from "lucide-react";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CommonForm } from "@/components/ui/common-form";
 import { signInFormControls, signUpFormControls } from "@/config";
 import { registerService } from "@/services";
-import { ToastContainer, toast } from "react-toastify";
-
+import { toast } from "react-sonner";
 import {
 	Card,
 	CardContent,
@@ -15,9 +13,11 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { AuthContext } from "@/context/auth-context";
+import { GraduationCap, Sun, Moon } from "lucide-react";
 
 export const AuthPage = () => {
 	const [activeTab, setActiveTab] = useState("signin");
+	const [isDarkMode, setIsDarkMode] = useState(false); // State for dark mode
 	const navigate = useNavigate();
 
 	const {
@@ -27,6 +27,35 @@ export const AuthPage = () => {
 		setSignUpFormData,
 		handleLoginUser,
 	} = useContext(AuthContext);
+
+	// Sync with system mode and toggle dark mode
+	useEffect(() => {
+		// Check system preference on mount
+		const prefersDark = window.matchMedia(
+			"(prefers-color-scheme: dark)"
+		).matches;
+		const savedTheme = localStorage.getItem("theme");
+		const initialDarkMode = savedTheme ? savedTheme === "dark" : prefersDark;
+
+		setIsDarkMode(initialDarkMode);
+		if (initialDarkMode) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}, []);
+
+	const handleToggleDarkMode = () => {
+		const newDarkMode = !isDarkMode;
+		setIsDarkMode(newDarkMode);
+		if (newDarkMode) {
+			document.documentElement.classList.add("dark");
+			localStorage.setItem("theme", "dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+			localStorage.setItem("theme", "light");
+		}
+	};
 
 	const handleTabChange = (value) => {
 		setActiveTab(value);
@@ -40,7 +69,6 @@ export const AuthPage = () => {
 		);
 	};
 
-	//check only for name, email, and password
 	const checkIfSignUpFormIsvalid = () => {
 		return (
 			signUpFormData &&
@@ -54,74 +82,85 @@ export const AuthPage = () => {
 		e.preventDefault();
 		try {
 			const { userName, userEmail, password } = signUpFormData;
-
 			const regResponse = await registerService({
 				userName,
 				userEmail,
 				password,
 			});
 			if (!regResponse || !regResponse.success) {
-				toast.error("Registration Failed!");
+				toast.error("Registration Failed", {
+					description: regResponse?.message || "An error occurred.",
+				});
 				return;
 			}
-			toast.success(
-				"Registration Successful. Please check your email for the verification code."
-			);
-			// clear the registration form
+			toast.success("Registration Successful", {
+				description: "Please check your email for the verification code.",
+			});
 			setSignUpFormData({
 				userName: "",
 				userEmail: "",
 				password: "",
 			});
-			// redirect the user to  verification page
 			navigate("/verify-email");
 		} catch (error) {
 			console.error("Registration Error:", error);
-			toast.error(
-				`Registration Failed! ${error.response?.data?.message || error.message}`
-			);
+			toast.error("Registration Failed", {
+				description:
+					error.response?.data?.message ||
+					error.message ||
+					"An unexpected error occurred.",
+			});
 		}
 	};
 
 	return (
-		<div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 text-gray-800">
-			<header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-300 bg-white/50 backdrop-blur-sm">
-				<ToastContainer />
+		<div className="min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 flex flex-col">
+			<header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm">
 				<Link
 					to="/"
 					className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
 				>
-					<GraduationCapIcon className="h-8 w-8 text-gray-800 animate-bounce" />
-					<span className="font-bold text-2xl lg:text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+					<GraduationCap className="h-8 w-8 text-indigo-600 dark:text-indigo-400 animate-bounce" />
+					<span className="font-bold text-2xl lg:text-3xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
 						Learn For Fun
 					</span>
 				</Link>
+				<button
+					onClick={handleToggleDarkMode}
+					className="p-2 rounded-full bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+					aria-label="Toggle dark mode"
+				>
+					{isDarkMode ? (
+						<Sun className="h-5 w-5 text-yellow-500" />
+					) : (
+						<Moon className="h-5 w-5 text-gray-600" />
+					)}
+				</button>
 			</header>
 
-			<main className="flex items-center justify-center px-4 sm:px-8 lg:px-0 py-8 md:py-16 lg:py-24 min-h-[calc(100vh-64px)]">
+			<main className="flex-1 flex items-center justify-center px-4 py-8 md:py-12 lg:py-16">
 				<Tabs
 					value={activeTab}
-					defaultValue="signin"
 					onValueChange={handleTabChange}
-					className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto"
+					className="w-full max-w-md lg:max-w-lg mx-auto"
 				>
-					<TabsList className="grid w-full grid-cols-2 rounded-lg bg-gray-100/50 backdrop-blur-sm p-1.5 gap-1.5 mb-6">
+					<TabsList className="grid w-full grid-cols-2 bg-gray-200/50 dark:bg-gray-700/50 backdrop-blur-sm rounded-xl p-1 mb-6 shadow-md">
 						<TabsTrigger
 							value="signin"
-							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all ${
+							className={`rounded-lg py-2.5 text-sm md:text-base font-semibold transition-all ${
 								activeTab === "signin"
-									? "bg-white shadow-md text-purple-600"
-									: "text-gray-600 hover:bg-white/50"
+									? "bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-sm"
+									: "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
 							}`}
 						>
 							Sign In
 						</TabsTrigger>
 						<TabsTrigger
 							value="signup"
-							className={`w-full rounded-md py-2.5 text-sm md:text-base font-medium transition-all ${
+							className={`rounded-lg py-2.5 text-sm md:text-base font-semibold transition-all ${
 								activeTab === "signup"
-									? "bg-white shadow-md text-purple-600"
-									: "text-gray-600 hover:bg-white/50"
+									? "bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-sm"
+									: "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
 							}`}
 						>
 							Sign Up
@@ -129,16 +168,16 @@ export const AuthPage = () => {
 					</TabsList>
 
 					<TabsContent value="signin">
-						<Card className="p-4 sm:p-6 space-y-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-xl text-gray-800 animate-slide-up">
+						<Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 space-y-4 border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl">
 							<CardHeader>
-								<CardTitle className="text-lg md:text-xl font-bold">
-									Sign In To Your Account
+								<CardTitle className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+									Sign In
 								</CardTitle>
-								<CardDescription className="text-sm md:text-base text-gray-600">
-									Enter your email and password to log in
+								<CardDescription className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+									Enter your email and password to access your account.
 								</CardDescription>
 							</CardHeader>
-							<CardContent className="space-y-2">
+							<CardContent className="space-y-4">
 								<CommonForm
 									formControls={signInFormControls}
 									buttonText="Sign In"
@@ -152,16 +191,16 @@ export const AuthPage = () => {
 					</TabsContent>
 
 					<TabsContent value="signup">
-						<Card className="p-4 sm:p-6 space-y-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-xl text-gray-800 animate-slide-up">
+						<Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 space-y-4 border border-gray-200 dark:border-gray-700 transition-all hover:shadow-xl">
 							<CardHeader>
-								<CardTitle className="text-lg md:text-xl font-bold">
-									Sign Up To Get Started
+								<CardTitle className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+									Sign Up
 								</CardTitle>
-								<CardDescription className="text-sm md:text-base text-gray-600">
-									Enter your details to create your account
+								<CardDescription className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+									Create an account to start your learning journey.
 								</CardDescription>
 							</CardHeader>
-							<CardContent className="space-y-2">
+							<CardContent className="space-y-4">
 								<CommonForm
 									formControls={signUpFormControls}
 									buttonText="Sign Up"
