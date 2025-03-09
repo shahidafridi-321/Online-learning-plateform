@@ -184,7 +184,7 @@ export const InstructorDashboardPage = () => {
 					<h1 className="text-3xl font-bold text-white">
 						Instructor Dashboard
 					</h1>
-					<div className="space-x-4">
+					<div className="space-x-4 ">
 						{menuItems.map((item) => (
 							<Button
 								key={item.value}
@@ -201,7 +201,6 @@ export const InstructorDashboardPage = () => {
 					</div>
 				</div>
 
-				{/* Tab Content */}
 				{menuItems.map(
 					(item) =>
 						activeTab === item.value && (
