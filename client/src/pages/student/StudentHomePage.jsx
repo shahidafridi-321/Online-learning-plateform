@@ -68,6 +68,7 @@ export const StudentHomePage = () => {
 			const response = await subscribeService({
 				userEmail: subscribeFieldValue,
 			});
+
 			if (response.success) {
 				navigate("/student/email-verification", {
 					state: { email: subscribeFieldValue },
@@ -80,7 +81,6 @@ export const StudentHomePage = () => {
 			setIsLoading(false);
 		}
 	};
-	console.log(subscribeFieldValue);
 
 	useEffect(() => {
 		const fetchCourses = async () => {
