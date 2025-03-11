@@ -83,7 +83,7 @@ export const StudentEmailVerificationPage = () => {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
-				className="text-center py-16"
+				className="text-center py-16 flex flex-col items-center justify-center min-h-screen"
 			>
 				<CheckCircle2 className="w-16 h-16 text-green-500 dark:text-green-400 mx-auto mb-4" />
 				<h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
