@@ -78,7 +78,7 @@ export const EmailVerificationPage = () => {
 		setIsSubmitting(false);
 	};
 
-	// Placeholder for resend functionality
+	// resend functionality
 	const handleResend = async () => {
 		if (!userEmail) {
 			toast.error("Error", {
