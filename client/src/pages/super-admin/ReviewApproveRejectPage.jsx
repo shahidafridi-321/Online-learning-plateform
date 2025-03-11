@@ -13,14 +13,14 @@ export const ReviewApproveRejectPage = () => {
 	const handleApproveReview = async (id) => {
 		const response = await approveReviewService(id);
 		if (response.success) {
-			fetchReviews(); // Refresh the list after approval
+			fetchReviews();
 		}
 	};
 
 	const handleRejectReview = async (id) => {
 		const response = await rejectReviewService(id);
 		if (response.success) {
-			fetchReviews(); // Refresh the list after rejection
+			fetchReviews();
 		}
 	};
 
