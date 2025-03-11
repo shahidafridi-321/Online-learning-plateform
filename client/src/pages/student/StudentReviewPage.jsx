@@ -14,7 +14,7 @@ import { createReviewService, mediaUploadService } from "@/services";
 import { InstructorContext } from "@/context/instructor-context/InstructorContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { UserCircle2 } from "lucide-react"; // Added for placeholder icon
+import { UserCircle2 } from "lucide-react";
 
 export const StudentReviewPage = () => {
 	const navigate = useNavigate();
@@ -97,7 +97,7 @@ export const StudentReviewPage = () => {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
-				className="text-center py-16"
+				className="text-center py-16 flex flex-col items-center justify-center min-h-screen"
 			>
 				<h2 className="text-3xl font-bold text-green-600 dark:text-green-400">
 					Thank You for Your Review!
