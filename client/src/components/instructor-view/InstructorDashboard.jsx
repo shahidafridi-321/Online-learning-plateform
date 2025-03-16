@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Table,
@@ -13,6 +13,30 @@ import { motion } from "framer-motion";
 import { Bar } from "react-chartjs-2";
 
 export const InstructorDashboard = ({ listOfCourses, chartData }) => {
+	const stats = useMemo(() => {
+		return listOfCourses.reduce(
+			(acc, course) => {
+				const studentCount = course.students.length;
+				acc.totalStudents += studentCount;
+				acc.totalProfits += course.pricing * studentCount;
+				course.students.forEach((student) => {
+					acc.studentList.push({
+						courseTitle: course.title,
+						studentEmail: student.studentEmail,
+						studentName: student.studentName,
+					});
+				});
+				return acc;
+			},
+			{
+				totalStudents: 0,
+				totalProfits: 0,
+				studentList: [],
+			}
+		);
+	}, [listOfCourses]);
+
+	/* 
 	const calculateTotalStudentsAndProfit = () => {
 		const { totalStudents, totalProfits, studentList } = listOfCourses.reduce(
 			(acc, course) => {
@@ -33,7 +57,7 @@ export const InstructorDashboard = ({ listOfCourses, chartData }) => {
 		return { totalStudents, totalProfits, studentList };
 	};
 
-	const stats = calculateTotalStudentsAndProfit();
+const stats = calculateTotalStudentsAndProfit(); */
 
 	const chartOptions = {
 		responsive: true,
