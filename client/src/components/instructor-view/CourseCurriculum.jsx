@@ -76,10 +76,10 @@ export function CourseCurriculum() {
 					updatedData[currentIndex].videoUrl = response?.data?.url;
 					updatedData[currentIndex].public_id = response?.data?.public_id;
 					setCourseCurriculumFormData(updatedData);
-					setMediaUploadProgress(false);
 				}
 			} catch (error) {
 				console.log(error);
+			} finally {
 				setMediaUploadProgress(false);
 			}
 		}
@@ -150,10 +150,10 @@ export function CourseCurriculum() {
 					})),
 				];
 				setCourseCurriculumFormData(updatedData);
-				setMediaUploadProgress(false);
 			}
 		} catch (e) {
 			console.log(e);
+		} finally {
 			setMediaUploadProgress(false);
 		}
 	}
