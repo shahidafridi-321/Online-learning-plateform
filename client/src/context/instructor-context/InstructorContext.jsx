@@ -39,11 +39,17 @@ export const InstructorContextProvider = ({ children }) => {
 		}),
 		[
 			courseLandingFormData,
+			setCourseLandingFormData,
 			courseCurriculumFormData,
+			setCourseCurriculumFormData,
 			mediaUploadProgress,
+			setMediaUploadProgress,
 			mediaUploadProgressPercentage,
+			setMediaUploadProgressPercentage,
 			instructorCoursesList,
+			setInstructorCoursesList,
 			currentEditedCourseId,
+			setCurrentEditedCourseId,
 		]
 	);
 	return (
